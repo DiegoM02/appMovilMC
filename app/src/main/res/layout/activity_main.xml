@@ -33,44 +33,48 @@
         >
 
         <EditText
+            android:id="@+id/EditUsuario"
             android:layout_width="340dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
-            android:paddingLeft="10dp"
+            android:background="@drawable/edittext"
             android:drawableLeft="@drawable/usuario"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Usuario"
             android:lineSpacingExtra="24sp"
-            android:textSize="24sp"
-            android:background="@drawable/edittext"/>
+            android:paddingLeft="10dp"
+            android:textSize="24sp" />
 
         <EditText
+            android:id="@+id/EditContraseña"
             android:layout_width="340dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:paddingLeft="10dp"
+            android:background="@drawable/edittext"
             android:drawableLeft="@drawable/contrasenia"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Constraseña"
             android:inputType="textPassword"
             android:lineSpacingExtra="24sp"
-            android:textSize="24sp"
-            android:background="@drawable/edittext"/>
+            android:paddingLeft="10dp"
+            android:textSize="24sp" />
+
         <Button
+            android:id="@+id/BotonEntrar"
             android:layout_width="340dp"
             android:layout_height="65dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_entrar"
             android:fontFamily="@font/roboto"
+            android:onClick="logear"
             android:text="@string/btn_entrar"
             android:textColor="@color/icons"
             android:textSize="24sp"
-            android:typeface="normal"
-            />
+            android:typeface="normal" />
 
 
 
