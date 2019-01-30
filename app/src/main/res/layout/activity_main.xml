@@ -33,32 +33,36 @@
         >
 
         <EditText
+            android:id="@+id/EditUsuario"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:paddingLeft="10dp"
+            android:background="@drawable/edittext_modified_states"
             android:drawableLeft="@drawable/usuario24"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Usuario"
             android:lineSpacingExtra="24sp"
+            android:paddingLeft="10dp"
             android:textSize="24sp"
-            android:background="@drawable/edittext_modified_states"/>
+            android:singleLine="true"/>
+
 
         <EditText
+            android:id="@+id/EditContraseña"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:paddingLeft="10dp"
+            android:background="@drawable/edittext_modified_states"
             android:drawableLeft="@drawable/constrasenia24"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Constraseña"
             android:inputType="textPassword"
             android:lineSpacingExtra="24sp"
-            android:textSize="24sp"
-            android:background="@drawable/edittext_modified_states"/>
+            android:paddingLeft="10dp"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/buttonEnter"
@@ -68,7 +72,7 @@
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_entrar"
             android:fontFamily="@font/roboto"
-            android:onClick="ingresar"
+            android:onClick="logear"
             android:text="@string/btn_entrar"
             android:textColor="@color/icons"
             android:textSize="24sp"
