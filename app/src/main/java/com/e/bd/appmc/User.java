@@ -66,7 +66,7 @@ public class User {
         values.put(UserContract.UserEntry.ID, id);
         values.put(UserContract.UserEntry.NAME, name);
         values.put(UserContract.UserEntry.USERNAME, userName);
-        values.put(UserContract.UserEntry.PASSWORD, phone);
+        values.put(UserContract.UserEntry.PASSWORD, password);
         values.put(UserContract.UserEntry.CREATED, crated);
         values.put(UserContract.UserEntry.RUT, rut);
         values.put(UserContract.UserEntry.EMAIL, email);
