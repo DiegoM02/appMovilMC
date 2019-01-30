@@ -7,9 +7,6 @@
 
     tools:context=".MainActivity">
 
-
-
-
      <LinearLayout
          android:layout_width="match_parent"
          android:layout_height="255dp"
@@ -30,56 +27,58 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:clickable="true"
         >
 
         <EditText
-            android:layout_width="340dp"
-            android:layout_height="60dp"
+            android:id="@+id/EditUsuario"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:drawableLeft="@drawable/usuario"
+            android:background="@drawable/edittext_modified_states"
+            android:drawableLeft="@drawable/usuario24"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Usuario"
             android:lineSpacingExtra="24sp"
+            android:paddingLeft="10dp"
             android:textSize="24sp"
-            android:background="@drawable/edittext"/>
+            android:singleLine="true"/>
+
 
         <EditText
-            android:layout_width="340dp"
-            android:layout_height="60dp"
+            android:id="@+id/EditContraseña"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:paddingLeft="10dp"
-            android:drawableLeft="@drawable/contrasenia"
+            android:background="@drawable/edittext_modified_states"
+            android:drawableLeft="@drawable/constrasenia24"
             android:drawablePadding="20dp"
             android:fontFamily="@font/roboto"
             android:hint="Constraseña"
             android:inputType="textPassword"
             android:lineSpacingExtra="24sp"
-            android:textSize="24sp"
-            android:background="@drawable/edittext"/>
+            android:paddingLeft="10dp"
+            android:textSize="24sp" />
+
         <Button
-            android:layout_width="340dp"
-            android:layout_height="65dp"
+            android:id="@+id/buttonEnter"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_entrar"
             android:fontFamily="@font/roboto"
+            android:onClick="logear"
             android:text="@string/btn_entrar"
             android:textColor="@color/icons"
             android:textSize="24sp"
-            android:typeface="normal"
-            />
-
-
-
-
+            android:typeface="normal" />
 
     </LinearLayout>
-
-
-
 
     </LinearLayout>
 
