@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,13 +44,19 @@ public class MainActivity extends AppCompatActivity {
         if (obtenerEstadoRecordarSession()) enterSession();
 
         /*Creacion BD*/
-        if(!obtenerBdCreada()) {
+
             this.bd = new SQLiteOpenHelperDataBase(this, "mcapp", null, 1);
-            bd.createDataUser();
-            guardarBdCreada();
-        }
+            SQLiteDatabase dataBase = this.bd.getWritableDatabase();
+
+
     }
 
+
+    public static void changeEstadoSession(Context c , boolean estadoSession)
+    {
+        SharedPreferences sessionPreferences = c.getSharedPreferences(SESSION_ESTADO_RECORDAR,MODE_PRIVATE);
+        sessionPreferences.edit().putBoolean(ESTADO_CHECK_BOX,estadoSession).apply();
+    }
 
     public void activarGuardarSesion(View view)
     {

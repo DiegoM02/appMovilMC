@@ -1,6 +1,8 @@
 package com.e.appmc;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import com.e.bd.appmc.User;
 
 public class MainMenuActivity extends AppCompatActivity {
+    private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
     private TextView nombreUsuario;
     private Bundle datosUsuario;
     @Override
@@ -24,9 +27,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
     public void salir(View view)
+
     {
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+       MainActivity.changeEstadoSession(MainMenuActivity.this,false);
+        Intent goToLogin = new Intent(MainMenuActivity.this,MainActivity.class);
+        startActivity(goToLogin);
     }
 
 

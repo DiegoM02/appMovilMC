@@ -15,6 +15,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createTableUser());
+        createDataUser(db);
 
     }
 
@@ -32,9 +33,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     }
 
 
-    public void createDataUser()
+    public void createDataUser(SQLiteDatabase db)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         if (db != null) {
             insertTableUser(db,new User(1,"Diego Matus","DMatus","12345","12-14-2019","19.007.996-1","diego@gmail.com",
                     "+56984775979"));
