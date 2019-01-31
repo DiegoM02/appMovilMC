@@ -52,6 +52,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
     public String createTableUser() {
         return "CREATE TABLE " + UserContract.UserEntry.TABLE_NAME + " ("
+                +UserContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + UserContract.UserEntry.ID + " TEXT NOT NULL, "
                 + UserContract.UserEntry.NAME + " TEXT NOT NULL, "
                 + UserContract.UserEntry.USERNAME + " TEXT NOT NULL, "
@@ -60,7 +61,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + UserContract.UserEntry.RUT + " TEXT NOT NULL, "
                 + UserContract.UserEntry.EMAIL+ " TEXT, "
                 + UserContract.UserEntry.PHONE+ " TEXT, "
-                + " PRIMARY KEY (" + UserContract.UserEntry.ID + "))";
+                + " UNIQUE (" + UserContract.UserEntry.ID + "))";
     }
 
 

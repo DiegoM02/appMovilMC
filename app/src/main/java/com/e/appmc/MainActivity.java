@@ -25,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean estaActivadoCheckBox;
     private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
     private static final String ESTADO_CHECK_BOX = "estado_check";
-
+    private static final String NOMBRE_USUARIO = "nombre_usuario";
+    private static final String ID_USUARIO = "id_usuario";
+    private static final String BD_CREADA ="bd_creada";
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
         session = (CheckBox) findViewById(R.id.checkbox_session);
 
         estaActivadoCheckBox = session.isChecked();
-
         if (obtenerEstadoRecordarSession()) enterSession();
 
         /*Creacion BD*/
-        this.bd = new SQLiteOpenHelperDataBase(this, "mcapp", null, 1);
-        bd.createDataUser();
+        if(!obtenerBdCreada()) {
+            this.bd = new SQLiteOpenHelperDataBase(this, "mcapp", null, 1);
+            bd.createDataUser();
+            guardarBdCreada();
+        }
     }
 
 
@@ -61,12 +66,44 @@ public class MainActivity extends AppCompatActivity {
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
         sesionPreferencias.edit().putBoolean(ESTADO_CHECK_BOX,session.isChecked()).apply();
+
+    }
+
+    public void guardarDatosUsuario()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        sesionPreferencias.edit().putString(NOMBRE_USUARIO,user.getName()).apply();
+        sesionPreferencias.edit().putInt(ID_USUARIO,user.getId()).apply();
+    }
+
+    public void guardarBdCreada()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        sesionPreferencias.edit().putBoolean(BD_CREADA,true);
     }
 
     public boolean obtenerEstadoRecordarSession()
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
         return sesionPreferencias.getBoolean(ESTADO_CHECK_BOX,false);
+    }
+
+    public String obtenerNombreUsuarioRecordarSesion()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getString(NOMBRE_USUARIO,"no aplica");
+    }
+
+    public int obtenerIdUsuarioRecordarSesion()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getInt(ID_USUARIO,0);
+    }
+
+    public boolean obtenerBdCreada()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getBoolean(BD_CREADA,false);
     }
 
     public void logear(View view)
@@ -83,14 +120,13 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!usr.isEmpty() && !pass.isEmpty())
         {
-            User user = this.comprobarUsuario(usr);
+            user = this.comprobarUsuario(usr);
             int opcion = this.validar(usr,pass,user);
             switch(opcion){
                 case 0:
-                    Intent intent = new Intent(this,MainMenuActivity.class);
-                    intent.putExtra("id",user.getId());
-                    intent.putExtra("name",user.getName());
-                    startActivity(intent);
+                    this.guardarDatosUsuario();
+                    this.guadarEstadoRecordarSesion();
+                    enterSession();
                     break;
                 case 1:
                     usuario.setError("Usuario Incorrecto");
@@ -141,14 +177,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
     private  void enterSession() {
-            guadarEstadoRecordarSesion();
-            Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
+
+            Intent intent = new Intent(this,MainMenuActivity.class);
+            intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
+            intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
             startActivity(intent);
-            finish();
+            //finish();
 
     }
 }
