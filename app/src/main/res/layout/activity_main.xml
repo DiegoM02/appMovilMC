@@ -69,7 +69,7 @@
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/btn_entrar"
             android:fontFamily="@font/roboto"
             android:onClick="logear"
@@ -77,6 +77,23 @@
             android:textColor="@color/icons"
             android:textSize="24sp"
             android:typeface="normal" />
+
+        <CheckBox
+            android:id="@+id/checkbox_session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:clickable="false"
+            android:duplicateParentState="false"
+
+            android:fontFamily="@font/roboto"
+            android:onClick="activarGuardarSesion"
+            android:text="Recordar sesion"
+            android:textColor="@color/secondary_text"
+            android:textSize="22dp" />
 
     </LinearLayout>
 
