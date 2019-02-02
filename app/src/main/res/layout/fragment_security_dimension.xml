@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="450dp"
+    tools:context=".SecurityDimensionFragment"
+    android:layout_gravity="bottom"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="391dp"
+            android:layout_height="346dp"
+            android:background="#C4C4C4"
+            tools:layout_editor_absoluteX="11dp"
+            tools:layout_editor_absoluteY="16dp">
+
+        </android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView3"
+            android:layout_width="177dp"
+            android:layout_height="159dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="260dp"
+            app:cardBackgroundColor="#B3E5FC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.038"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="69dp"
+                android:layout_height="63dp"
+                android:background="#0288D1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="5.0"
+                    android:textAlignment="center"
+                    android:textColor="@color/icons"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="#C4C4C4"
+                android:text="Normas labores" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView4"
+            android:layout_width="177dp"
+            android:layout_height="159dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#B3E5FC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.963"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.04">
+
+            <LinearLayout
+                android:layout_width="69dp"
+                android:layout_height="63dp"
+                android:background="#0288D1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="5.0"
+                    android:textAlignment="center"
+                    android:textColor="@color/icons"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="#C4C4C4"
+                android:text="Presentacion Perosonal" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="177dp"
+            android:layout_height="159dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#B3E5FC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.036"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.669">
+
+            <LinearLayout
+                android:layout_width="69dp"
+                android:layout_height="63dp"
+                android:background="#0288D1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="5.0"
+                    android:textAlignment="center"
+                    android:textColor="@color/icons"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="#C4C4C4"
+                android:text="Presentacion Perosonal" />
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="177dp"
+            android:layout_height="159dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#B3E5FC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.963"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.669">
+
+            <LinearLayout
+                android:layout_width="69dp"
+                android:layout_height="63dp"
+                android:background="#0288D1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="5.0"
+                    android:textAlignment="center"
+                    android:textColor="@color/icons"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="#C4C4C4"
+                android:text="Presentacion Perosonal" />
+        </android.support.v7.widget.CardView>
+
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+
+</FrameLayout>
