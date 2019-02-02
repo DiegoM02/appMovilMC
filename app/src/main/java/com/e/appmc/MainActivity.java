@@ -83,11 +83,7 @@ public class MainActivity extends AppCompatActivity {
         sesionPreferencias.edit().putInt(ID_USUARIO,user.getId()).apply();
     }
 
-    public void guardarBdCreada()
-    {
-        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
-        sesionPreferencias.edit().putBoolean(BD_CREADA,true);
-    }
+
 
     public boolean obtenerEstadoRecordarSession()
     {
@@ -190,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
             intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
             startActivity(intent);
-            //finish();
+            finish();
 
     }
 }

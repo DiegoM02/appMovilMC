@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EvaluationActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:foregroundGravity="center"
+            android:src="@drawable/evaluation_icon"
+            />
+
+        <TextView
+            android:layout_width="230dp"
+            android:layout_height="80dp"
+            android:text="Evaluaciones"
+            android:textColor="@color/icons"
+            android:textSize="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Centro"
+        android:textSize="24dp"
+        android:textColor="@color/primary_text"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+
+        >
+
+
+
+        <ImageButton
+            android:id="@+id/button_centro_ubicacion"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:src="@drawable/location_icon_28"
+
+            />
+        <TextView
+            android:layout_width="260dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@color/resltar"
+            >
+
+        </TextView>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/contenedor_dimensiones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </FrameLayout>
+
+</LinearLayout>

@@ -8,6 +8,7 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+    <color name="resltar">#C8ECECEC</color>
     <color name="edit">#6FBDBDBD</color>
 </resources>
 
