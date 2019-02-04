@@ -15,6 +15,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createTableUser());
+        db.execSQL(createTablePersonal());
+        db.execSQL(createTableEvaluation());
         createDataUser(db);
 
     }
@@ -53,8 +55,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
     public String createTableUser() {
         return "CREATE TABLE " + UserContract.UserEntry.TABLE_NAME + " ("
-                +UserContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + UserContract.UserEntry.ID + " TEXT NOT NULL, "
+                +UserContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + UserContract.UserEntry.ID + " INTEGER NOT NULL, "
                 + UserContract.UserEntry.NAME + " TEXT NOT NULL, "
                 + UserContract.UserEntry.USERNAME + " TEXT NOT NULL, "
                 + UserContract.UserEntry.PASSWORD + " TEXT NOT NULL, "
@@ -64,6 +66,38 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + UserContract.UserEntry.PHONE+ " TEXT, "
                 + " UNIQUE (" + UserContract.UserEntry.ID + "))";
     }
+
+
+    public String createTablePersonal()
+    {
+        return "CREATE TABLE " + PersonalContract.PersonalEntry.TABLE_NAME + " ("
+            + PersonalContract.PersonalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonalContract.PersonalEntry.ID + " INTEGER NOT NULL, "
+            + PersonalContract.PersonalEntry.NAME + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.SURNAME + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.RUT + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.PHONE + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.EMAIL + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.FACILITY_ID + " INTEGER NOT NULL, "
+            + " UNIQUE(" + PersonalContract.PersonalEntry.ID + ")," +
+                " FOREIGN KEY("+ PersonalContract.PersonalEntry.FACILITY_ID+ ") REFERENCES facility(id))";
+    }
+
+
+
+    public String createTableEvaluation()
+    {
+        return "CREATE TABLE " + EvaluationContract.EvaluationEntry.TABLE_NAME+ " ("
+                + EvaluationContract.EvaluationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + EvaluationContract.EvaluationEntry.ID + " INTEGER NOT NULL, "
+                + EvaluationContract.EvaluationEntry.DONE + " TEXT NOT NULL, "
+                + EvaluationContract.EvaluationEntry.FACILITY_ID+ " INTEGER NOT NULL, "
+                +" UNIQUE("+ EvaluationContract.EvaluationEntry.ID + "), "
+                +  " FOREIGN KEY("+ EvaluationContract.EvaluationEntry.FACILITY_ID+ ") REFERENCES facility(id))";
+    }
+
+
+
 
 
     public Cursor doSelectQuery(String query)
