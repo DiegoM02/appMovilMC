@@ -39,5 +39,10 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(goToLogin);
     }
 
+    public void evaluaciones(View view)
+    {
+        Intent goToEvaluation = new Intent(MainMenuActivity.this, EvaluationActivity.class);
+        startActivity(goToEvaluation);
+    }
 
 }
