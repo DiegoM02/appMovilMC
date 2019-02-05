@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainMenuActivity"></activity>
+<<<<<<< HEAD
+        <activity android:name=".EvaluationActivity"></activity>
+=======
+>>>>>>> InterfazEvaluacionFragmentSeguridad
+        <activity android:name=".MainMenuActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +26,11 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".MainMenuActivity"></activity>
+        <activity android:name=".MainMenuActivity" />
+<<<<<<< HEAD
+=======
+        <activity android:name=".EvaluationActivity"></activity>
+>>>>>>> InterfazEvaluacionFragmentSeguridad
     </application>
 
 </manifest>

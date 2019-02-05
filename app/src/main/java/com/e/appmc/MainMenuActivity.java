@@ -25,14 +25,24 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
 
+    public void evaluar(View view)
+    {
+        Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);
+        startActivity(goToEvaluation);
+    }
+
 
     public void salir(View view)
-
     {
        MainActivity.changeEstadoSession(MainMenuActivity.this,false);
         Intent goToLogin = new Intent(MainMenuActivity.this,MainActivity.class);
         startActivity(goToLogin);
     }
 
+    public void evaluaciones(View view)
+    {
+        Intent goToEvaluation = new Intent(MainMenuActivity.this, EvaluationActivity.class);
+        startActivity(goToEvaluation);
+    }
 
 }

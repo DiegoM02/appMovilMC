@@ -1,0 +1,125 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".EvaluationActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        >
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:foregroundGravity="center"
+            android:src="@drawable/evaluations_icon"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evaluaciones"
+            android:textColor="@color/icons"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="30dp"
+           />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Centro"
+        android:textSize="16dp"
+        android:textColor="@color/primary_text"
+        android:layout_marginTop="5dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+
+        >
+
+        <ImageButton
+            android:id="@+id/button_centro_ubicacion"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:src="@drawable/location_icon_16"
+
+            />
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@color/resltar"
+            >
+
+        </TextView>
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/contenedor_dimensiones"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="5dp"
+            android:src="@drawable/personal_icon_24" />
+    </FrameLayout>
+
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EvaluationActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="133dp"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+>>>>>>> InterfazEvaluacionFragmentSeguridad
+</LinearLayout>

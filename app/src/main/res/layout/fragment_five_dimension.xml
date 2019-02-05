@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    tools:context=".FragmentFiveDimension">
+
+
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Dimension"
+            android:textSize="16dp"
+            android:textColor="@color/primary_text"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/resltar"
+        android:padding="5dp"
+        >
+
+        <android.support.v7.widget.CardView
+            android:layout_width="257dp"
+            android:layout_height="85dp"
+            app:cardBackgroundColor="@color/primary_light"
+          >
+
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="3.0"
+                    android:textColor="@color/icons"
+
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:background="@color/resltar"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="3dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="Normas Laborales"
+                    android:textColor="@color/secondary_text"
+                    android:layout_gravity="center"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="125dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                app:cardBackgroundColor="@color/primary_light">
+
+                <LinearLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="3.0"
+                        android:textColor="@color/icons"
+
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="1dp"
+                    android:background="@color/resltar"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="Presentación personal"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="center"
+                        android:textSize="12dp"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="125dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/primary_light">
+
+                <LinearLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="3.0"
+                        android:textColor="@color/icons"
+
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="1dp"
+                    android:background="@color/resltar"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="Presentación personal"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="center"
+                        android:textSize="12dp"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="125dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                app:cardBackgroundColor="@color/primary_light">
+
+                <LinearLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="3.0"
+                        android:textColor="@color/icons"
+
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="1dp"
+                    android:background="@color/resltar"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="Presentación personal"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="center"
+                        android:textSize="12dp"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="125dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/primary_light">
+
+                <LinearLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="3.0"
+                        android:textColor="@color/icons"
+
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="1dp"
+                    android:background="@color/resltar"
+                    android:gravity="center_horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto"
+                        android:text="Presentación personal"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="center"
+                        android:textSize="12dp"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:typeface="normal" />
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
