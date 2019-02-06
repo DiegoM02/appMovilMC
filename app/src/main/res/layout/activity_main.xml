@@ -9,12 +9,12 @@
 
      <LinearLayout
          android:layout_width="match_parent"
-         android:layout_height="255dp"
+         android:layout_height="200dp"
          android:orientation="vertical"
          android:background="@color/colorPrimaryDark">
        <ImageView
-           android:layout_width="220dp"
-           android:layout_height="200dp"
+           android:layout_width="150dp"
+           android:layout_height="150dp"
            android:src="@drawable/logo"
            android:layout_marginTop="20dp"
            android:layout_gravity="center"
@@ -24,18 +24,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:focusableInTouchMode="true"
         android:focusable="true"
         android:clickable="true"
+        android:paddingTop="40dp"
+        android:paddingBottom="30dp"
+
         >
 
         <EditText
             android:id="@+id/EditUsuario"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="220dp"
+            android:layout_height="37dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/edittext_modified_states"
             android:drawableLeft="@drawable/usuario24"
@@ -44,14 +47,14 @@
             android:hint="Usuario"
             android:lineSpacingExtra="24sp"
             android:paddingLeft="10dp"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:singleLine="true"/>
 
 
         <EditText
             android:id="@+id/EditContraseña"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="220dp"
+            android:layout_height="37dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:background="@drawable/edittext_modified_states"
@@ -62,12 +65,12 @@
             android:inputType="textPassword"
             android:lineSpacingExtra="24sp"
             android:paddingLeft="10dp"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/buttonEnter"
-            android:layout_width="300dp"
-            android:layout_height="55dp"
+            android:layout_width="220dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="25dp"
             android:background="@drawable/btn_entrar"
@@ -75,15 +78,15 @@
             android:onClick="logear"
             android:text="@string/btn_entrar"
             android:textColor="@color/icons"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:typeface="normal" />
 
         <CheckBox
             android:id="@+id/checkbox_session"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="start"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="10dp"
             android:checked="false"
             android:clickable="false"
@@ -93,7 +96,7 @@
             android:onClick="activarGuardarSesion"
             android:text="Recordar sesion"
             android:textColor="@color/secondary_text"
-            android:textSize="22dp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 
