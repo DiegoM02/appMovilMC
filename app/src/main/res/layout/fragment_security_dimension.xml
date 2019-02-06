@@ -2,10 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="450dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".SecurityDimensionFragment"
-    android:layout_gravity="bottom"
+    android:layout_gravity="center"
     >
 
     <!-- TODO: Update blank fragment layout -->
@@ -17,22 +17,24 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="326dp"
-            android:layout_height="324dp"
+            android:layout_width="272dp"
+            android:layout_height="189dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#C4C4C4"
+            android:background="@color/resltar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.207">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView2"
-                android:layout_width="143dp"
-                android:layout_height="142dp"
+                android:layout_width="125dp"
+                android:layout_height="85dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
@@ -40,14 +42,14 @@
                 app:cardBackgroundColor="#B3E5FC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.946"
+                app:layout_constraintHorizontal_bias="0.992"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.951">
+                app:layout_constraintVertical_bias="1.0">
 
                 <LinearLayout
-                    android:layout_width="50dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:background="#0288D1"
                     android:orientation="vertical">
 
@@ -60,25 +62,33 @@
                         android:text="5.0"
                         android:textAlignment="center"
                         android:textColor="@color/icons"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:typeface="normal" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#C4C4C4"
-                    android:text="Presentacion Personal"
-                    android:textAlignment="center" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/resltar"
+                    android:fontFamily="@font/roboto"
+                    android:text="Presentación personal"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView"
-                android:layout_width="143dp"
-                android:layout_height="142dp"
+                android:layout_width="125dp"
+                android:layout_height="85dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
@@ -86,14 +96,14 @@
                 app:cardBackgroundColor="#B3E5FC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.047"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.951">
+                app:layout_constraintVertical_bias="1.0">
 
                 <LinearLayout
-                    android:layout_width="50dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:background="#0288D1"
                     android:orientation="vertical">
 
@@ -106,40 +116,48 @@
                         android:text="5.0"
                         android:textAlignment="center"
                         android:textColor="@color/icons"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:typeface="normal" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#C4C4C4"
-                    android:text="Presentacion Personal"
-                    android:textAlignment="center" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/resltar"
+                    android:fontFamily="@font/roboto"
+                    android:text="Presentación personal"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView4"
-                android:layout_width="143dp"
-                android:layout_height="142dp"
+                android:layout_width="125dp"
+                android:layout_height="85dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 app:cardBackgroundColor="#B3E5FC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.946"
+                app:layout_constraintHorizontal_bias="0.992"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
                 <LinearLayout
-                    android:layout_width="50dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:background="#0288D1"
                     android:orientation="vertical">
 
@@ -152,40 +170,48 @@
                         android:text="5.0"
                         android:textAlignment="center"
                         android:textColor="@color/icons"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:typeface="normal" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#C4C4C4"
-                    android:text="Presentacion Personal"
-                    android:textAlignment="center" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/resltar"
+                    android:fontFamily="@font/roboto"
+                    android:text="Presentación personal"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView3"
-                android:layout_width="143dp"
-                android:layout_height="142dp"
+                android:layout_width="125dp"
+                android:layout_height="85dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 app:cardBackgroundColor="#B3E5FC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.047"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
                 <LinearLayout
-                    android:layout_width="50dp"
-                    android:layout_height="48dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:background="#0288D1"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -199,18 +225,27 @@
                         android:text="5.0"
                         android:textAlignment="center"
                         android:textColor="@color/icons"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:typeface="normal" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#C4C4C4"
-                    android:text="Normas labores" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/resltar"
+                    android:fontFamily="@font/roboto"
+                    android:text="Normas Laborales"
+                    android:textAlignment="center"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
 
             </android.support.v7.widget.CardView>
         </android.support.constraint.ConstraintLayout>
@@ -219,16 +254,18 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="Dimension"
+            android:text="Dimensión"
             android:textColor="@color/primary_text"
-            android:textSize="30sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
 
     </android.support.constraint.ConstraintLayout>

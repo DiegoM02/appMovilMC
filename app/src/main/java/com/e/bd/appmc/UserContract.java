@@ -15,6 +15,7 @@ public class UserContract {
         public static final String RUT = "rut";
         public static final String EMAIL = "email";
         public static final String PHONE= "phone";
+        public static final String ROLE = "role";
 
     }
 
