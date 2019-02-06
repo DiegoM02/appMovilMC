@@ -14,9 +14,10 @@ public class User {
     private String rut;
     private String email;
     private String phone;
+    private int role;
 
 
-    public User(int id, String name, String userName, String password, String crated, String rut, String email, String phone) {
+    public User(int id, String name, String userName, String password, String crated, String rut, String email, String phone, int role) {
         this.id = id;
         this.name = name;
         this.userName = userName;
@@ -25,6 +26,7 @@ public class User {
         this.rut = rut;
         this.email = email;
         this.phone = phone;
+        this.role = role;
     }
 
 
@@ -60,6 +62,10 @@ public class User {
         return phone;
     }
 
+    public int getRole()
+    {
+        return role;
+    }
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
@@ -71,6 +77,7 @@ public class User {
         values.put(UserContract.UserEntry.RUT, rut);
         values.put(UserContract.UserEntry.EMAIL, email);
         values.put(UserContract.UserEntry.PHONE, phone);
+        values.put(UserContract.UserEntry.ROLE,role);
 
         return values;
     }

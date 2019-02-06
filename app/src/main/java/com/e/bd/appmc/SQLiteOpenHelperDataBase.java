@@ -68,15 +68,15 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
         if (db != null) {
             insertTableUser(db,new User(1,"Diego Matus","DMatus","12345","12-14-2019","19.007.996-1","diego@gmail.com",
-                    "+56984775979"));
+                    "+56984775979",5));
             insertTableUser(db,new User(2,"Ariel Cornejo","ABass","12345","12-14-2019","19.299.833-6","ariel@gmail.com",
-                    "+56984775979"));
+                    "+56984775979",5));
             insertTableUser(db,new User(3,"Arturo Torres","ATorres","12345","12-14-2019","19.289.833-6","aturo@gmail.com",
-                    "+56984775979"));
+                    "+56984775979",1));
             insertTableUser(db,new User(4,"Matias Quezada","MQuezada","12345","12-14-2019","19.279.833-6","matias@gmail.com",
-                    "+56984775979"));
+                    "+56984775979",1));
             insertTableUser(db,new User(5,"Diego Quezada","DQuezada","12345","12-14-2019","19.269.833-6","diegoQ@gmail.com",
-                    "+56984775979"));
+                    "+56984775979",1));
         }
 
     }
@@ -85,7 +85,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico"));
+            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2));
+            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1));
         }
     }
 
@@ -101,7 +102,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            inserTableService(db,new Service(1,"31321","Seguridad","5464",""));
+            inserTableService(db,new Service(1,"78508310","División Aseo - Mujica & Docmac","Aseo",""));
+            inserTableService(db,new Service(2,"77327830","División Seguridad Física - Mujica & Docmac","Seguridad 1",""));
+            inserTableService(db,new Service(3,"77606450","División Seguridad Física 2 - Mujica & Docmac","Seguridad 2",""));
         }
     }
 
@@ -124,6 +127,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + UserContract.UserEntry.RUT + " TEXT NOT NULL, "
                 + UserContract.UserEntry.EMAIL+ " TEXT, "
                 + UserContract.UserEntry.PHONE+ " TEXT, "
+                + UserContract.UserEntry.ROLE + " INTEGER NOT NULL, "
                 + " UNIQUE (" + UserContract.UserEntry.ID + "))";
     }
 
@@ -133,12 +137,14 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 +FacilityContract.FacilityEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + FacilityContract.FacilityEntry.ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.NAME + " INTEGER NOT NULL, "
-                + FacilityContract.FacilityEntry.USER_ID + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.USER_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.CODE + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.CREATED + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
                 + " UNIQUE (" + FacilityContract.FacilityEntry.ID + "),"
-                + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"))";
+                + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"), "
+                + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
     }
 
     public String createTablePersonal()
