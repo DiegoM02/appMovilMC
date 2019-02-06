@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     contraseña.setError("Contraseña Incorrecta");
                     break;
+                case 3:
+                    usuario.setError("Usuario no valido");
+                    break;
             }
 
         }
@@ -153,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
         if(!user.getPassword().equals(pass))//similar
         {
             return 2;
+        }
+        if(user.getRole()!=5)
+        {
+            return 3;
         }
         return 0;
     }
@@ -172,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
             String email = data.getString(data.getColumnIndex("email"));
             String phone   = data.getString(data.getColumnIndex("phone"));
             int id = data.getInt(data.getColumnIndex("id"));
-            usuario = new User(id,name,username,password,created,rut,email,phone);
+            int role = data.getInt(data.getColumnIndex("role"));
+            usuario = new User(id,name,username,password,created,rut,email,phone,role);
             return usuario;
         }
         return null;
