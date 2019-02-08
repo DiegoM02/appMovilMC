@@ -1,12 +1,16 @@
 package com.e.appmc;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -26,6 +30,20 @@ public class SecurityDimensionFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Dialog dialogPregunta;
+    private Dialog dialogPreguntaSiNo;
+    private ViewPager pagerPregunta;
+    private ViewPager pagerPreguntaSiNo;
+    private QuestionAdpater adpter;
+    private QuestionSiNoAdapter adapter_si_no;
+    private CardView dimension;
+    private CardView dimension1;
+    private CardView dimension2;
+    private CardView dimension3;
+    private View view;
+    private Button confirmarButton;
+    private Button cancelarButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,15 +75,82 @@ public class SecurityDimensionFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_security_dimension, container, false);
+        view = inflater.inflate(R.layout.fragment_security_dimension, container, false);
+        dialogPregunta = new Dialog(view.getContext());
+        dialogPreguntaSiNo = new Dialog(view.getContext());
+        dimension = (CardView) view.findViewById(R.id.cardView);
+        dimension1 = (CardView) view.findViewById(R.id.cardView2);
+        dimension2 = (CardView) view.findViewById(R.id.cardView3);
+        dimension3 = (CardView) view.findViewById(R.id.cardView4);
+        disableCardView();
+        confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
+        cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
+
+
+        return view;
     }
+
+
+    public void disableCardView()
+    {
+        dimension.setEnabled(false);
+        dimension1.setEnabled(false);
+        dimension2.setEnabled(false);
+        dimension3.setEnabled(false);
+    }
+
+    public void enableCardView()
+    {
+        dimension.setEnabled(true);
+        dimension1.setEnabled(true);
+        dimension2.setEnabled(true);
+        dimension3.setEnabled(true);
+    }
+
+    public void realizarEvaluacionOtrasDimensiones(View view ) {
+        dialogPregunta.setContentView(R.layout.contenedor_question);
+        adpter = new QuestionAdpater(view.getContext());
+        pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
+        pagerPregunta.setAdapter(adpter);
+        dialogPregunta.show();
+
+
+    }
+
+
+    public void realizarEvaluacionDimensionNormasLaborales(View view ) {
+        dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext());
+        pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
+        pagerPreguntaSiNo.setAdapter(adapter_si_no);
+        dialogPreguntaSiNo.show();
+
+    }
+
+
+    public void confirmarPregunta(View view)
+    {
+        pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+
+    }
+
+    public void confirmarPreguntaSiNo(View view)
+    {
+        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+    }
+
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

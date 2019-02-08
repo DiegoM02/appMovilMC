@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="230dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@color/icons"
+    android:orientation="vertical"
+    android:id="@+id/question_layout_si_no">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorPrimaryDark"
+
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aseo"
+            android:textColor="@color/icons"
+            android:textSize="18dp"
+            android:id="@+id/text_point"
+            />
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="240dp"
+        android:layout_height="135dp"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        app:cardBackgroundColor="@color/resltar"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/12"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:layout_marginTop="5dp"
+            android:id="@+id/indicador_pages_si_no"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pregunta de prueba1"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:id="@+id/text_quesion"
+            android:layout_gravity="center"/>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+
+        <Button
+            android:id="@+id/button_cancelar"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="#FF5252"
+            android:paddingStart="25dp"
+            android:text="NO"
+            android:textAlignment="center"
+            android:textColor="@color/icons" />
+
+        <Button
+            android:id="@+id/button_confirmar"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:text="SI"
+            android:textColor="@color/icons"
+            android:textAlignment="center"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingEnd="25dp"
+            android:onClick="confirmarPreguntaSiNo"
+
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>
