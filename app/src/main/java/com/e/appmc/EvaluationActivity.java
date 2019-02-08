@@ -32,9 +32,10 @@ import com.e.appmc.dummy.DummyContent;
 import com.e.bd.appmc.Facility;
 import com.e.bd.appmc.Personal;
 import com.e.bd.appmc.SQLiteOpenHelperDataBase;
+import java.util.ArrayList;
 
 public class EvaluationActivity extends AppCompatActivity implements FragmentFiveDimension.OnFragmentInteractionListener, SecurityDimensionFragment.OnFragmentInteractionListener {
-import java.util.ArrayList;
+
 
 
     private Button buttonElegirUbicacionCentro;
@@ -92,6 +93,11 @@ import java.util.ArrayList;
 
     }
 
+    public void realizarEvaluacion(View view)
+    {
+        obtenerFragmentoActivo(view);
+    }
+
     private int comprobarServicio()
     {
         String query = "SELECT service_id FROM facility WHERE user_Id = " + idUsuario;
@@ -124,6 +130,7 @@ import java.util.ArrayList;
         builder.setView(customView);
         builder.create();
         builder.show();
+        enableDimensiones();
     }
 
     public Facility[] obtnereCentros()
@@ -152,7 +159,7 @@ import java.util.ArrayList;
 
         return centros;
 
-       enableDimensiones();
+
     }
 
     public void enableDimensiones()
@@ -166,6 +173,8 @@ import java.util.ArrayList;
             fragmentoCuatroDimensiones.enableCardView();
         }
     }
+
+
     public ArrayList<Personal> rellenarPersonal()
     {
         ArrayList<Personal> personal = new ArrayList<>();
@@ -192,7 +201,7 @@ import java.util.ArrayList;
 
 
 
-    }
+
 
 
     public void obtenerFragmentoActivo(View view) {

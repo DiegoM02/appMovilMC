@@ -65,7 +65,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@color/colorPrimaryDark"
-            android:onClick="seleccionCentro"
+
 
             android:src="@drawable/location_icon_16" />
 
