@@ -37,6 +37,8 @@
             android:layout_width="257dp"
             android:layout_height="85dp"
             app:cardBackgroundColor="@color/primary_light"
+            android:id="@+id/car_view"
+            android:onClick="realizarEvaluacion"
           >
 
             <LinearLayout
@@ -95,7 +97,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                app:cardBackgroundColor="@color/primary_light">
+                app:cardBackgroundColor="@color/primary_light"
+                android:id="@+id/car_view_1"
+                android:onClick="realizarEvaluacion">
 
                 <LinearLayout
                     android:layout_width="35dp"
@@ -148,7 +152,9 @@
                 android:layout_height="85dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                app:cardBackgroundColor="@color/primary_light">
+                app:cardBackgroundColor="@color/primary_light"
+                android:id="@+id/car_view_2"
+                android:onClick="realizarEvaluacion">
 
                 <LinearLayout
                     android:layout_width="35dp"
@@ -213,7 +219,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                app:cardBackgroundColor="@color/primary_light">
+                app:cardBackgroundColor="@color/primary_light"
+                android:id="@+id/car_view_3"
+                android:onClick="realizarEvaluacion">
 
                 <LinearLayout
                     android:layout_width="35dp"
@@ -266,7 +274,9 @@
                 android:layout_height="85dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                app:cardBackgroundColor="@color/primary_light">
+                app:cardBackgroundColor="@color/primary_light"
+                android:id="@+id/car_view_4"
+                android:onClick="realizarEvaluacion">
 
                 <LinearLayout
                     android:layout_width="35dp"

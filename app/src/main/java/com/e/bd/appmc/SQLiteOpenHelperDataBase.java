@@ -26,6 +26,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
+        createDataPersonal(db);
 
     }
 
@@ -62,6 +63,11 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         return db.insert(SubserviceContract.SubserviceEntry.TABLE_NAME,null,subservice.toContentValues());
     }
 
+    public long insertTablePersonal(SQLiteDatabase db,Personal personal)
+    {
+        return db.insert(PersonalContract.PersonalEntry.TABLE_NAME,null,personal.toContentValues());
+    }
+
 
     public void createDataUser(SQLiteDatabase db)
     {
@@ -87,6 +93,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         {
             insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2));
             insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1));
+            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1));
+            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2));
         }
     }
 
@@ -113,6 +121,22 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         if(db !=null)
         {
             insertTableSubservice(db,new Subservice(1,"04-02-2019","04-02-2019","rondas","rondas diarias",1));
+        }
+    }
+
+    public void createDataPersonal(SQLiteDatabase db)
+    {
+        if(db !=null)
+        {
+            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2));
+            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2));
+            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3));
+            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3));
+            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1));
+            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1));
+            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4));
+            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4));
+
         }
     }
 
