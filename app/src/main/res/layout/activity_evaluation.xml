@@ -63,19 +63,22 @@
             android:id="@+id/button_centro_ubicacion"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@color/colorPrimaryDark"
             android:layout_gravity="center"
-            android:src="@drawable/location_icon_16"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="seleccionCentro"
 
-            />
-        <TextView
+            android:src="@drawable/location_icon_16" />
+
+        <Spinner
+            android:id="@+id/centroActual"
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@color/resltar"
-            >
+            android:textAlignment="center"
+            android:textSize="18sp">
 
-        </TextView>
+        </Spinner>
     </LinearLayout>
     <FrameLayout
         android:id="@+id/contenedor_dimensiones"
