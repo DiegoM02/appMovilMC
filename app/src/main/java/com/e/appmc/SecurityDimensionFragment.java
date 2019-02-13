@@ -1,5 +1,6 @@
 package com.e.appmc;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.e.bd.appmc.Question;
+
+import java.util.ArrayList;
 
 
 /**
@@ -27,9 +32,8 @@ public class SecurityDimensionFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+
 
     private Dialog dialogPregunta;
     private Dialog dialogPreguntaSiNo;
@@ -72,11 +76,7 @@ public class SecurityDimensionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
 
-        }
     }
 
 
@@ -128,9 +128,9 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view ) {
+    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question>  questions) {
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
-        adapter_si_no = new QuestionSiNoAdapter(view.getContext());
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         dialogPreguntaSiNo.show();
@@ -144,19 +144,21 @@ public class SecurityDimensionFragment extends Fragment {
 
     }
 
-    public void confirmarPreguntaSiNo(View view)
+    public void noPreguntaSiNo(View view)
     {
-        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+
     }
 
 
+    public void cancelarPregunta(View view)
+    {
+        dialogPregunta.dismiss();
 
+    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    public void confirmarPreguntaSiNo(View view)
+    {
+        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
     }
 
     @Override

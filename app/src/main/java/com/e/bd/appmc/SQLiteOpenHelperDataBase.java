@@ -21,12 +21,18 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableVisit());
         db.execSQL(createTableService());
         db.execSQL(createTableSubservice());
+        db.execSQL(createTableQuestion());
+        db.execSQL(createTablePoint());
+        db.execSQL(createTableEvaluationQuestion());
         createDataUser(db);
         createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
         createDataPersonal(db);
+        createDataEvaluation(db);
+        createDataQuestion(db);
+        creatDataEvaluation_Question(db);
 
     }
 
@@ -69,6 +75,28 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     }
 
 
+    public long insertTableQuestion(SQLiteDatabase db, Question question)
+    {
+        return db.insert(QuestionContract.questionEntry.TABLE_NAME,null,question.toContentValues());
+    }
+
+    public long insertEvaluationQuestion(SQLiteDatabase db, EvaluationQuestion evaluationQuestion)
+    {
+        return db.insert(EvaluationQuestionContract.evaluationQuestionEntry.TABLE_NAME,null,evaluationQuestion.toContentValues());
+    }
+
+    public long insertarEvaluation(SQLiteDatabase db,Evaluation evaluation)
+    {
+        return db.insert(EvaluationContract.EvaluationEntry.TABLE_NAME,null,evaluation.toContentValues());
+    }
+
+
+    public void createDataEvaluation(SQLiteDatabase db)
+    {
+        insertarEvaluation(db,new Evaluation(1,"12-02-2019",1));
+    }
+
+
     public void createDataUser(SQLiteDatabase db)
     {
 
@@ -91,11 +119,36 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2));
-            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1));
-            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1));
-            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2));
+            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1));
+            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1));
+            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1));
+            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1));
         }
+    }
+
+    public void creatDataEvaluation_Question(SQLiteDatabase db)
+    {
+        if (db != null)
+        {
+            insertEvaluationQuestion(db, new EvaluationQuestion(1,1));
+            insertEvaluationQuestion(db, new EvaluationQuestion(2,1));
+            insertEvaluationQuestion(db, new EvaluationQuestion(3,1));
+            insertEvaluationQuestion(db, new EvaluationQuestion(4,1));
+        }
+
+    }
+
+    public void createDataQuestion(SQLiteDatabase db)
+    {
+
+        if(db !=null) {
+            insertTableQuestion(db, new Question(1, "¿Cuentan todos con fotocopia de cédula de identidad o pasaporte?", 100, 1, 1,1));
+            insertTableQuestion(db, new Question(2, "¿Cuentan todos con el certificado de afiliación AFP?", 100, 1, 1,1));
+            insertTableQuestion(db, new Question(3, "¿Cuentan todos con el certificado de afiliación FONASA o ISAPRE?", 100, 1, 1,1));
+            insertTableQuestion(db, new Question(4, "¿Cuentan todos con certificado de antecedentes?", 100, 1, 1,1));
+        }
+
+
     }
 
     public void createDataVisit(SQLiteDatabase db)
@@ -166,6 +219,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + FacilityContract.FacilityEntry.CREATED + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
+                + FacilityContract.FacilityEntry.EVALUATION_ID + " INTEGER NOT NULL, "
                 + " UNIQUE (" + FacilityContract.FacilityEntry.ID + "),"
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"), "
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
@@ -245,10 +299,47 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
     }
 
-    public Cursor doSelectQuery(String query)
+    public String createTableQuestion()
     {
+        return "CREATE TABLE " + QuestionContract.questionEntry.TABLE_NAME+ " ("
+                + QuestionContract.questionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + QuestionContract.questionEntry.ID+ " INTEGER NOT NULL, "
+                + QuestionContract.questionEntry.DESCRIPTION + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.APROVAL_PORCENTAGE + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.TYPE+ " TEXT NOT NULL,"
+                + QuestionContract.questionEntry.ASPECT_ID + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.POINT_ID + " INTEGER NOT NULL, "
+                + " FOREIGN KEY(" + QuestionContract.questionEntry.POINT_ID +") REFERENCES " + PointContract.pointEntry.TABLE_NAME + "(" + PointContract.pointEntry.ID+")"
+                + "UNIQUE("+ QuestionContract.questionEntry.ID+"))";
+
+    }
+
+    public String createTablePoint()
+    {
+        return "CREATE TABLE "+ PointContract.pointEntry.TABLE_NAME+" ("
+                + PointContract.pointEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PointContract.pointEntry.ID + " INTEGER NOT NULL, "
+                + PointContract.pointEntry.NAME+ " TEXT NOT NULL, "
+                + "UNIQUE ("+PointContract.pointEntry.ID+"))";
+
+    }
+
+    public String createTableEvaluationQuestion()
+    {
+        return "CREATE TABLE " + EvaluationQuestionContract.evaluationQuestionEntry.TABLE_NAME + "( "
+                + EvaluationQuestionContract.evaluationQuestionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + EvaluationQuestionContract.evaluationQuestionEntry.QUESTION_ID + " INTEGER NOT NULL, "
+                + EvaluationQuestionContract.evaluationQuestionEntry.EVALUATION_ID + " INTEGER NOT NULL "
+                + ")";
+    }
+
+    public Cursor doSelectQuery(String query)
+
+    {
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query,
+                null);
         return cursor;
     }
 }

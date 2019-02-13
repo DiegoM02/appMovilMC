@@ -17,6 +17,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.e.appmc.dummy.DummyContent;
+import com.e.bd.appmc.EvaluationContract;
+import com.e.bd.appmc.EvaluationQuestionContract;
 import com.e.bd.appmc.Facility;
+import com.e.bd.appmc.FacilityContract;
 import com.e.bd.appmc.Personal;
+import com.e.bd.appmc.Point;
+import com.e.bd.appmc.Question;
+import com.e.bd.appmc.QuestionContract;
 import com.e.bd.appmc.SQLiteOpenHelperDataBase;
 import java.util.ArrayList;
 
@@ -43,6 +50,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private SecurityDimensionFragment fragmentoCuatroDimensiones;
     private Spinner centroActual;
     private SQLiteOpenHelperDataBase bd;
+    private ArrayList<Question> questions;
+    private ArrayList<Point> points;
 
 
     private int idUsuario;
@@ -95,6 +104,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
     public void realizarEvaluacion(View view)
     {
+        llenarPreguntas();
         obtenerFragmentoActivo(view);
     }
 
@@ -151,7 +161,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
                 String name = data.getString(data.getColumnIndex("name"));
                 String address = data.getString(data.getColumnIndex("address"));
                 int service_id = data.getInt(data.getColumnIndex("service_id"));
-                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id);
+                int evaluation_id = data.getInt(data.getColumnIndex("evaluation_id"));
+                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id);
                 i=i+1;
             }while(data.moveToNext());
 
@@ -175,25 +186,49 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     }
 
 
-    public ArrayList<Personal> rellenarPersonal()
-    {
+    public ArrayList<Personal> rellenarPersonal() {
         ArrayList<Personal> personal = new ArrayList<>();
         String query = "SELECT * FROM personal WHERE facility_id = " + idCentroActual;
-        Cursor data=bd.doSelectQuery(query);
-        if(data.moveToFirst())
-        {
-            do{
-                int id= data.getInt(data.getColumnIndex("id"));
-                String name =data.getString(data.getColumnIndex("name"));
+        Cursor data = bd.doSelectQuery(query);
+        if (data.moveToFirst()) {
+            do {
+                int id = data.getInt(data.getColumnIndex("id"));
+                String name = data.getString(data.getColumnIndex("name"));
                 String surname = data.getString(data.getColumnIndex("surname"));
                 String rut = data.getString(data.getColumnIndex("rut"));
-                personal.add(new Personal(id,name,surname,rut,"","",idCentroActual));
+                personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual));
 
-            }while(data.moveToNext());
+            } while (data.moveToNext());
 
         }
 
         return personal;
+    }
+
+    public void llenarPreguntas()
+    {
+        this.questions = new ArrayList<>();
+        String query = "SELECT question.id, question.description, question.aproval_porcentage, question.type, question.aspect_id, question.point_id FROM "+ FacilityContract.FacilityEntry.TABLE_NAME
+                +" , "+ EvaluationQuestionContract.evaluationQuestionEntry.TABLE_NAME+" , "
+                + QuestionContract.questionEntry.TABLE_NAME+ " WHERE facility.id = "+ this.idCentroActual + " AND facility.evaluation_id = " + 1
+                + " AND evaluation_question.evaluation_id = "+1+";";
+
+        Cursor cursor = bd.doSelectQuery(query);
+
+        if (cursor.moveToFirst())
+        do {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String descripcion = cursor.getString(cursor.getColumnIndex("description"));
+            double aproval_porcentage = cursor.getDouble(cursor.getColumnIndex("aproval_porcentage"));
+            int type = cursor.getInt(cursor.getColumnIndex("type"));
+            int aspect_id = cursor.getInt(cursor.getColumnIndex("aspect_id"));
+            int point_id = cursor.getInt(cursor.getColumnIndex("point_id"));
+            this.questions.add(new Question(id,descripcion,aproval_porcentage,type,aspect_id,point_id));
+
+            Log.d("Pruba 1: ", "Descripcion: "+descripcion);
+
+        } while (cursor.moveToNext());
+
 
     }
 
@@ -211,7 +246,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
             switch (view.getId()) {
                 case R.id.car_view:
-                    fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view);
+                    fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,this.questions);
                     break;
                 case R.id.car_view_1:
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view);
@@ -235,7 +270,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view);
                     break;
                 case R.id.cardView3:
-                    fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view);
+                    fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,this.questions);
                     break;
                 case R.id.cardView4:
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view);
@@ -263,6 +298,27 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
             fragmentoCincoDimensiones.confirmarPreguntaSiNo(view);
         } else if (f instanceof SecurityDimensionFragment) {
             fragmentoCuatroDimensiones.confirmarPreguntaSiNo(view);
+        }
+    }
+
+    public void cancelarEvaluacion(View view)
+    {
+        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+
+        if (f instanceof FragmentFiveDimension) {
+            fragmentoCincoDimensiones.cancelarPregunta(view);
+        } else if (f instanceof SecurityDimensionFragment) {
+            fragmentoCuatroDimensiones.cancelarPregunta(view);
+        }
+    }
+
+    public void buttonClickNegative(View view)
+    {
+        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        if (f instanceof FragmentFiveDimension) {
+            fragmentoCincoDimensiones.noPreguntaSiNo(view);
+        } else if (f instanceof SecurityDimensionFragment) {
+            fragmentoCuatroDimensiones.noPreguntaSiNo(view);
         }
     }
 
