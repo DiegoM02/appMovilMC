@@ -128,14 +128,14 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2));
-            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2));
-            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3));
-            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3));
-            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1));
-            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1));
-            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4));
-            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4));
+            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2,1));
+            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2,1));
+            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3,1));
+            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3,1));
+            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1,1));
+            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1,1));
+            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4,1));
+            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4,1));
 
         }
     }
@@ -174,13 +174,14 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public String createTablePersonal()
     {
         return "CREATE TABLE " + PersonalContract.PersonalEntry.TABLE_NAME + " ("
-            + PersonalContract.PersonalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + PersonalContract.PersonalEntry.ID + " INTEGER NOT NULL, "
+            //+ PersonalContract.PersonalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonalContract.PersonalEntry.ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
             + PersonalContract.PersonalEntry.NAME + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.SURNAME + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.RUT + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.PHONE + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.EMAIL + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.STATE + " INT NOT NULL, "
             + PersonalContract.PersonalEntry.FACILITY_ID + " INTEGER NOT NULL, "
             + " UNIQUE(" + PersonalContract.PersonalEntry.ID + ")," +
                 " FOREIGN KEY("+ PersonalContract.PersonalEntry.FACILITY_ID+ ") REFERENCES facility(id))";
@@ -251,4 +252,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query,null);
         return cursor;
     }
+
+
+
 }

@@ -2,12 +2,15 @@
 package com.e.appmc;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,7 +29,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private SecurityDimensionFragment fragmentoCuatroDimensiones;
     private Spinner centroActual;
     private DBMediator mediador;
-
+    private FloatingActionButton personalButton;
 
     private int idUsuario;
     private int idCentroActual;
@@ -37,6 +40,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         setContentView(R.layout.activity_evaluation);
         idUsuario = getIntent().getExtras().getInt("id");
         mediador = new DBMediator(this);
+        personalButton = (FloatingActionButton) findViewById(R.id.personal);
+        funcionalidadBotonPersonal();
         activarSpinnerCentros();
         int opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
@@ -61,7 +66,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         obtenerFragmentoActivo(view);
     }
 
-    public void listaPersonal(View view)
+    public void listaPersonal()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = getLayoutInflater();
@@ -74,6 +79,9 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         list.setAdapter(personal);
         list.setItemAnimator(new DefaultItemAnimator());
         list.setLayoutManager(new LinearLayoutManager(this));
+       /* SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(list);*/
 
 
         builder.setView(customView);
@@ -179,5 +187,24 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         });
     }
 
+    public void agregarPersonal(View view)
+    {
+        Intent EnterAdittion = new Intent(this,PersonalAdittionActivity.class);
+        EnterAdittion.putExtra("idCentro",idCentroActual);
+        EnterAdittion.putExtra("idUsuario",idUsuario);
+        startActivity(EnterAdittion);
+
+
+    }
+
+    private void funcionalidadBotonPersonal()
+    {
+        this.personalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listaPersonal();
+            }
+        });
+    }
 
 }

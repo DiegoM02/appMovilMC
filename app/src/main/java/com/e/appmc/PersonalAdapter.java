@@ -50,9 +50,10 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"The position is:"+i,Toast.LENGTH_SHORT).show();
+
             }
         });
+
 
     }
 

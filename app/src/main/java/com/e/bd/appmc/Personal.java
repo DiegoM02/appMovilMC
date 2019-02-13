@@ -13,9 +13,10 @@ public class Personal {
     private String phone;
     private String email;
     private int facility_id;
+    private int state;
 
 
-    public Personal(int id, String name, String surname, String rut, String phone, String email, int facility_id) {
+    public Personal(int id, String name, String surname, String rut, String phone, String email, int facility_id,int state) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -23,6 +24,7 @@ public class Personal {
         this.phone = phone;
         this.email = email;
         this.facility_id = facility_id;
+        this.state = state;
     }
 
 
@@ -57,7 +59,7 @@ public class Personal {
     public ContentValues toContentValues()
     {
         ContentValues values = new ContentValues();
-        values.put(PersonalContract.PersonalEntry.ID,id);
+        //values.put(PersonalContract.PersonalEntry.ID,id);
         values.put(PersonalContract.PersonalEntry.NAME,name);
         values.put(PersonalContract.PersonalEntry.SURNAME,surname);
         values.put(PersonalContract.PersonalEntry.RUT,rut);
