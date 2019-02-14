@@ -60,6 +60,7 @@ public class MainMenuActivity extends AppCompatActivity {
        MainActivity.changeEstadoSession(MainMenuActivity.this,false);
         Intent goToLogin = new Intent(MainMenuActivity.this,MainActivity.class);
         startActivity(goToLogin);
+        finish();
     }
 
     public void subirImagen(View view) {

@@ -11,6 +11,7 @@ public class QuestionContract {
         public static final String TYPE = "type";
         public static final String ASPECT_ID = "aspect_id";
         public static final String POINT_ID = "point_id";
+        public static final String EVALUATION_ID = "evaluation_id";
 
     }
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.e.bd.appmc.Question;
 import com.e.bd.appmc.QuestionContract;
@@ -36,6 +37,8 @@ public class QuestionSiNoAdapter extends PagerAdapter {
         String name_point = "";
 
         Cursor data = bd.doSelectQuery(query);
+
+        Toast.makeText(this.context,"Count Row: "+data.getCount(),Toast.LENGTH_LONG);
         if (data.moveToFirst())
         {
            name_point = data.getString(data.getColumnIndex("name"));
@@ -82,9 +85,14 @@ public class QuestionSiNoAdapter extends PagerAdapter {
         textPregunta = (TextView) view.findViewById(R.id.text_quesion);
         textPunto = (TextView) view.findViewById(R.id.text_point);
         indadorPages = (TextView) view.findViewById(R.id.indicador_pages_si_no);
-        textPunto.setText(puntos[position]);
+        String punto = obtenerPuntoDePregunta(questions.get(position).getPoint_id());
+        Toast.makeText(this.context,"Count Row: "+punto,Toast.LENGTH_LONG);
+
+        textPunto.setText(punto);
         textPregunta.setText(questions.get(position).getDescription());
         indadorPages.setText(position+1+ " de "+ (questions.size()));
+        if (position == getCount()-1) confirmarButton.setText("TERMINAR");
+
         container.addView(view);
 
         return view;

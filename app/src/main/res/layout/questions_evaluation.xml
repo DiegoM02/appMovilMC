@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Aseo"
             android:textColor="@color/icons"
-            android:textSize="18dp"
+            android:textSize="14dp"
             android:id="@+id/text_point"
           />
 
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pregunta de prueba1"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textAlignment="center"
             android:layout_marginTop="30dp"
             android:id="@+id/text_quesion"

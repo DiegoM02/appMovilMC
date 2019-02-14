@@ -3,6 +3,7 @@ package com.e.appmc;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.e.bd.appmc.Personal;
 import com.e.bd.appmc.Question;
 
 import java.util.ArrayList;
@@ -117,9 +119,9 @@ public class SecurityDimensionFragment extends Fragment {
         dimension3.setEnabled(true);
     }
 
-    public void realizarEvaluacionOtrasDimensiones(View view ) {
+    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions) {
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext());
+        adpter = new QuestionAdpater(view.getContext(), questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
@@ -140,14 +142,71 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void confirmarPregunta(View view)
     {
-        pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount()-1)
+        {
+            dialogPregunta.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Resumen evaluación");
+            builder.setMessage("COMING SOON");
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else
+        {
+            pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        }
+
+
 
     }
 
-    public void noPreguntaSiNo(View view)
+    public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
     {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+       int index =  pagerPreguntaSiNo.getCurrentItem();
+       Question question = questions.get(index);
 
+       if (question.getType() == 1)
+       {
+          construirDialogoPersonal(questions,personal,inflater);
+       }
     }
+
+    public void construirDialogoPersonal(ArrayList<Question> questions, String[] personal,
+                                         LayoutInflater inflater)
+    {
+        final ArrayList<Integer> mSelectedItems = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
+        builder.setMultiChoiceItems(personal,null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            mSelectedItems.add(which);
+                        } else if (mSelectedItems.contains(which)) {
+                            mSelectedItems.remove(Integer.valueOf(which));
+                        }
+                    }});
+        builder.setNegativeButton("Cancelar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
 
     public void cancelarPregunta(View view)
@@ -158,7 +217,20 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void confirmarPreguntaSiNo(View view)
     {
-        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+        if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount()-1)
+        {
+            dialogPreguntaSiNo.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Resumen evaluación");
+            builder.setMessage("COMING SOON");
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }else
+        {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+        }
+
     }
 
     @Override
