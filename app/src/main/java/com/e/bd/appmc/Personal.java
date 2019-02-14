@@ -66,6 +66,7 @@ public class Personal {
         values.put(PersonalContract.PersonalEntry.PHONE,phone);
         values.put(PersonalContract.PersonalEntry.EMAIL,email);
         values.put(PersonalContract.PersonalEntry.FACILITY_ID,facility_id);
+        values.put(PersonalContract.PersonalEntry.STATE,state);
         return values;
     }
 

@@ -30,7 +30,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private Spinner centroActual;
     private DBMediator mediador;
     private FloatingActionButton personalButton;
-
+    private AlertDialog listaPersonalFlotante;
     private int idUsuario;
     private int idCentroActual;
     private FacilitySpinnerAdapter adapter;
@@ -73,7 +73,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         View customView = layoutInflater.inflate(R.layout.personal_container,null);
 
         ArrayList<Personal> personals = mediador.rellenarPersonal(idCentroActual);
-        PersonalAdapter personal = new PersonalAdapter(personals);
+        PersonalAdapter personal = new PersonalAdapter(personals,this,this);
 
         RecyclerView list = (RecyclerView) customView.findViewById(R.id.list);
         list.setAdapter(personal);
@@ -85,8 +85,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
 
         builder.setView(customView);
-        builder.create();
-        builder.show();
+        listaPersonalFlotante =builder.create();
+        listaPersonalFlotante.show();
         enableDimensiones();
     }
 
@@ -192,7 +192,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         Intent EnterAdittion = new Intent(this,PersonalAdittionActivity.class);
         EnterAdittion.putExtra("idCentro",idCentroActual);
         EnterAdittion.putExtra("idUsuario",idUsuario);
-        startActivity(EnterAdittion);
+        startActivityForResult(EnterAdittion,1);
+
 
 
     }
@@ -205,6 +206,22 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
                 listaPersonal();
             }
         });
+    }
+
+    public void recargarListaPersonal()
+    {
+        listaPersonalFlotante.cancel();
+        listaPersonal();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1)
+        {
+            recargarListaPersonal();
+        }
     }
 
 }

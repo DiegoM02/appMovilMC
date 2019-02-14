@@ -1,6 +1,7 @@
 package com.e.appmc;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.e.bd.appmc.Personal;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PersonalAdittionActivity extends AppCompatActivity {
     private EditText dateText;
@@ -61,6 +65,11 @@ public class PersonalAdittionActivity extends AppCompatActivity {
             rutText.setError("Campo necesario");
             flag=1;
         }
+        if(validarRut(rutText.getText().toString()))
+        {
+            rutText.setError("Formato incorrecto");
+            flag=1;
+        }
         if(dateText.getText().toString().isEmpty())
         {
             dateText.setError("Campo necesario");
@@ -71,7 +80,8 @@ public class PersonalAdittionActivity extends AppCompatActivity {
         {
             Personal personal = new Personal(-1,nameText.getText().toString(),surnameText.getText().toString(),rutText.getText().toString(),"","",idCentro,1);
             dbMediator.insertarPersonal(personal);
-
+            Intent intent=new Intent();
+            setResult(2,intent);
             this.finish();
         }
         else
@@ -84,5 +94,18 @@ public class PersonalAdittionActivity extends AppCompatActivity {
     public void cancelar(View view)
     {
         this.finish();
+    }
+
+    public boolean validarRut(String rut)
+    {
+        Pattern pattern = Pattern.compile("^0*(\\d{1,3}(\\.?\\d{3})*)\\-?([\\dkK])$");
+        Matcher matcher = pattern.matcher(rut);
+        if(matcher.matches())
+        {
+            return false;
+        }
+
+
+        return true;
     }
 }

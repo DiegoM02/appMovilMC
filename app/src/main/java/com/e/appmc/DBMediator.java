@@ -1,5 +1,6 @@
 package com.e.appmc;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 
@@ -26,12 +27,13 @@ public final class DBMediator {
         if(data.moveToFirst())
         {
             do{
-                int id= data.getInt(data.getColumnIndex("id"));
-                String name =data.getString(data.getColumnIndex("name"));
-                String surname = data.getString(data.getColumnIndex("surname"));
-                String rut = data.getString(data.getColumnIndex("rut"));
-                personal.add(new Personal(id,name,surname,rut,"","",idCentroActual,1));
-
+                if(data.getInt(data.getColumnIndex("state"))==1) {
+                    int id = data.getInt(data.getColumnIndex("id"));
+                    String name = data.getString(data.getColumnIndex("name"));
+                    String surname = data.getString(data.getColumnIndex("surname"));
+                    String rut = data.getString(data.getColumnIndex("rut"));
+                    personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual, 1));
+                }
             }while(data.moveToNext());
 
         }
@@ -110,7 +112,9 @@ public final class DBMediator {
 
     public void actualizarEstadoPesonal(int idPersonal)
     {
-
+        ContentValues cv = new ContentValues();
+        cv.put("state",0);
+        db.getWritableDatabase().update("personal",cv,"id = " + idPersonal,null);
     }
 
 

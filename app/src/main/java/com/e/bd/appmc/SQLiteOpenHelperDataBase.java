@@ -181,7 +181,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             + PersonalContract.PersonalEntry.RUT + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.PHONE + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.EMAIL + " TEXT NOT NULL, "
-            + PersonalContract.PersonalEntry.STATE + " INT NOT NULL, "
+            + PersonalContract.PersonalEntry.STATE + " INTEGER NOT NULL, "
             + PersonalContract.PersonalEntry.FACILITY_ID + " INTEGER NOT NULL, "
             + " UNIQUE(" + PersonalContract.PersonalEntry.ID + ")," +
                 " FOREIGN KEY("+ PersonalContract.PersonalEntry.FACILITY_ID+ ") REFERENCES facility(id))";
