@@ -88,13 +88,13 @@
         >
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/personal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="5dp"
             android:src="@drawable/personal_icon_24"
-            android:onClick="listaPersonal"/>
+            />
     </FrameLayout>
 
 

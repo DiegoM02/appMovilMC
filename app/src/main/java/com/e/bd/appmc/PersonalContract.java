@@ -13,6 +13,8 @@ public class PersonalContract {
         public static final String PHONE = "phone";
         public static final String EMAIL = "email";
         public static final String FACILITY_ID = "facility_id";
+        public static final String STATE ="state";
+        public static final String CREATED = "created";
 
     }
 }
