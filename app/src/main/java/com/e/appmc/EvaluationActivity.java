@@ -41,10 +41,6 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private AlertDialog listaPersonalFlotante;
     private int idUsuario;
     private int idCentroActual;
-    private FailitySpinnerAdapter adapter;
-
-
-
     private FacilitySpinnerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +52,8 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         personalButton = (FloatingActionButton) findViewById(R.id.personal);
         funcionalidadBotonPersonal();
         activarSpinnerCentros();
+        this.questions = new ArrayList<Question>();
+        this.personal = new ArrayList<Personal>();
         int opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
             fragmentoCincoDimensiones = new FragmentFiveDimension();
@@ -88,7 +86,6 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
         ArrayList<Personal> personals = mediador.rellenarPersonal(idCentroActual);
         PersonalAdapter personal = new PersonalAdapter(personals,this,this);
-
         RecyclerView list = (RecyclerView) customView.findViewById(R.id.list);
         list.setAdapter(personal);
         list.setItemAnimator(new DefaultItemAnimator());
@@ -118,36 +115,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     }
 
 
-    public void llenarPreguntas(int idAspect, int idEvaluation)
-    {
-        if (this.questions != null)  this.questions.clear();
 
-        String query = "SELECT question.id, question.description, question.aproval_porcentage, question.type, question.aspect_id, question.point_id, question.evaluation_id FROM "+ FacilityContract.FacilityEntry.TABLE_NAME
-
-        this.questions = new ArrayList<>();
-                +" , "
-                + QuestionContract.questionEntry.TABLE_NAME+ " WHERE facility.id = "+ this.idCentroActual + " AND facility.evaluation_id = " + 1
-                + " AND question.evaluation_id = "+idEvaluation+" AND question.aspect_id = "+idAspect+";";
-        Cursor cursor = bd.doSelectQuery(query);
-
-        do {
-        if (cursor.moveToFirst())
-            int id = cursor.getInt(cursor.getColumnIndex("id"));
-            String descripcion = cursor.getString(cursor.getColumnIndex("description"));
-            double aproval_porcentage = cursor.getDouble(cursor.getColumnIndex("aproval_porcentage"));
-            int type = cursor.getInt(cursor.getColumnIndex("type"));
-            int aspect_id = cursor.getInt(cursor.getColumnIndex("aspect_id"));
-            int evaluation_id = cursor.getInt(cursor.getColumnIndex("evaluation_id"));
-            int point_id = cursor.getInt(cursor.getColumnIndex("point_id"));
-            this.questions.add(new Question(id,descripcion,aproval_porcentage,type,aspect_id,point_id,evaluation_id));
-
-
-        } while (cursor.moveToNext());
-
-        cursor.close();
-
-
-    }
     public void obtenerFragmentoActivo(View view) {
         android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
@@ -173,19 +141,19 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         } else if (f instanceof SecurityDimensionFragment) {
             switch (view.getId()) {
                 case R.id.cardView:
-                    llenarPreguntas(1,1);
+                    this.questions = mediador.llenarPreguntas(1,1, this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,this.questions);
                     break;
                 case R.id.cardView2:
-                    llenarPreguntas(2,2);
+                    this.questions = mediador.llenarPreguntas(2,2, this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view, this.questions);
                     break;
                 case R.id.cardView3:
-                    llenarPreguntas(3,3);
+                    this.questions = mediador.llenarPreguntas(3,3,this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
                     break;
                 case R.id.cardView4:
-                    llenarPreguntas(4,4);
+                    this.questions = mediador.llenarPreguntas(4,4,this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view, this.questions);
             }
         }
@@ -228,7 +196,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
     public String [] arrayPersonal()
     {
-        rellenarPersonal();
+        this.personal = mediador.rellenarPersonal(this.idCentroActual);
         String [] personal = new String[this.personal.size()];
 
         for (int i = 0 ; i < this.personal.size(); i++)
