@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,32 +18,31 @@
 
             >
 
-            <ImageButton
-                android:id="@+id/delete"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/icons"
-                android:src="@drawable/boton_menos"
-                android:layout_marginLeft="5dp"/>
-
             <TextView
                 android:id="@+id/textName"
-                android:layout_width="wrap_content"
+                android:layout_width="192dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="15dp"
                 android:text="Place_holder"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:textColor="@color/primary_text"
                 android:textSize="14sp"
-                android:layout_margin="15dp"
+                android:textStyle="bold" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/delete"
+                android:layout_width="19dp"
+                android:layout_height="21dp"
                 android:layout_gravity="center"
-                android:id="@+id/textRut"
-                android:text="Place_holder"/>
+                android:layout_marginLeft="5dp"
+                android:foreground="@drawable/icon_eliminar"
+
+                android:scaleType="fitXY"
+                app:backgroundTint="@android:color/holo_red_light"
+                app:borderWidth="0dp"
+                app:elevation="5dp"
+
+                app:maxImageSize="10dp" />
 
 
         </LinearLayout>

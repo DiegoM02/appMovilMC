@@ -1,16 +1,25 @@
 package com.e.appmc;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.e.bd.appmc.Question;
+
+import java.util.ArrayList;
 
 
 /**
@@ -27,9 +36,8 @@ public class SecurityDimensionFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+
 
     private Dialog dialogPregunta;
     private Dialog dialogPreguntaSiNo;
@@ -44,6 +52,11 @@ public class SecurityDimensionFragment extends Fragment {
     private View view;
     private Button confirmarButton;
     private Button cancelarButton;
+    private RecyclerView recyclerResumen;
+    private SummaryAdapter resumenAdapter;
+    private Dialog dialogoResumen;
+    private Button buttonFinalizarEvaluacion;
+    ArrayList<CriticalPoint> puntoCritico;
 
     private OnFragmentInteractionListener mListener;
 
@@ -72,11 +85,7 @@ public class SecurityDimensionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
 
-        }
     }
 
 
@@ -88,6 +97,7 @@ public class SecurityDimensionFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_security_dimension, container, false);
         dialogPregunta = new Dialog(view.getContext());
         dialogPreguntaSiNo = new Dialog(view.getContext());
+        dialogoResumen = new Dialog(view.getContext());
         dimension = (CardView) view.findViewById(R.id.cardView);
         dimension1 = (CardView) view.findViewById(R.id.cardView2);
         dimension2 = (CardView) view.findViewById(R.id.cardView3);
@@ -95,6 +105,8 @@ public class SecurityDimensionFragment extends Fragment {
         disableCardView();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
+
+
 
 
         return view;
@@ -117,9 +129,9 @@ public class SecurityDimensionFragment extends Fragment {
         dimension3.setEnabled(true);
     }
 
-    public void realizarEvaluacionOtrasDimensiones(View view ) {
+    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions) {
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext());
+        adpter = new QuestionAdpater(view.getContext(), questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
@@ -128,9 +140,9 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view ) {
+    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question>  questions) {
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
-        adapter_si_no = new QuestionSiNoAdapter(view.getContext());
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         dialogPreguntaSiNo.show();
@@ -140,23 +152,122 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void confirmarPregunta(View view)
     {
-        pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount()-1)
+        {
+           construirDialogoResumen();
+        }else
+        {
+            pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        }
 
+
+
+    }
+
+    public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
+    {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+       int index =  pagerPreguntaSiNo.getCurrentItem();
+       Question question = questions.get(index);
+
+       if (question.getType() == 1)
+       {
+          construirDialogoPersonal(questions,personal,inflater);
+       }
+    }
+
+    public void construirDialogoPersonal(ArrayList<Question> questions, String[] personal,
+                                         LayoutInflater inflater)
+    {
+        final ArrayList<Integer> mSelectedItems = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
+        builder.setMultiChoiceItems(personal,null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            mSelectedItems.add(which);
+                        } else if (mSelectedItems.contains(which)) {
+                            mSelectedItems.remove(Integer.valueOf(which));
+                        }
+                    }});
+        builder.setNegativeButton("Cancelar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+
+    public void cancelarPregunta(View view)
+    {
+        dialogPregunta.dismiss();
+
+    }
+
+    public void construirDialogoResumen()
+    {
+        puntoCritico = new ArrayList<CriticalPoint>();
+
+        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Operativo","Prueba"));
+        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Recursos Humanos","Prueba"));
+        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Prevencion de Riesgos","Prueba"));
+
+
+        resumenAdapter = new SummaryAdapter(puntoCritico);
+
+        if (dialogPreguntaSiNo.isShowing())
+        {
+            dialogPreguntaSiNo.dismiss();
+        }else if (dialogPregunta.isShowing())
+        {
+           dialogPregunta.dismiss();
+        }
+
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View v = layoutInflater.inflate(R.layout.summaryrecycler,null);
+        buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
+
+        recyclerResumen = (RecyclerView) v.findViewById(R.id.recyclerResumen);
+        recyclerResumen.setAdapter(resumenAdapter);
+        recyclerResumen.setItemAnimator(new DefaultItemAnimator());
+        recyclerResumen.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        dialogoResumen.setContentView(v);
+        dialogoResumen.show();
+
+        buttonFinalizarEvaluacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogoResumen.dismiss();
+            }
+        });
     }
 
     public void confirmarPreguntaSiNo(View view)
     {
-        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
-    }
+        if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount()-1)
+        {
+            construirDialogoResumen();
 
-
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        }else
+        {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
         }
+
     }
 
     @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="250dp"
-    android:layout_height="230dp"
+    android:layout_height="245dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="@color/icons"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="Aseo"
             android:textColor="@color/icons"
-            android:textSize="18dp"
+            android:textSize="14dp"
             android:id="@+id/text_point"
           />
 
@@ -32,9 +32,10 @@
         android:layout_width="240dp"
         android:layout_height="135dp"
         android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        app:cardBackgroundColor="@color/resltar"
+        android:layout_marginTop="10dp"
+        app:cardBackgroundColor="@color/icons"
         android:layout_gravity="center"
+
         >
 
         <TextView
@@ -51,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pregunta de prueba1"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textAlignment="center"
             android:layout_marginTop="30dp"
             android:id="@+id/text_quesion"
@@ -63,9 +64,12 @@
             android:numStars="5"
             android:scaleX="0.8"
             android:scaleY="0.8"
-            android:background="@color/primary_light"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="10dp"
+            android:stepSize="1"
+            android:background="@drawable/edittext_focused"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:paddingTop="10dp"
+
 
 
             />
@@ -78,37 +82,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp">
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
 
         <Button
             android:id="@+id/button_cancelar"
-            android:layout_width="150dp"
+            android:layout_width="115dp"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#FF5252"
-            android:paddingStart="25dp"
+            android:layout_marginStart="0dp"
+            android:background="@drawable/btn_cancelar"
+            android:layout_gravity="start|bottom"
+            android:onClick="cancelarEvaluacion"
             android:text="CANCELAR"
             android:textAlignment="center"
-            android:textColor="@color/icons" />
+            android:textColor="#FF5252" />
+
 
         <Button
             android:id="@+id/button_confirmar"
-            android:layout_width="150dp"
+            android:layout_width="115dp"
             android:layout_height="match_parent"
             android:text="CONFIRMAR"
-            android:textColor="@color/icons"
-            android:textAlignment="center"
-            android:background="@color/colorPrimaryDark"
-            android:layout_marginBottom="5dp"
+            android:textColor="@color/colorPrimaryDark"
+
+            android:background="@drawable/btn_confirmar"
             android:layout_marginTop="5dp"
-            android:paddingEnd="25dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:textAlignment="center"
             android:onClick="confirmarPregunta"
+            android:layout_gravity="end|bottom"
+
 
             />
+
 
 
     </LinearLayout>

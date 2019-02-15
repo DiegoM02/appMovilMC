@@ -1,5 +1,6 @@
 package com.e.appmc;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.e.bd.appmc.Question;
+
+import java.util.ArrayList;
 
 
 /**
@@ -139,9 +144,9 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-    public void realizarEvaluacionOtrasDimensiones(View view ) {
+    public void realizarEvaluacionOtrasDimensiones(View view , ArrayList<Question> questions) {
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext());
+        adpter = new QuestionAdpater(view.getContext(),questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
@@ -150,12 +155,27 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view ) {
+    public void realizarEvaluacionDimensionNormasLaborales(View view , ArrayList<Question> questions) {
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
-        adapter_si_no = new QuestionSiNoAdapter(view.getContext());
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext(),questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         dialogPreguntaSiNo.show();
+
+    }
+
+    public void noPreguntaSiNo(View view)
+    {
+        int indice = pagerPreguntaSiNo.getCurrentItem();
+        QuestionSiNoAdapter adapter = (QuestionSiNoAdapter) pagerPreguntaSiNo.getAdapter();
+
+
+    }
+
+
+    public void cancelarPregunta(View view)
+    {
+        dialogPregunta.dismiss();
 
     }
 

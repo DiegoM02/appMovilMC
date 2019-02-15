@@ -21,12 +21,18 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableVisit());
         db.execSQL(createTableService());
         db.execSQL(createTableSubservice());
+        db.execSQL(createTableQuestion());
+        db.execSQL(createTablePoint());
         createDataUser(db);
         createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
         createDataPersonal(db);
+        createDataEvaluation(db);
+        createDataQuestion(db);
+        createDataPoint(db);
+
 
     }
 
@@ -69,6 +75,49 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     }
 
 
+    public long insertTableQuestion(SQLiteDatabase db, Question question)
+    {
+        return db.insert(QuestionContract.questionEntry.TABLE_NAME,null,question.toContentValues());
+    }
+
+    public long insertEvaluationQuestion(SQLiteDatabase db, EvaluationQuestion evaluationQuestion)
+    {
+        return db.insert(EvaluationQuestionContract.evaluationQuestionEntry.TABLE_NAME,null,evaluationQuestion.toContentValues());
+    }
+
+    public long insertarEvaluation(SQLiteDatabase db,Evaluation evaluation)
+    {
+        return db.insert(EvaluationContract.EvaluationEntry.TABLE_NAME,null,evaluation.toContentValues());
+    }
+
+    public long insertarPoint(SQLiteDatabase db, Point point)
+    {
+        return db.insert(PointContract.pointEntry.TABLE_NAME,null,point.toContentValues());
+    }
+
+
+    public void createDataPoint(SQLiteDatabase db)
+    {
+        insertarPoint(db, new Point(1,"Operativo"));
+        insertarPoint(db, new Point(2,"Recursos Humanos"));
+        insertarPoint(db, new Point(3,"Prevención de Riesgo"));
+        insertarPoint(db,new Point(4, "Vestimenta y Presentación Física"));
+        insertarPoint(db, new Point(5,"Apoyo"));
+        insertarPoint(db, new Point(6,"Porteria"));
+        insertarPoint(db, new Point(7,"Ronda de Guardias"));
+        insertarPoint(db, new Point(8,"Portalón"));
+        insertarPoint(db, new Point(9,"Ronda de guardias-Mall"));
+    }
+
+    public void createDataEvaluation(SQLiteDatabase db)
+    {
+        insertarEvaluation(db,new Evaluation(1,"12-02-2019",1));
+        insertarEvaluation(db,new Evaluation(2,"13-02-2019",1));
+        insertarEvaluation(db,new Evaluation(3,"13-02-2019",1));
+
+    }
+
+
     public void createDataUser(SQLiteDatabase db)
     {
 
@@ -91,11 +140,71 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2));
-            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1));
-            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1));
-            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2));
+            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1));
+            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1));
+            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1));
+            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1));
         }
+    }
+
+    public void createDataQuestion(SQLiteDatabase db)
+    {
+
+        if(db !=null) {
+            insertTableQuestion(db, new Question(1, "¿Cuentan todos con ficha de ingreso?", 100, 1, 1,1,1));
+            insertTableQuestion(db, new Question(2, "¿Cuentan todos con curriculum vitae?", 100, 1, 1,1,1));
+            insertTableQuestion(db, new Question(3, "¿Cuentan todos con certificado de antecedentes?", 100, 1, 1,1,1));
+            insertTableQuestion(db, new Question(4, "¿Cuentan todos con certificado de afiliación AFP?", 100, 1, 1,1,1));
+            insertTableQuestion(db, new Question(5,"¿Cuentan todos con certificado de afiliación FONASA O ISAPRE?",100,1,1,1,1));
+            insertTableQuestion(db, new Question(6,"¿Cuentan todos con curso OS-10 vigente?",100,1,1,1,1));
+            insertTableQuestion(db, new Question(7,"¿Cuentan todos con copia entrega de credencial o solicitud de acreditación?",100,1,1,1,1));
+            insertTableQuestion(db, new Question(8,"¿Cuentan  con la resolución aprobación de directiva?",100,2,1,1,1));
+            insertTableQuestion(db, new Question(9,"¿Cuentan con la nómina actualizada?",100,2,1,1,1));
+            insertTableQuestion(db, new Question(10,"¿Cuentan todos los guardias con seguro de vida?",100,1,1,1,1));
+            insertTableQuestion(db, new Question(11,"¿Cuentan con el certificado de empresa prestadora de RRHH actualizada?",100,2,1,1,1));
+            insertTableQuestion(db, new Question(12,"¿Cuentan con la resolución aprobación Acuerdos Marcos?",100,2,1,1,1));
+
+            insertTableQuestion(db, new Question(13,"¿Cuentan todos con la copia del contrato?",100,1,1,2,1));
+            insertTableQuestion(db, new Question(14,"¿Cuentan todos con la copia de los comprobantes de remuneración?",100,1,1,2,1));
+            insertTableQuestion(db, new Question(15,"¿Cuentan todos con la copia de comprobantes de pago y cotizaciones?",100,1,1,2,1));
+            insertTableQuestion(db, new Question(16,"¿Cuentan con el certificado de centralización de documentos?",100,2,1,2,1));
+            insertTableQuestion(db, new Question(17,"¿Cuentan todos con los anexos de contrato?",100,1,1,2,1));
+
+            insertTableQuestion(db, new Question(18,"¿Cuentan todos con OIR Cargo?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(19,"¿Cuentan todos con OIR Protocolo Prexor e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(20,"¿Cuentan todos con OIR Protocolo Sílice e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(21,"¿Cuentan todos con OIR Protocolo Rad UV e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(22,"¿Cuentan todos con OIR Protocolo TMERT e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(23,"¿Cuentan todos con OIR Protocolo Psicosocial e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(24,"¿Cuentan todos con OIR Protocolo MMC e implementación MINSAL?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(25,"¿Cuentan todos con el registro de inducción DS 40 - art. 21?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(26,"¿Cuentan todos con la hoja de cargo y entrega EPP?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(27,"¿Cuentan todos con el registro de entrega de procedimientos de trabajo seguro?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(28,"¿Cuentan todos el Acta entrega de RIOHS?",100,1,1,3,1));
+            insertTableQuestion(db, new Question(29,"¿Cuentan todos el registro de capacitaci\"Inducción Hombre Nuevo\"?",100,1,1,3,1));
+
+
+
+            insertTableQuestion(db, new Question(30,"Mantiene postura corporal y presentación acorde al servicio",80,0,2,4,2));
+            insertTableQuestion(db, new Question(31,"Porta credencial de OS-10 o(existe registro de solicitud)",80,0,2,4,2));
+            insertTableQuestion(db, new Question(32,"Utilización de uniforme completo",80,0,2,4,2));
+            insertTableQuestion(db, new Question(33,"Uniforme empresa limpio y en buen estado",80,0,2,4,2));
+            insertTableQuestion(db, new Question(34,"Utilización y estado de elementos de protección personal (EPP)",80,0,2,4,2));
+            insertTableQuestion(db, new Question(35,"Zapatos de seguridad, en buenas condiciones y limpios",80,0,2,4,2));
+
+            insertTableQuestion(db, new Question(36,"Captor",80,0,3,1,3));
+            insertTableQuestion(db, new Question(37,"Radio",80,0,3,1,3));
+            insertTableQuestion(db, new Question(38,"Linterna",80,0,3,1,3));
+            insertTableQuestion(db, new Question(39,"Equipo Telefonico MD",80,0,3,1,3));
+            insertTableQuestion(db, new Question(40,"Hervidor",80,0,3,5,3));
+            insertTableQuestion(db, new Question(41,"Calefactor",80,0,3,5,3));
+            insertTableQuestion(db, new Question(36,"Articulos de oficina",80,0,3,5,3));
+            insertTableQuestion(db, new Question(36,"Otros",80,0,3,5,3));
+
+
+        }
+
+
     }
 
     public void createDataVisit(SQLiteDatabase db)
@@ -128,14 +237,14 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2));
-            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2));
-            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3));
-            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3));
-            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1));
-            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1));
-            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4));
-            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4));
+            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2,1,"14-02-2019"));
+            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4,1,"14-02-2019"));
 
         }
     }
@@ -166,6 +275,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + FacilityContract.FacilityEntry.CREATED + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
+                + FacilityContract.FacilityEntry.EVALUATION_ID + " INTEGER NOT NULL, "
                 + " UNIQUE (" + FacilityContract.FacilityEntry.ID + "),"
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"), "
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
@@ -174,13 +284,15 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public String createTablePersonal()
     {
         return "CREATE TABLE " + PersonalContract.PersonalEntry.TABLE_NAME + " ("
-            + PersonalContract.PersonalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + PersonalContract.PersonalEntry.ID + " INTEGER NOT NULL, "
+            //+ PersonalContract.PersonalEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonalContract.PersonalEntry.ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
             + PersonalContract.PersonalEntry.NAME + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.SURNAME + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.RUT + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.PHONE + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.EMAIL + " TEXT NOT NULL, "
+            + PersonalContract.PersonalEntry.STATE + " INTEGER NOT NULL, "
+            + PersonalContract.PersonalEntry.CREATED + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.FACILITY_ID + " INTEGER NOT NULL, "
             + " UNIQUE(" + PersonalContract.PersonalEntry.ID + ")," +
                 " FOREIGN KEY("+ PersonalContract.PersonalEntry.FACILITY_ID+ ") REFERENCES facility(id))";
@@ -245,10 +357,43 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
     }
 
-    public Cursor doSelectQuery(String query)
+    public String createTableQuestion()
     {
+        return "CREATE TABLE " + QuestionContract.questionEntry.TABLE_NAME+ " ("
+                + QuestionContract.questionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + QuestionContract.questionEntry.ID+ " INTEGER NOT NULL, "
+                + QuestionContract.questionEntry.DESCRIPTION + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.APROVAL_PORCENTAGE + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.TYPE+ " TEXT NOT NULL,"
+                + QuestionContract.questionEntry.ASPECT_ID + " TEXT NOT NULL, "
+                + QuestionContract.questionEntry.POINT_ID + " INTEGER NOT NULL, "
+                + QuestionContract.questionEntry.EVALUATION_ID +" INTEGER NOT NULL, "
+                + " FOREIGN KEY(" + QuestionContract.questionEntry.POINT_ID +") REFERENCES " + PointContract.pointEntry.TABLE_NAME + "(" + PointContract.pointEntry.ID+")"
+                + "UNIQUE("+ QuestionContract.questionEntry.ID+"))";
+
+    }
+
+    public String createTablePoint()
+    {
+        return "CREATE TABLE "+ PointContract.pointEntry.TABLE_NAME+" ("
+                + PointContract.pointEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PointContract.pointEntry.ID + " INTEGER NOT NULL, "
+                + PointContract.pointEntry.NAME+ " TEXT NOT NULL, "
+                + "UNIQUE ("+PointContract.pointEntry.ID+"))";
+
+    }
+
+
+    public Cursor doSelectQuery(String query)
+
+    {
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query,
+                null);
         return cursor;
     }
+
+
+
 }

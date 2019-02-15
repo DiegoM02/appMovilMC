@@ -10,8 +10,9 @@ public class Facility {
     private String name;
     private String address;
     private int service_id;
+    private int evaluation_id;
 
-    public Facility(int id, int user_id, String created, String code, String name, String address,int service_id) {
+    public Facility(int id, int user_id, String created, String code, String name, String address,int service_id, int evaluation_id) {
         this.id = id;
         this.user_id = user_id;
         this.created = created;
@@ -19,6 +20,7 @@ public class Facility {
         this.name = name;
         this.address = address;
         this.service_id = service_id;
+        this.evaluation_id = evaluation_id;
     }
 
     public int getId() {
@@ -49,6 +51,10 @@ public class Facility {
         return service_id;
     }
 
+    public int getEvaluation_id() {
+        return evaluation_id;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put(FacilityContract.FacilityEntry.ID, id);
@@ -58,6 +64,7 @@ public class Facility {
         values.put(FacilityContract.FacilityEntry.CREATED,created);
         values.put(FacilityContract.FacilityEntry.ADDRESS,address);
         values.put(FacilityContract.FacilityEntry.SERVICE_ID,service_id);
+        values.put(FacilityContract.FacilityEntry.EVALUATION_ID,evaluation_id);
 
         return values;
     }

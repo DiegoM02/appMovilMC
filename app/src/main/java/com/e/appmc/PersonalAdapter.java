@@ -1,7 +1,10 @@
 package com.e.appmc;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,9 +24,14 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
 {
     List<Personal> personalList;
     Context context;
+    DBMediator dbMediator;
+    EvaluationActivity activity;
 
-    public PersonalAdapter(List<Personal> personalList) {
+
+    public PersonalAdapter(List<Personal> personalList,EvaluationActivity activity,Context mContext) {
         this.personalList = personalList;
+        dbMediator = new DBMediator(activity);
+        context = mContext;
     }
 
     @NonNull
@@ -37,9 +45,8 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-        Personal personal = personalList.get(i);
+        final Personal personal = personalList.get(i);
 
-        viewHolder.textRut.setText(personal.getRut());
         viewHolder.textName.setText(personal.getName() + " " + personal.getSurname());
         viewHolder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,9 +57,29 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"The position is:"+i,Toast.LENGTH_SHORT).show();
+                if(context instanceof EvaluationActivity )
+                {
+                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder((EvaluationActivity) context);
+                    alertDialog.setMessage("¿Estas seguro de eliminarlo?");
+                    alertDialog.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dbMediator.actualizarEstadoPesonal(personal.getId());
+                            ((EvaluationActivity)context).recargarListaPersonal();
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.show();
+
+                }
             }
         });
+
 
     }
 
@@ -63,18 +90,17 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
-        TextView textRut;
+
         TextView textName;
         CardView cv;
-        ImageButton  delete;
+        FloatingActionButton delete;
 
         public ViewHolder(View itemView)
         {
             super(itemView);
-            textRut = (TextView) itemView.findViewById(R.id.textRut);
             textName = (TextView)itemView.findViewById(R.id.textName);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            delete = (ImageButton)itemView.findViewById(R.id.delete);
+            delete = (FloatingActionButton)itemView.findViewById(R.id.delete);
         }
     }
 }
