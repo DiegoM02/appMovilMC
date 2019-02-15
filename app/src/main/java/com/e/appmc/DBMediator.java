@@ -32,7 +32,8 @@ public final class DBMediator {
                     String name = data.getString(data.getColumnIndex("name"));
                     String surname = data.getString(data.getColumnIndex("surname"));
                     String rut = data.getString(data.getColumnIndex("rut"));
-                    personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual, 1));
+                    String created = data.getString(data.getColumnIndex("created"));
+                    personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual, 1,created));
                 }
             }while(data.moveToNext());
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -92,14 +93,14 @@ public class PersonalAdapter extends RecyclerView.Adapter<PersonalAdapter.ViewHo
 
         TextView textName;
         CardView cv;
-        ImageButton  delete;
+        FloatingActionButton delete;
 
         public ViewHolder(View itemView)
         {
             super(itemView);
             textName = (TextView)itemView.findViewById(R.id.textName);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            delete = (ImageButton)itemView.findViewById(R.id.delete);
+            delete = (FloatingActionButton)itemView.findViewById(R.id.delete);
         }
     }
 }

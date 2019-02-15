@@ -20,6 +20,7 @@ public class PersonalAdittionActivity extends AppCompatActivity {
     private EditText rutText;
     private DBMediator dbMediator;
     private int idCentro;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,7 @@ public class PersonalAdittionActivity extends AppCompatActivity {
             rutText.setError("Campo necesario");
             flag=1;
         }
-        if(validarRut(rutText.getText().toString()))
+        if(!rutText.getText().toString().isEmpty() && validarRut(rutText.getText().toString()))
         {
             rutText.setError("Formato incorrecto");
             flag=1;
@@ -75,10 +76,21 @@ public class PersonalAdittionActivity extends AppCompatActivity {
             dateText.setError("Campo necesario");
             flag=1;
         }
+        if(!nameText.getText().toString().isEmpty() && validarTexto(nameText.getText().toString()))
+        {
+            nameText.setError("Formato incorrecto");
+            flag=1;
+        }
+        if(!surnameText.getText().toString().isEmpty() && validarTexto(surnameText.getText().toString()))
+        {
+            surnameText.setError("Formato incorrecto");
+            flag=1;
+        }
 
         if (flag==0)
         {
-            Personal personal = new Personal(-1,nameText.getText().toString(),surnameText.getText().toString(),rutText.getText().toString(),"","",idCentro,1);
+            Personal personal = new Personal(-1,nameText.getText().toString(),surnameText.getText().toString(),rutText.getText().toString(),"","",idCentro,1,
+                    dateText.getText().toString());
             dbMediator.insertarPersonal(personal);
             Intent intent=new Intent();
             setResult(2,intent);
@@ -106,6 +118,17 @@ public class PersonalAdittionActivity extends AppCompatActivity {
         }
 
 
+        return true;
+    }
+
+    public boolean validarTexto(String texto )
+    {
+        Pattern pattern = Pattern.compile("[a-zA-Z]+");
+        Matcher matcher = pattern.matcher(texto);
+        if(matcher.matches())
+        {
+            return false;
+        }
         return true;
     }
 }
