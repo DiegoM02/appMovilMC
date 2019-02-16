@@ -25,7 +25,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".PersonalAdittionActivity"></activity>
+        <activity android:name=".PersonalAdittionActivity" />
+        <activity android:name=".PersonalSummaryActivity"></activity>
     </application>
 
 </manifest>
