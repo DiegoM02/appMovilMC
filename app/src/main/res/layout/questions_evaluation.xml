@@ -69,6 +69,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="5dp"
             android:paddingTop="10dp"
+            android:id="@+id/rating_bar"
 
 
 

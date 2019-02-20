@@ -7,9 +7,10 @@ public class QuestionPersonal
     private String questionName;
     private ArrayList<String> personal;
 
-    public QuestionPersonal(String questionName) {
+
+    public QuestionPersonal(String questionName,ArrayList<String> personal) {
         this.questionName = questionName;
-        this.personal = new ArrayList<>();
+        this.personal = personal;
     }
 
     public int size() {
@@ -34,5 +35,9 @@ public class QuestionPersonal
 
     public String getQuestionName() {
         return questionName;
+    }
+
+    public ArrayList<String> getPersonal() {
+        return personal;
     }
 }

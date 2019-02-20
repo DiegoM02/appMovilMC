@@ -17,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.e.bd.appmc.Point;
 import com.e.bd.appmc.Question;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -57,8 +59,10 @@ public class SecurityDimensionFragment extends Fragment {
     private Dialog dialogoResumen;
     private Button buttonFinalizarEvaluacion;
     ArrayList<CriticalPoint> puntoCritico;
-
+    private String puntoActual;
+    private String preguntaActual;
     private OnFragmentInteractionListener mListener;
+    ArrayList<QuestionRating> questionsRaitings;
 
     public SecurityDimensionFragment() {
         // Required empty public constructor
@@ -85,6 +89,7 @@ public class SecurityDimensionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.puntoCritico = new ArrayList<>();
 
     }
 
@@ -172,15 +177,17 @@ public class SecurityDimensionFragment extends Fragment {
 
        if (question.getType() == 1)
        {
-          construirDialogoPersonal(questions,personal,inflater);
+           this.puntoActual = ((EvaluationActivity)getActivity()).obtenerNombrePunto(question.getPoint_id());
+           this.preguntaActual = question.getDescription();
+           construirDialogoPersonal(questions,personal,inflater);
        }
     }
 
-    public void construirDialogoPersonal(ArrayList<Question> questions, String[] personal,
+    public void construirDialogoPersonal(ArrayList<Question> questions, final String[] personal,
                                          LayoutInflater inflater)
     {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
         builder.setMultiChoiceItems(personal,null,
                 new DialogInterface.OnMultiChoiceClickListener() {
@@ -203,6 +210,7 @@ public class SecurityDimensionFragment extends Fragment {
         builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                addCriticalPoint(personal,mSelectedItems);
                 pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
             }
         });
@@ -221,14 +229,14 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void construirDialogoResumen()
     {
-        puntoCritico = new ArrayList<CriticalPoint>();
+        //puntoCritico = new ArrayList<CriticalPoint>();
 
-        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Operativo","Prueba"));
-        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Recursos Humanos","Prueba"));
-        puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Prevencion de Riesgos","Prueba"));
+        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Operativo","Prueba"));
+        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Recursos Humanos","Prueba"));
+        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Prevencion de Riesgos","Prueba"));
 
 
-        resumenAdapter = new SummaryAdapter(puntoCritico);
+        resumenAdapter = new SummaryAdapter(puntoCritico,(EvaluationActivity) this.getActivity());
 
         if (dialogPreguntaSiNo.isShowing())
         {
@@ -253,8 +261,11 @@ public class SecurityDimensionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dialogoResumen.dismiss();
+                puntoCritico.clear();
             }
         });
+
+
     }
 
     public void confirmarPreguntaSiNo(View view)
@@ -268,6 +279,48 @@ public class SecurityDimensionFragment extends Fragment {
             pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
         }
 
+    }
+
+    public void addCriticalPoint(String [] personal, ArrayList<Integer> selectedItems)
+    {
+        ArrayList<String> personals= new ArrayList<>();
+        for(Integer selected : selectedItems)
+        {
+            personals.add(personal[selected]);
+        }
+        for(CriticalPoint cPoint: this.puntoCritico)
+        {
+            if(cPoint.getPoint().equals(this.puntoActual))
+            {
+                cPoint.put(this.preguntaActual,personals);
+                return;
+            }
+        }
+        CriticalPoint cPoint = new CriticalPoint(this.puntoActual);
+        cPoint.put(this.preguntaActual,personals);
+        this.puntoCritico.add(cPoint);
+
+
+    }
+
+    public void fillQuestionPoints(ArrayList<Question> questions)
+    {
+        for(int i =0;i<questions.size();i++)
+        {
+            Question question = questions.get(i);
+            QuestionRating questionRating = new QuestionRating(question.getDescription(),0);
+            questionsRaitings.add(questionRating);
+        }
+    }
+
+    public void setRating(int index, int rating)
+    {
+        this.questionsRaitings.get(index).setPoint(rating);
+    }
+
+    public int getRating(int index)
+    {
+        return this.questionsRaitings.get(index).getPoint();
     }
 
     @Override

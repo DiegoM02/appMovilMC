@@ -1,28 +1,33 @@
 package com.e.appmc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+
 
 public class CriticalPoint {
 
-    private ArrayList<String> personal;
+    //private ArrayList<String> personal;
     private String point;
-    private String pregunta;
+    //private String pregunta;
+    private HashMap<String,ArrayList<String>> resume;
 
-    public CriticalPoint(ArrayList<String> personal, String point, String pregunta) {
-        this.personal = personal;
+    public CriticalPoint( String point) {
+
         this.point = point;
-        this.pregunta = pregunta;
-    }
-
-    public ArrayList<String> getPersonal() {
-        return personal;
+        this.resume = new HashMap<>();
     }
 
     public String getPoint() {
         return point;
     }
 
-    public String getPregunta() {
-        return pregunta;
+
+    public ArrayList<String> put(String key, ArrayList<String> value) {
+        return resume.put(key, value);
+    }
+
+    public HashMap<String, ArrayList<String>> getResume() {
+        return resume;
     }
 }

@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PersonalSummaryActivity">
+    tools:context=".PersonalSummaryActivity"
+    android:orientation="vertical">
     <TextView
+        android:id="@+id/textPunto"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
         android:text="Punto"
-        android:textSize="35sp"
+        android:textSize="25sp"
         android:textAlignment="center"
         android:textColor="@color/icons"
         />

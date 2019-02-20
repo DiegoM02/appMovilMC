@@ -17,10 +17,11 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     private PersonalSummaryActivity activity;
     private Context context;
 
-    public QuestionListAdapter(ArrayList<QuestionPersonal> questions,PersonalSummaryActivity activity)
+    public QuestionListAdapter(ArrayList<QuestionPersonal> questions,PersonalSummaryActivity activity, Context mContext)
     {
         this.questions = questions;
         this.activity = activity;
+        context = mContext;
 
     }
 
@@ -36,6 +37,8 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.textQuestion.setText(questions.get(i).getQuestionName());
+        String list = this.stringLista(questions.get(i).getPersonal());
+        viewHolder.textPersonal.setText(list);
     }
 
     @Override
@@ -47,15 +50,26 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     {
 
         TextView textQuestion;
-        CardView cv;
+        //CardView cv;
         TextView textPersonal;
 
         public ViewHolder(View itemView)
         {
             super(itemView);
             textQuestion = (TextView)itemView.findViewById(R.id.textQuestion);
-            cv = (CardView)itemView.findViewById(R.id.cardView);
+            //cv = (CardView)itemView.findViewById(R.id.cardView);
             textPersonal = (TextView) itemView.findViewById(R.id.textPersonal);
         }
+    }
+
+    public String stringLista(ArrayList<String> personal)
+    {
+        String string = "";
+        for(String per : personal)
+        {
+            string = string + "  - " + per +"\n";
+        }
+
+        return string;
     }
 }

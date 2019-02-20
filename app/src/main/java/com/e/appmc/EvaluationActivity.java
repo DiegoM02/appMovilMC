@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.e.bd.appmc.Facility;
 import com.e.bd.appmc.FacilityContract;
 import com.e.bd.appmc.Personal;
+import com.e.bd.appmc.Point;
 import com.e.bd.appmc.Question;
 import com.e.bd.appmc.QuestionContract;
 import com.e.bd.appmc.SQLiteOpenHelperDataBase;
@@ -42,6 +43,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private int idUsuario;
     private int idCentroActual;
     private FacilitySpinnerAdapter adapter;
+    private ArrayList<Point> points;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         activarSpinnerCentros();
         this.questions = new ArrayList<Question>();
         this.personal = new ArrayList<Personal>();
+        this.points = mediador.obtenerPuntos();
         int opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
             fragmentoCincoDimensiones = new FragmentFiveDimension();
@@ -266,6 +269,19 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     {
         listaPersonalFlotante.cancel();
         listaPersonal();
+    }
+
+    public String obtenerNombrePunto(int id)
+    {
+        for(Point point : this.points)
+        {
+            if(point.getId()==id)
+            {
+                return point.getName();
+            }
+        }
+
+        return "";
     }
 
     @Override
