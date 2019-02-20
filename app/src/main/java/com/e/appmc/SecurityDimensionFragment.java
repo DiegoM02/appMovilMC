@@ -69,12 +69,15 @@ public class SecurityDimensionFragment extends Fragment {
     private TextView textPreguntasPositivas;
     private TextView textPreguntasNegativas;
     private int contadorPreguntasNegativas;
+    private int contadorPreguntasReporbadas;
     private TextView dimension1Valoracion;
     private TextView dimension2Valoracion;
     private TextView dimension3Valoracion;
     private TextView dimension4Valoracion;
+    private int dimensionActiva = 0;
     ArrayList<CriticalPoint> puntoCritico;
     private ArrayList<Assessment> valoraciones;
+    RatingBar barValoracion;
 
 
     private OnFragmentInteractionListener mListener;
@@ -122,9 +125,9 @@ public class SecurityDimensionFragment extends Fragment {
         dimension2 = (CardView) view.findViewById(R.id.cardView3);
         dimension3 = (CardView) view.findViewById(R.id.cardView4);
         dimension1Valoracion = (TextView) view.findViewById(R.id.textView);
-        dimension2Valoracion = (TextView) view.findViewById(R.id.textView2);
-        dimension3Valoracion = (TextView) view.findViewById(R.id.textView3);
-        dimension4Valoracion = (TextView) view.findViewById(R.id.textView4);
+        dimension2Valoracion = (TextView) view.findViewById(R.id.textView1);
+        dimension3Valoracion = (TextView) view.findViewById(R.id.textView2);
+        dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
         puntoCritico = new ArrayList<CriticalPoint>();
         valoraciones = new ArrayList<Assessment>();
         disableCardView();
@@ -151,7 +154,9 @@ public class SecurityDimensionFragment extends Fragment {
         dimension3.setEnabled(true);
     }
 
-    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions) {
+    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions, int dimensionActiva) {
+        this.dimensionActiva = dimensionActiva;
+
         dialogPregunta.setContentView(R.layout.contenedor_question);
         adpter = new QuestionAdpater(view.getContext(), questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager);
@@ -162,12 +167,17 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question> questions) {
+    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question> questions, int dimensionActiva) {
+
+        this.dimensionActiva = dimensionActiva;
+
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
         adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No);
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
+        barValoracion = (RatingBar) dialogPreguntaSiNo.findViewById(R.id.rating_bar_pregunta);
         dialogPreguntaSiNo.show();
+
 
     }
 
@@ -180,10 +190,19 @@ public class SecurityDimensionFragment extends Fragment {
 
 
     public void confirmarPregunta(View view, ArrayList<Question> questions) {
-        RatingBar indicador = (RatingBar) dialogPregunta.findViewById(R.id.rating_bar_pregunta);
 
 
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
+
+
+            if (adpter.getValoracion() < 3) {
+                int index = pagerPregunta.getCurrentItem();
+                Question question = questions.get(index);
+                CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                puntoCritico.add(punto);
+                this.contadorPreguntasReporbadas += 1;
+            }
+
             agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
                     questions.get(pagerPregunta.getCurrentItem()).getDescription());
             construirDialogoResumen(view);
@@ -192,22 +211,26 @@ public class SecurityDimensionFragment extends Fragment {
 
             if (adpter.getValoracion() == 0) {
 
-                Toast.makeText(view.getContext(), "Entro en vacio", Toast.LENGTH_LONG).show();
-
                 alertaValoracionVacia();
             } else if (adpter.getValoracion() > 0) {
 
-
-                int actual = pagerPregunta.getCurrentItem();
-                Toast.makeText(view.getContext(), "Entro en lleno", Toast.LENGTH_LONG).show();
                 agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
                         questions.get(pagerPregunta.getCurrentItem()).getDescription());
                 pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem() + 1, true);
+                if (adpter.getValoracion() < 3) {
+                    int index = pagerPregunta.getCurrentItem();
+                    Question question = questions.get(index);
+                    CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                    puntoCritico.add(punto);
+                    this.contadorPreguntasReporbadas += 1;
+                }
+
+                adpter.setValoracion(0);
 
 
             }
 
-            adpter.setValoracion(0);
+
 
         }
 
@@ -223,6 +246,8 @@ public class SecurityDimensionFragment extends Fragment {
         puntoCritico.add(punto);
         if (question.getType() == 1) {
             construirDialogoPersonal(questions, personal, inflater);
+        } else {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
         }
     }
 
@@ -270,7 +295,7 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void setValoracionPromedioDimension1() {
 
-        float valor = calcularValoracionPromedio();
+        float valor = calcularValoracionSiNoPromedio();
         dimension1Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension1Valoracion.setBackgroundResource(R.color.negativo);
@@ -314,7 +339,22 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-
+    public void elegirDimension() {
+        switch (this.dimensionActiva) {
+            case 1:
+                setValoracionPromedioDimension1();
+                break;
+            case 2:
+                setValoracionPromedioDimension2();
+                break;
+            case 3:
+                setValoracionPromedioDimension3();
+                break;
+            case 4:
+                setValoracionPromedioDimension4();
+                break;
+        }
+    }
 
 
     public void construirDialogoResumen(final View view) {
@@ -329,14 +369,27 @@ public class SecurityDimensionFragment extends Fragment {
             dialogPregunta.dismiss();
         }
 
+        String numeroPreguntasPositivas = "";
+        String numeroPreguntasNegativas = "";
+
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
-        //String numeroPreguntasPositivas = String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
-        String numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+
+        if (this.dimensionActiva == 1) {
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+        } else {
+
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPregunta.getAdapter().getCount() - this.contadorPreguntasReporbadas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasReporbadas);
+        }
+
         textPreguntasPositivas = (TextView) v.findViewById(R.id.preguntas_positivas);
         textPreguntasNegativas = (TextView) v.findViewById(R.id.preguntas_negativas);
-        //textPreguntasPositivas.setText(numeroPreguntasPositivas);
+        textPreguntasPositivas.setText(numeroPreguntasPositivas);
         textPreguntasNegativas.setText(numeroPreguntasNegativas);
         recyclerResumen = (RecyclerView) v.findViewById(R.id.recyclerResumen);
         recyclerResumen.setAdapter(resumenAdapter);
@@ -349,8 +402,10 @@ public class SecurityDimensionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (puntoCritico.size() > 0) puntoCritico.clear();
+                elegirDimension();
                 dialogoResumen.dismiss();
                 contadorPreguntasNegativas = 0;
+                contadorPreguntasReporbadas = 0;
 
                 if (valoraciones.size() > 0) valoraciones.clear();
 
@@ -367,15 +422,23 @@ public class SecurityDimensionFragment extends Fragment {
         ) {
 
             suma = suma + v.getAssessment();
-
         }
 
         int numeroPreguntas = pagerPregunta.getAdapter().getCount();
-        Toast.makeText(view.getContext(), "Valor: " + suma, Toast.LENGTH_LONG).show();
         float promedio = Math.round(suma / numeroPreguntas);
 
 
-        return promedio;
+        return Math.round(promedio);
+    }
+
+
+    public float calcularValoracionSiNoPromedio() {
+
+        float pregunta = pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas;
+
+        float resultado = (pregunta * 5) / pagerPreguntaSiNo.getAdapter().getCount();
+
+        return Math.round(resultado);
     }
 
     public void alertaValoracionVacia() {
@@ -425,16 +488,7 @@ public class SecurityDimensionFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

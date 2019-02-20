@@ -2,7 +2,10 @@ package com.e.appmc;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,7 +22,7 @@ import com.e.bd.appmc.SQLiteOpenHelperDataBase;
 
 import java.util.ArrayList;
 
-public class QuestionAdpater extends PagerAdapter implements ViewPager.OnPageChangeListener {
+public class QuestionAdpater extends PagerAdapter   {
 
     LayoutInflater inflater;
     Context context;
@@ -32,6 +35,7 @@ public class QuestionAdpater extends PagerAdapter implements ViewPager.OnPageCha
     SQLiteOpenHelperDataBase bd;
     ArrayList<Question> questions;
     private float valoracion;
+    private static final String BUNDLE_PAGER_VIEW_STATE = "state_pager";
 
 
     public QuestionAdpater(Context context, ArrayList<Question> questions) {
@@ -78,8 +82,6 @@ public class QuestionAdpater extends PagerAdapter implements ViewPager.OnPageCha
         barPregunta.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Toast.makeText(view.getContext(), "Valor rating" + position + ": " + rating,
-                        Toast.LENGTH_LONG).show();
                 valoracion = rating;
 
             }
@@ -113,19 +115,8 @@ public class QuestionAdpater extends PagerAdapter implements ViewPager.OnPageCha
 
     }
 
-    @Override
-    public void onPageScrolled(int i, float v, int i1) {
-
-    }
 
 
-    @Override
-    public void onPageSelected(int i) {
 
-    }
 
-    @Override
-    public void onPageScrollStateChanged(int i) {
-
-    }
 }

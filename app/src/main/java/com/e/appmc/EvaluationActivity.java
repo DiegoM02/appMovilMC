@@ -159,25 +159,25 @@ public class EvaluationActivity extends AppCompatActivity implements
                     this.questions = mediador.llenarPreguntas(1, 1,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
-                            this.questions);
+                            this.questions,1);
                     break;
                 case R.id.cardView2:
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,2);
                     break;
                 case R.id.cardView3:
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,3);
                     break;
                 case R.id.cardView4:
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,4);
             }
         }
 
