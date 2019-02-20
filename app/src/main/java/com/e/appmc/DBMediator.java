@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.e.bd.appmc.Facility;
 import com.e.bd.appmc.FacilityContract;
 import com.e.bd.appmc.Personal;
+import com.e.bd.appmc.Point;
 import com.e.bd.appmc.Question;
 import com.e.bd.appmc.QuestionContract;
 import com.e.bd.appmc.SQLiteOpenHelperDataBase;
@@ -154,6 +155,23 @@ public final class DBMediator {
         ContentValues cv = new ContentValues();
         cv.put("state",0);
         db.getWritableDatabase().update("personal",cv,"id = " + idPersonal,null);
+    }
+
+    public ArrayList<Point> obtenerPuntos()
+    {
+        ArrayList<Point> points = new ArrayList<>();
+        Cursor data = db.doSelectQuery("SELECT * FROM point");
+        if(data.moveToFirst())
+        {
+            do{
+                String name = data.getString(data.getColumnIndex("name"));
+                int id = data.getInt(data.getColumnIndex("id"));
+                points.add(new Point(id,name));
+            }while(data.moveToNext());
+        }
+
+        return points;
+
     }
 
 

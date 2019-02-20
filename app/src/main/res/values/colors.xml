@@ -10,5 +10,6 @@
     <color name="divider">#BDBDBD</color>
     <color name="resltar">#C8ECECEC</color>
     <color name="edit">#6FBDBDBD</color>
+    <color name="negativo">#FF5252</color>
 </resources>
 
