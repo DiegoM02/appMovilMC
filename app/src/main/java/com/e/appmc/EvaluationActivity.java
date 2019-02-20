@@ -128,31 +128,31 @@ public class EvaluationActivity extends AppCompatActivity implements
                     this.questions = mediador.llenarPreguntas(1,
                             1, this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
-                            this.questions);
+                            this.questions,1);
                     break;
                 case R.id.car_view_1:
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,2);
                     break;
                 case R.id.car_view_2:
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,3);
                     break;
                 case R.id.car_view_3:
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,4);
                     break;
                 case R.id.car_view_4:
                     this.questions = mediador.llenarPreguntas(5, 5,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
-                            this.questions);
+                            this.questions,5);
             }
 
         } else if (f instanceof SecurityDimensionFragment) {
@@ -191,7 +191,7 @@ public class EvaluationActivity extends AppCompatActivity implements
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
         if (f instanceof FragmentFiveDimension) {
-            fragmentoCincoDimensiones.confirmarPregunta(view);
+            fragmentoCincoDimensiones.confirmarPregunta(view,this.questions);
         } else if (f instanceof SecurityDimensionFragment) {
             fragmentoCuatroDimensiones.confirmarPregunta(view, this.questions);
         }

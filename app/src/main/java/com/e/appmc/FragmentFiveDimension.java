@@ -56,6 +56,10 @@ public class FragmentFiveDimension extends Fragment {
     private View view;
     private Button confirmarButton;
     private Button cancelarButton;
+    private TextView dimension1Valoracion;
+    private TextView dimension2Valoracion;
+    private TextView dimension3Valoracion;
+    private TextView dimension4Valoracion;
 
     private OnFragmentInteractionListener mListener;
     private int contadorPreguntasNegativas;
@@ -66,6 +70,11 @@ public class FragmentFiveDimension extends Fragment {
     private SummaryAdapter resumenAdapter;
     private RecyclerView recyclerResumen;
     private Dialog dialogoResumen;
+    private ArrayList<Assessment> valoraciones;
+    private int contadorPreguntasReporbadas = 0;
+    private int dimensionActiva = 0;
+    private String puntoActual;
+    private String preguntaActual;
 
     public FragmentFiveDimension() {
         // Required empty public constructor
@@ -107,6 +116,7 @@ public class FragmentFiveDimension extends Fragment {
         dimension = (CardView) view.findViewById(R.id.car_view);
         dialogoResumen = new Dialog(view.getContext());
         puntoCritico = new ArrayList<CriticalPoint>();
+        valoraciones = new ArrayList<Assessment>();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
         dimension = (CardView) view.findViewById(R.id.car_view);
@@ -114,6 +124,10 @@ public class FragmentFiveDimension extends Fragment {
         dimension2 = (CardView) view.findViewById(R.id.car_view_2);
         dimension3 = (CardView) view.findViewById(R.id.car_view_3);
         dimension4 = (CardView) view.findViewById(R.id.car_view_4);
+        dimension1Valoracion = (TextView) view.findViewById(R.id.text_1);
+        dimension2Valoracion = (TextView) view.findViewById(R.id.text_2);
+        dimension3Valoracion = (TextView) view.findViewById(R.id.text_3);
+        dimension4Valoracion = (TextView) view.findViewById(R.id.text_4);
 
         disableCardView();
         // Inflate the layout for this fragment
@@ -160,7 +174,8 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-    public void realizarEvaluacionOtrasDimensiones(View view , ArrayList<Question> questions) {
+    public void realizarEvaluacionOtrasDimensiones(View view , ArrayList<Question> questions, int dimensionActiva) {
+        this.dimensionActiva = dimensionActiva;
         dialogPregunta.setContentView(R.layout.contenedor_question);
         adpter = new QuestionAdpater(view.getContext(),questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
@@ -173,7 +188,7 @@ public class FragmentFiveDimension extends Fragment {
 
 
 
-    public void construirDialogoPersonal(ArrayList<Question> questions, String[] personal,
+    public void construirDialogoPersonal(ArrayList<Question> questions, final String[] personal,
                                          LayoutInflater inflater)
     {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
@@ -200,6 +215,7 @@ public class FragmentFiveDimension extends Fragment {
         builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                addCriticalPoint(personal,mSelectedItems);
                 pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
             }
         });
@@ -208,11 +224,34 @@ public class FragmentFiveDimension extends Fragment {
         dialog.show();
     }
 
+    public void addCriticalPoint(String [] personal, ArrayList<Integer> selectedItems)
+    {
+        ArrayList<String> personals= new ArrayList<>();
+        for(Integer selected : selectedItems)
+        {
+            personals.add(personal[selected]);
+        }
+        for(CriticalPoint cPoint: this.puntoCritico)
+        {
+            if(cPoint.getPoint().equals(this.puntoActual))
+            {
+                cPoint.put(this.preguntaActual,personals);
+                return;
+            }
+        }
+        CriticalPoint cPoint = new CriticalPoint(this.puntoActual);
+        cPoint.put(this.preguntaActual,personals);
+        this.puntoCritico.add(cPoint);
+
+
+    }
 
 
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view , ArrayList<Question> questions) {
+
+    public void realizarEvaluacionDimensionNormasLaborales(View view , ArrayList<Question> questions, int dimensionActiva) {
+        this.dimensionActiva = dimensionActiva;
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
         adapter_si_no = new QuestionSiNoAdapter(view.getContext(),questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
@@ -227,42 +266,142 @@ public class FragmentFiveDimension extends Fragment {
         int index =  pagerPreguntaSiNo.getCurrentItem();
         Question question = questions.get(index);
         this.contadorPreguntasNegativas+=1;
-        CriticalPoint punto = new CriticalPoint(new ArrayList<String>(),adapter_si_no.obtenerPuntoDePregunta(question.getPoint_id()),question.getDescription());
-        puntoCritico.add(punto);
         if (question.getType() == 1)
         {
+            this.puntoActual = ((EvaluationActivity)getActivity()).obtenerNombrePunto(question.getPoint_id());
+            this.preguntaActual = question.getDescription();
             construirDialogoPersonal(questions,personal,inflater);
         }
     }
 
 
 
-    public void construirDialogoResumen()
-    {
 
 
 
-        resumenAdapter = new SummaryAdapter(puntoCritico);
+    public void setValoracionPromedioDimension1() {
+
+        float valor = calcularValoracionSiNoPromedio();
+        dimension1Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension1Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension1Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public float calcularValoracionSiNoPromedio() {
+
+        float pregunta = pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas;
+
+        float resultado = (pregunta * 5) / pagerPreguntaSiNo.getAdapter().getCount();
+
+        return Math.round(resultado);
+    }
 
 
-        if (dialogPreguntaSiNo.isShowing())
-        {
+    public void setValoracionPromedioDimension2() {
+
+        float valor = calcularValoracionPromedio();
+        dimension2Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension2Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension2Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public void setValoracionPromedioDimension3() {
+
+        float valor = calcularValoracionPromedio();
+        dimension3Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension3Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension3Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public void setValoracionPromedioDimension4() {
+
+        float valor = calcularValoracionPromedio();
+        dimension4Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+        } else if (valor > 3.0) {
+            dimension4Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+
+    public void elegirDimension() {
+        switch (this.dimensionActiva) {
+            case 1:
+                setValoracionPromedioDimension1();
+                break;
+            case 2:
+                setValoracionPromedioDimension2();
+                break;
+            case 3:
+                setValoracionPromedioDimension3();
+                break;
+            case 4:
+                setValoracionPromedioDimension4();
+                break;
+        }
+    }
+
+
+    public float calcularValoracionPromedio() {
+
+        float suma = 0;
+        for (Assessment v : this.valoraciones
+        ) {
+
+            suma = suma + v.getAssessment();
+        }
+
+        int numeroPreguntas = pagerPregunta.getAdapter().getCount();
+        float promedio = Math.round(suma / numeroPreguntas);
+
+
+        return Math.round(promedio);
+    }
+
+
+
+    public void construirDialogoResumen(final View view) {
+
+
+        resumenAdapter = new SummaryAdapter(puntoCritico,(EvaluationActivity) this.getActivity());
+        if (dialogPreguntaSiNo.isShowing()) {
             dialogPreguntaSiNo.dismiss();
-        }else if (dialogPregunta.isShowing())
-        {
+        } else if (dialogPregunta.isShowing()) {
             dialogPregunta.dismiss();
         }
 
+        String numeroPreguntasPositivas = "";
+        String numeroPreguntasNegativas = "";
+
         LayoutInflater layoutInflater = getLayoutInflater();
-        View v = layoutInflater.inflate(R.layout.summaryrecycler,null);
+        View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
-        String numeroPreguntasPositivas = String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
-        String numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+
+        if (this.dimensionActiva == 1) {
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+        } else {
+
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPregunta.getAdapter().getCount() - this.contadorPreguntasReporbadas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasReporbadas);
+        }
+
         textPreguntasPositivas = (TextView) v.findViewById(R.id.preguntas_positivas);
         textPreguntasNegativas = (TextView) v.findViewById(R.id.preguntas_negativas);
         textPreguntasPositivas.setText(numeroPreguntasPositivas);
         textPreguntasNegativas.setText(numeroPreguntasNegativas);
-        recyclerResumen  = (RecyclerView) v.findViewById(R.id.recyclerResumen);
+        recyclerResumen = (RecyclerView) v.findViewById(R.id.recyclerResumen);
         recyclerResumen.setAdapter(resumenAdapter);
         recyclerResumen.setItemAnimator(new DefaultItemAnimator());
         recyclerResumen.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -270,15 +409,25 @@ public class FragmentFiveDimension extends Fragment {
         dialogoResumen.show();
 
         buttonFinalizarEvaluacion.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
-                if (puntoCritico.size()> 0) puntoCritico.clear();
+                if (puntoCritico.size() > 0) puntoCritico.clear();
+                elegirDimension();
                 dialogoResumen.dismiss();
                 contadorPreguntasNegativas = 0;
+                contadorPreguntasReporbadas = 0;
+
+                if (valoraciones.size() > 0) valoraciones.clear();
+
 
             }
         });
+
+
     }
+
 
 
     public void cancelarPregunta(View view)
@@ -287,16 +436,75 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+    public void alertaValoracionVacia() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Debes evaluar la pregunta");
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
-    public void confirmarPregunta(View view)
-    {
-        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount()-1)
-        {
-            construirDialogoResumen();
-        }else
-        {
-            pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        Dialog diaologo = builder.create();
+        diaologo.show();
+
+    }
+
+    public void agregarValoracion(float valoracion, int posicion, String pregunta) {
+
+        Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
+        this.valoraciones.add(valoraciones);
+
+    }
+
+
+
+    public void confirmarPregunta(View view, ArrayList<Question> questions) {
+
+
+        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
+
+
+            if (adpter.getValoracion() < 3) {
+                int index = pagerPregunta.getCurrentItem();
+                Question question = questions.get(index);
+                CriticalPoint punto = new CriticalPoint( adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                puntoCritico.add(punto);
+                this.contadorPreguntasReporbadas += 1;
+            }
+
+            agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
+                    questions.get(pagerPregunta.getCurrentItem()).getDescription());
+            construirDialogoResumen(view);
+
+        } else {
+
+            if (adpter.getValoracion() == 0) {
+
+                alertaValoracionVacia();
+            } else if (adpter.getValoracion() > 0) {
+
+                agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
+                        questions.get(pagerPregunta.getCurrentItem()).getDescription());
+                pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem() + 1, true);
+                if (adpter.getValoracion() < 3) {
+                    int index = pagerPregunta.getCurrentItem();
+                    Question question = questions.get(index);
+                    CriticalPoint punto = new CriticalPoint( adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                    puntoCritico.add(punto);
+                    this.contadorPreguntasReporbadas += 1;
+                }
+
+                adpter.setValoracion(0);
+
+
+            }
+
+
+
         }
+
 
     }
 
@@ -305,7 +513,7 @@ public class FragmentFiveDimension extends Fragment {
 
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount()-1)
         {
-            construirDialogoResumen();
+            construirDialogoResumen(view);
 
 
         }else

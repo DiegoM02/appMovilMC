@@ -48,6 +48,7 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/text_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
@@ -108,6 +109,7 @@
                     android:gravity="center">
 
                     <TextView
+                        android:id="@+id/text_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
@@ -163,6 +165,7 @@
                     android:gravity="center">
 
                     <TextView
+                        android:id="@+id/text_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
@@ -230,6 +233,7 @@
                     android:gravity="center">
 
                     <TextView
+                        android:id="@+id/text_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"
@@ -285,6 +289,8 @@
                     android:gravity="center">
 
                     <TextView
+                        android:layout_gravity="center"
+                        android:id="@+id/text_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto"

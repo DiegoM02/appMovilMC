@@ -204,7 +204,7 @@ public class SecurityDimensionFragment extends Fragment {
             if (adpter.getValoracion() < 3) {
                 int index = pagerPregunta.getCurrentItem();
                 Question question = questions.get(index);
-                CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                CriticalPoint punto = new CriticalPoint( adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
                 puntoCritico.add(punto);
                 this.contadorPreguntasReporbadas += 1;
             }
@@ -226,7 +226,7 @@ public class SecurityDimensionFragment extends Fragment {
                 if (adpter.getValoracion() < 3) {
                     int index = pagerPregunta.getCurrentItem();
                     Question question = questions.get(index);
-                    CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                    CriticalPoint punto = new CriticalPoint( adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
                     puntoCritico.add(punto);
                     this.contadorPreguntasReporbadas += 1;
                 }
@@ -302,9 +302,7 @@ public class SecurityDimensionFragment extends Fragment {
 
     }
 
-    public void construirDialogoResumen()
-    {
-        puntoCritico = new ArrayList<CriticalPoint>();
+
 
     public void setValoracionPromedioDimension1() {
 

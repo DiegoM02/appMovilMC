@@ -7,10 +7,17 @@ import java.util.HashMap;
 
 public class CriticalPoint {
 
-    //private ArrayList<String> personal;
+
     private String point;
-    //private String pregunta;
+    private String pregunta;
     private HashMap<String,ArrayList<String>> resume;
+
+    public CriticalPoint(String point,String pregunta)
+    {
+        this.pregunta = pregunta;
+        this.point = point;
+    }
+
 
     public CriticalPoint( String point) {
 
