@@ -58,7 +58,7 @@
             android:id="@+id/text_quesion"
             android:layout_gravity="center_horizontal"/>
 
-        <RatingBar
+        <android.support.v7.widget.AppCompatRatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"
@@ -69,7 +69,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="5dp"
             android:paddingTop="10dp"
-            android:id="@+id/rating_bar"
+            android:id="@+id/rating_bar_pregunta"
 
 
 

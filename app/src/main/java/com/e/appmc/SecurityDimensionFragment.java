@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.se.omapi.SEService;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.FloatRange;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -13,13 +17,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.e.bd.appmc.Point;
 import com.e.bd.appmc.Question;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.BreakIterator;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,8 +51,6 @@ public class SecurityDimensionFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
 
-
-
     private Dialog dialogPregunta;
     private Dialog dialogPreguntaSiNo;
     private ViewPager pagerPregunta;
@@ -58,11 +68,25 @@ public class SecurityDimensionFragment extends Fragment {
     private SummaryAdapter resumenAdapter;
     private Dialog dialogoResumen;
     private Button buttonFinalizarEvaluacion;
+    private TextView textPreguntasPositivas;
+    private TextView textPreguntasNegativas;
+    private int contadorPreguntasNegativas;
+    private int contadorPreguntasReporbadas;
+    private TextView dimension1Valoracion;
+    private TextView dimension2Valoracion;
+    private TextView dimension3Valoracion;
+    private TextView dimension4Valoracion;
+    private int dimensionActiva = 0;
     ArrayList<CriticalPoint> puntoCritico;
     private String puntoActual;
     private String preguntaActual;
+    private ArrayList<Assessment> valoraciones;
+    RatingBar barValoracion;
+
+
     private OnFragmentInteractionListener mListener;
     ArrayList<QuestionRating> questionsRaitings;
+
 
     public SecurityDimensionFragment() {
         // Required empty public constructor
@@ -94,7 +118,6 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,37 +130,42 @@ public class SecurityDimensionFragment extends Fragment {
         dimension1 = (CardView) view.findViewById(R.id.cardView2);
         dimension2 = (CardView) view.findViewById(R.id.cardView3);
         dimension3 = (CardView) view.findViewById(R.id.cardView4);
+        dimension1Valoracion = (TextView) view.findViewById(R.id.textView);
+        dimension2Valoracion = (TextView) view.findViewById(R.id.textView1);
+        dimension3Valoracion = (TextView) view.findViewById(R.id.textView2);
+        dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
+        puntoCritico = new ArrayList<CriticalPoint>();
+        valoraciones = new ArrayList<Assessment>();
         disableCardView();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
-
-
 
 
         return view;
     }
 
 
-    public void disableCardView()
-    {
+    public void disableCardView() {
         dimension.setEnabled(false);
         dimension1.setEnabled(false);
         dimension2.setEnabled(false);
         dimension3.setEnabled(false);
     }
 
-    public void enableCardView()
-    {
+
+    public void enableCardView() {
         dimension.setEnabled(true);
         dimension1.setEnabled(true);
         dimension2.setEnabled(true);
         dimension3.setEnabled(true);
     }
 
-    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions) {
+    public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions, int dimensionActiva) {
+        this.dimensionActiva = dimensionActiva;
+
         dialogPregunta.setContentView(R.layout.contenedor_question);
         adpter = new QuestionAdpater(view.getContext(), questions);
-        pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
+        pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager);
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
 
@@ -145,42 +173,90 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question>  questions) {
+    public void realizarEvaluacionDimensionNormasLaborales(View view, ArrayList<Question> questions, int dimensionActiva) {
+
+        this.dimensionActiva = dimensionActiva;
+
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
         adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
-        pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
+        pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No);
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
+        barValoracion = (RatingBar) dialogPreguntaSiNo.findViewById(R.id.rating_bar_pregunta);
         dialogPreguntaSiNo.show();
+
+
+    }
+
+    public void agregarValoracion(float valoracion, int posicion, String pregunta) {
+
+        Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
+        this.valoraciones.add(valoraciones);
 
     }
 
 
-    public void confirmarPregunta(View view)
-    {
-        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount()-1)
-        {
-           construirDialogoResumen();
-        }else
-        {
-            pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+    public void confirmarPregunta(View view, ArrayList<Question> questions) {
+
+
+        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
+
+
+            if (adpter.getValoracion() < 3) {
+                int index = pagerPregunta.getCurrentItem();
+                Question question = questions.get(index);
+                CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                puntoCritico.add(punto);
+                this.contadorPreguntasReporbadas += 1;
+            }
+
+            agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
+                    questions.get(pagerPregunta.getCurrentItem()).getDescription());
+            construirDialogoResumen(view);
+
+        } else {
+
+            if (adpter.getValoracion() == 0) {
+
+                alertaValoracionVacia();
+            } else if (adpter.getValoracion() > 0) {
+
+                agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
+                        questions.get(pagerPregunta.getCurrentItem()).getDescription());
+                pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem() + 1, true);
+                if (adpter.getValoracion() < 3) {
+                    int index = pagerPregunta.getCurrentItem();
+                    Question question = questions.get(index);
+                    CriticalPoint punto = new CriticalPoint(new ArrayList<String>(), adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                    puntoCritico.add(punto);
+                    this.contadorPreguntasReporbadas += 1;
+                }
+
+                adpter.setValoracion(0);
+
+
+            }
+
+
+
         }
 
 
-
     }
 
-    public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
-    {
+    public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
        int index =  pagerPreguntaSiNo.getCurrentItem();
        Question question = questions.get(index);
-
+        this.contadorPreguntasNegativas += 1;
        if (question.getType() == 1)
        {
            this.puntoActual = ((EvaluationActivity)getActivity()).obtenerNombrePunto(question.getPoint_id());
            this.preguntaActual = question.getDescription();
            construirDialogoPersonal(questions,personal,inflater);
        }
+       else {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
+        }
     }
 
     public void construirDialogoPersonal(ArrayList<Question> questions, final String[] personal,
@@ -189,7 +265,7 @@ public class SecurityDimensionFragment extends Fragment {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
-        builder.setMultiChoiceItems(personal,null,
+        builder.setMultiChoiceItems(personal, null,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which,
@@ -199,15 +275,16 @@ public class SecurityDimensionFragment extends Fragment {
                         } else if (mSelectedItems.contains(which)) {
                             mSelectedItems.remove(Integer.valueOf(which));
                         }
-                    }});
-        builder.setNegativeButton("Cancelar" , new DialogInterface.OnClickListener() {
+                    }
+                });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                dialog.dismiss();
             }
         });
 
-        builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 addCriticalPoint(personal,mSelectedItems);
@@ -220,36 +297,110 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-
-    public void cancelarPregunta(View view)
-    {
+    public void cancelarPregunta(View view) {
         dialogPregunta.dismiss();
 
     }
 
     public void construirDialogoResumen()
     {
-        //puntoCritico = new ArrayList<CriticalPoint>();
+        puntoCritico = new ArrayList<CriticalPoint>();
 
-        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Operativo","Prueba"));
-        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Recursos Humanos","Prueba"));
-        //puntoCritico.add(new CriticalPoint(new ArrayList<String>(),"Prevencion de Riesgos","Prueba"));
+    public void setValoracionPromedioDimension1() {
+
+        float valor = calcularValoracionSiNoPromedio();
+        dimension1Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension1Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension1Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
 
 
+    public void setValoracionPromedioDimension2() {
+
+        float valor = calcularValoracionPromedio();
+        dimension2Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension2Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension2Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public void setValoracionPromedioDimension3() {
+
+        float valor = calcularValoracionPromedio();
+        dimension3Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+            dimension3Valoracion.setBackgroundResource(R.color.negativo);
+        } else if (valor > 3.0) {
+            dimension3Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public void setValoracionPromedioDimension4() {
+
+        float valor = calcularValoracionPromedio();
+        dimension4Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+        } else if (valor > 3.0) {
+            dimension4Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+
+    public void elegirDimension() {
+        switch (this.dimensionActiva) {
+            case 1:
+                setValoracionPromedioDimension1();
+                break;
+            case 2:
+                setValoracionPromedioDimension2();
+                break;
+            case 3:
+                setValoracionPromedioDimension3();
+                break;
+            case 4:
+                setValoracionPromedioDimension4();
+                break;
+        }
+    }
+
+
+    public void construirDialogoResumen(final View view) {
+
+        
         resumenAdapter = new SummaryAdapter(puntoCritico,(EvaluationActivity) this.getActivity());
-
-        if (dialogPreguntaSiNo.isShowing())
-        {
+        if (dialogPreguntaSiNo.isShowing()) {
             dialogPreguntaSiNo.dismiss();
-        }else if (dialogPregunta.isShowing())
-        {
-           dialogPregunta.dismiss();
+        } else if (dialogPregunta.isShowing()) {
+            dialogPregunta.dismiss();
         }
 
+        String numeroPreguntasPositivas = "";
+        String numeroPreguntasNegativas = "";
+
         LayoutInflater layoutInflater = getLayoutInflater();
-        View v = layoutInflater.inflate(R.layout.summaryrecycler,null);
+        View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
 
+        if (this.dimensionActiva == 1) {
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+        } else {
+
+            numeroPreguntasPositivas =
+                    String.valueOf(pagerPregunta.getAdapter().getCount() - this.contadorPreguntasReporbadas);
+            numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasReporbadas);
+        }
+
+        textPreguntasPositivas = (TextView) v.findViewById(R.id.preguntas_positivas);
+        textPreguntasNegativas = (TextView) v.findViewById(R.id.preguntas_negativas);
+        textPreguntasPositivas.setText(numeroPreguntasPositivas);
+        textPreguntasNegativas.setText(numeroPreguntasNegativas);
         recyclerResumen = (RecyclerView) v.findViewById(R.id.recyclerResumen);
         recyclerResumen.setAdapter(resumenAdapter);
         recyclerResumen.setItemAnimator(new DefaultItemAnimator());
@@ -260,25 +411,36 @@ public class SecurityDimensionFragment extends Fragment {
         buttonFinalizarEvaluacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (puntoCritico.size() > 0) puntoCritico.clear();
+                elegirDimension();
                 dialogoResumen.dismiss();
-                puntoCritico.clear();
+                contadorPreguntasNegativas = 0;
+                contadorPreguntasReporbadas = 0;
+
+                if (valoraciones.size() > 0) valoraciones.clear();
+
+
             }
         });
 
 
     }
 
-    public void confirmarPreguntaSiNo(View view)
-    {
-        if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount()-1)
-        {
-            construirDialogoResumen();
 
-        }else
-        {
-            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+    public float calcularValoracionPromedio() {
+
+        float suma = 0;
+        for (Assessment v : this.valoraciones
+        ) {
+
+            suma = suma + v.getAssessment();
         }
 
+        int numeroPreguntas = pagerPregunta.getAdapter().getCount();
+        float promedio = Math.round(suma / numeroPreguntas);
+
+
+        return Math.round(promedio);
     }
 
     public void addCriticalPoint(String [] personal, ArrayList<Integer> selectedItems)
@@ -323,6 +485,46 @@ public class SecurityDimensionFragment extends Fragment {
         return this.questionsRaitings.get(index).getPoint();
     }
 
+
+    public float calcularValoracionSiNoPromedio() {
+
+        float pregunta = pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas;
+
+        float resultado = (pregunta * 5) / pagerPreguntaSiNo.getAdapter().getCount();
+
+        return Math.round(resultado);
+    }
+
+    public void alertaValoracionVacia() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Debes evaluar la pregunta");
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        Dialog diaologo = builder.create();
+        diaologo.show();
+
+    }
+
+
+    public void confirmarPreguntaSiNo(View view) {
+        if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
+            construirDialogoResumen(view);
+
+
+        } else {
+
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1,
+                    true);
+
+        }
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -340,16 +542,7 @@ public class SecurityDimensionFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

@@ -29,7 +29,6 @@ public class QuestionSiNoAdapter extends PagerAdapter {
     private SQLiteOpenHelperDataBase bd;
     private ArrayList<Question> questions = new ArrayList<Question>();
 
-    public String [] puntos = {"Aseo","Jardin","Baños","Baños 1"};
 
     public String obtenerPuntoDePregunta(int id)
     {

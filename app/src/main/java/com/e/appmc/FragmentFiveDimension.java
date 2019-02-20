@@ -2,16 +2,22 @@ package com.e.appmc;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Presentation;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.e.bd.appmc.Question;
 
@@ -52,6 +58,14 @@ public class FragmentFiveDimension extends Fragment {
     private Button cancelarButton;
 
     private OnFragmentInteractionListener mListener;
+    private int contadorPreguntasNegativas;
+    private ArrayList<CriticalPoint> puntoCritico;
+    private TextView textPreguntasPositivas;
+    private TextView textPreguntasNegativas;
+    private Button buttonFinalizarEvaluacion;
+    private SummaryAdapter resumenAdapter;
+    private RecyclerView recyclerResumen;
+    private Dialog dialogoResumen;
 
     public FragmentFiveDimension() {
         // Required empty public constructor
@@ -91,6 +105,8 @@ public class FragmentFiveDimension extends Fragment {
         dialogPregunta = new Dialog(view.getContext());
         dialogPreguntaSiNo = new Dialog(view.getContext());
         dimension = (CardView) view.findViewById(R.id.car_view);
+        dialogoResumen = new Dialog(view.getContext());
+        puntoCritico = new ArrayList<CriticalPoint>();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
         dimension = (CardView) view.findViewById(R.id.car_view);
@@ -155,6 +171,47 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
+
+
+    public void construirDialogoPersonal(ArrayList<Question> questions, String[] personal,
+                                         LayoutInflater inflater)
+    {
+        final ArrayList<Integer> mSelectedItems = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
+        builder.setMultiChoiceItems(personal,null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            mSelectedItems.add(which);
+                        } else if (mSelectedItems.contains(which)) {
+                            mSelectedItems.remove(Integer.valueOf(which));
+                        }
+                    }});
+        builder.setNegativeButton("Cancelar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+
+
+
     public void realizarEvaluacionDimensionNormasLaborales(View view , ArrayList<Question> questions) {
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
         adapter_si_no = new QuestionSiNoAdapter(view.getContext(),questions);
@@ -164,12 +221,63 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
-    public void noPreguntaSiNo(View view)
+    public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
     {
-        int indice = pagerPreguntaSiNo.getCurrentItem();
-        QuestionSiNoAdapter adapter = (QuestionSiNoAdapter) pagerPreguntaSiNo.getAdapter();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        int index =  pagerPreguntaSiNo.getCurrentItem();
+        Question question = questions.get(index);
+        this.contadorPreguntasNegativas+=1;
+        CriticalPoint punto = new CriticalPoint(new ArrayList<String>(),adapter_si_no.obtenerPuntoDePregunta(question.getPoint_id()),question.getDescription());
+        puntoCritico.add(punto);
+        if (question.getType() == 1)
+        {
+            construirDialogoPersonal(questions,personal,inflater);
+        }
+    }
 
 
+
+    public void construirDialogoResumen()
+    {
+
+
+
+        resumenAdapter = new SummaryAdapter(puntoCritico);
+
+
+        if (dialogPreguntaSiNo.isShowing())
+        {
+            dialogPreguntaSiNo.dismiss();
+        }else if (dialogPregunta.isShowing())
+        {
+            dialogPregunta.dismiss();
+        }
+
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View v = layoutInflater.inflate(R.layout.summaryrecycler,null);
+        buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
+        String numeroPreguntasPositivas = String.valueOf(pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas);
+        String numeroPreguntasNegativas = String.valueOf(this.contadorPreguntasNegativas);
+        textPreguntasPositivas = (TextView) v.findViewById(R.id.preguntas_positivas);
+        textPreguntasNegativas = (TextView) v.findViewById(R.id.preguntas_negativas);
+        textPreguntasPositivas.setText(numeroPreguntasPositivas);
+        textPreguntasNegativas.setText(numeroPreguntasNegativas);
+        recyclerResumen  = (RecyclerView) v.findViewById(R.id.recyclerResumen);
+        recyclerResumen.setAdapter(resumenAdapter);
+        recyclerResumen.setItemAnimator(new DefaultItemAnimator());
+        recyclerResumen.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        dialogoResumen.setContentView(v);
+        dialogoResumen.show();
+
+        buttonFinalizarEvaluacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (puntoCritico.size()> 0) puntoCritico.clear();
+                dialogoResumen.dismiss();
+                contadorPreguntasNegativas = 0;
+
+            }
+        });
     }
 
 
@@ -182,13 +290,29 @@ public class FragmentFiveDimension extends Fragment {
 
     public void confirmarPregunta(View view)
     {
-        pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount()-1)
+        {
+            construirDialogoResumen();
+        }else
+        {
+            pagerPregunta.setCurrentItem(pagerPregunta.getCurrentItem()+1,true);
+        }
 
     }
 
     public void confirmarPreguntaSiNo(View view)
     {
-        pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+
+        if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount()-1)
+        {
+            construirDialogoResumen();
+
+
+        }else
+        {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
+        }
+
     }
 
     public void disableCardView()

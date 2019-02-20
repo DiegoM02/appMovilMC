@@ -28,7 +28,9 @@ import com.e.bd.appmc.SQLiteOpenHelperDataBase;
 
 import java.util.ArrayList;
 
-public class EvaluationActivity extends AppCompatActivity implements FragmentFiveDimension.OnFragmentInteractionListener, SecurityDimensionFragment.OnFragmentInteractionListener {
+public class EvaluationActivity extends AppCompatActivity implements
+        FragmentFiveDimension.OnFragmentInteractionListener,
+        SecurityDimensionFragment.OnFragmentInteractionListener {
 
 
     private FragmentFiveDimension fragmentoCincoDimensiones;
@@ -36,7 +38,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     private Spinner centroActual;
     private SQLiteOpenHelperDataBase bd;
     private ArrayList<Question> questions;
-    private  ArrayList<Personal> personal;
+    private ArrayList<Personal> personal;
     private DBMediator mediador;
     private FloatingActionButton personalButton;
     private AlertDialog listaPersonalFlotante;
@@ -60,12 +62,13 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         int opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
             fragmentoCincoDimensiones = new FragmentFiveDimension();
-            getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones, fragmentoCincoDimensiones).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones,
+                    fragmentoCincoDimensiones).commit();
         } else {
             fragmentoCuatroDimensiones = new SecurityDimensionFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones, fragmentoCuatroDimensiones).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones,
+                    fragmentoCuatroDimensiones).commit();
         }
-
 
 
     }
@@ -75,20 +78,18 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
     }
 
-    public void realizarEvaluacion(View view)
-    {
+    public void realizarEvaluacion(View view) {
 
         obtenerFragmentoActivo(view);
     }
 
-    public void listaPersonal()
-    {
+    public void listaPersonal() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = getLayoutInflater();
-        View customView = layoutInflater.inflate(R.layout.personal_container,null);
+        View customView = layoutInflater.inflate(R.layout.personal_container, null);
 
         ArrayList<Personal> personals = mediador.rellenarPersonal(idCentroActual);
-        PersonalAdapter personal = new PersonalAdapter(personals,this,this);
+        PersonalAdapter personal = new PersonalAdapter(personals, this, this);
         RecyclerView list = (RecyclerView) customView.findViewById(R.id.list);
         list.setAdapter(personal);
         list.setItemAnimator(new DefaultItemAnimator());
@@ -99,65 +100,86 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
 
 
         builder.setView(customView);
-        listaPersonalFlotante =builder.create();
+        listaPersonalFlotante = builder.create();
         listaPersonalFlotante.show();
         enableDimensiones();
     }
 
 
-    public void enableDimensiones()
-    {
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
-        if (f instanceof FragmentFiveDimension)
-        {
+    public void enableDimensiones() {
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        if (f instanceof FragmentFiveDimension) {
             fragmentoCincoDimensiones.enableCardView();
-        }else if (f instanceof SecurityDimensionFragment)
-        {
+        } else if (f instanceof SecurityDimensionFragment) {
             fragmentoCuatroDimensiones.enableCardView();
         }
     }
 
 
-
     public void obtenerFragmentoActivo(View view) {
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
         if (f instanceof FragmentFiveDimension) {
 
             switch (view.getId()) {
                 case R.id.car_view:
-                    fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(1,
+                            1, this.idCentroActual);
+                    fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
+                            this.questions);
                     break;
                 case R.id.car_view_1:
-                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(2, 2,
+                            this.idCentroActual);
+                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions);
                     break;
                 case R.id.car_view_2:
-                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(3, 3,
+                            this.idCentroActual);
+                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions);
                     break;
                 case R.id.car_view_3:
-                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(4, 4,
+                            this.idCentroActual);
+                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions);
                     break;
                 case R.id.car_view_4:
-                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(5, 5,
+                            this.idCentroActual);
+                    fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions);
             }
 
         } else if (f instanceof SecurityDimensionFragment) {
             switch (view.getId()) {
                 case R.id.cardView:
-                    this.questions = mediador.llenarPreguntas(1,1, this.idCentroActual);
-                    fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(1, 1,
+                            this.idCentroActual);
+                    fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
+                            this.questions,1);
                     break;
                 case R.id.cardView2:
-                    this.questions = mediador.llenarPreguntas(2,2, this.idCentroActual);
-                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view, this.questions);
+                    this.questions = mediador.llenarPreguntas(2, 2,
+                            this.idCentroActual);
+                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions,2);
                     break;
                 case R.id.cardView3:
-                    this.questions = mediador.llenarPreguntas(3,3,this.idCentroActual);
-                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,this.questions);
+                    this.questions = mediador.llenarPreguntas(3, 3,
+                            this.idCentroActual);
+                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions,3);
                     break;
                 case R.id.cardView4:
-                    this.questions = mediador.llenarPreguntas(4,4,this.idCentroActual);
-                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view, this.questions);
+                    this.questions = mediador.llenarPreguntas(4, 4,
+                            this.idCentroActual);
+                    fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
+                            this.questions,4);
             }
         }
 
@@ -165,18 +187,20 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     }
 
     public void confirmarPregunta(View view) {
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
         if (f instanceof FragmentFiveDimension) {
             fragmentoCincoDimensiones.confirmarPregunta(view);
         } else if (f instanceof SecurityDimensionFragment) {
-            fragmentoCuatroDimensiones.confirmarPregunta(view);
+            fragmentoCuatroDimensiones.confirmarPregunta(view, this.questions);
         }
 
     }
 
     public void confirmarPreguntaSiNo(View view) {
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
         if (f instanceof FragmentFiveDimension) {
             fragmentoCincoDimensiones.confirmarPreguntaSiNo(view);
@@ -185,10 +209,10 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         }
     }
 
-  
-    public void cancelarEvaluacion(View view)
-    {
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+
+    public void cancelarEvaluacion(View view) {
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
         if (f instanceof FragmentFiveDimension) {
             fragmentoCincoDimensiones.cancelarPregunta(view);
         } else if (f instanceof SecurityDimensionFragment) {
@@ -197,66 +221,61 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     }
 
 
-    public String [] arrayPersonal()
-    {
+    public String[] arrayPersonal() {
         this.personal = mediador.rellenarPersonal(this.idCentroActual);
-        String [] personal = new String[this.personal.size()];
+        String[] personal = new String[this.personal.size()];
 
-        for (int i = 0 ; i < this.personal.size(); i++)
-        {
-            personal[i] = this.personal.get(i).getName()+" "+this.personal.get(i).getSurname();
+        for (int i = 0; i < this.personal.size(); i++) {
+            personal[i] = this.personal.get(i).getName() + " " + this.personal.get(i).getSurname();
         }
 
         return personal;
     }
 
-    public void buttonClickNegative(View view)
-    {
+    public void buttonClickNegative(View view) {
 
-        android.support.v4.app.Fragment f = getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
+        android.support.v4.app.Fragment f =
+                getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
         if (f instanceof FragmentFiveDimension) {
-            fragmentoCincoDimensiones.noPreguntaSiNo(view);
+            fragmentoCincoDimensiones.noPreguntaSiNo(view, this.questions, arrayPersonal());
         } else if (f instanceof SecurityDimensionFragment) {
-            fragmentoCuatroDimensiones.noPreguntaSiNo(view, this.questions , arrayPersonal());
+            fragmentoCuatroDimensiones.noPreguntaSiNo(view, this.questions, arrayPersonal());
         }
     }
 
 
-
-
-  public void activarSpinnerCentros()
-    {
-        centroActual = (Spinner)findViewById(R.id.centroActual);
-        adapter = new FacilitySpinnerAdapter(this,R.layout.spinner_facility_item,mediador.obtenerCentros(idUsuario));
+    public void activarSpinnerCentros() {
+        centroActual = (Spinner) findViewById(R.id.centroActual);
+        adapter = new FacilitySpinnerAdapter(this, R.layout.spinner_facility_item,
+                mediador.obtenerCentros(idUsuario));
         centroActual.setAdapter(adapter);
         centroActual.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                 Facility user = adapter.getItem(i);
-                Toast.makeText(EvaluationActivity.this, "ID: " + user.getId() + "\nName: " + user.getName(),
+                Toast.makeText(EvaluationActivity.this, "ID: " +
+                                user.getId() + "\nName: " + user.getName(),
                         Toast.LENGTH_SHORT).show();
                 idCentroActual = user.getId();
             }
-              @Override
+
+            @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
     }
 
-    public void agregarPersonal(View view)
-    {
-        Intent EnterAdittion = new Intent(this,PersonalAdittionActivity.class);
-        EnterAdittion.putExtra("idCentro",idCentroActual);
-        EnterAdittion.putExtra("idUsuario",idUsuario);
-        startActivityForResult(EnterAdittion,1);
-
+    public void agregarPersonal(View view) {
+        Intent EnterAdittion = new Intent(this, PersonalAdittionActivity.class);
+        EnterAdittion.putExtra("idCentro", idCentroActual);
+        EnterAdittion.putExtra("idUsuario", idUsuario);
+        startActivityForResult(EnterAdittion, 1);
 
 
     }
 
-    private void funcionalidadBotonPersonal()
-    {
+    private void funcionalidadBotonPersonal() {
         this.personalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -265,8 +284,7 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
         });
     }
 
-    public void recargarListaPersonal()
-    {
+    public void recargarListaPersonal() {
         listaPersonalFlotante.cancel();
         listaPersonal();
     }
@@ -285,15 +303,13 @@ public class EvaluationActivity extends AppCompatActivity implements FragmentFiv
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1)
-        {
+        if (requestCode == 1) {
             recargarListaPersonal();
         }
     }
-    
-    }
+
+}
 
 

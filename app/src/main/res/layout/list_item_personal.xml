@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="0.7dp"
+    >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -33,14 +35,12 @@
                 android:id="@+id/delete"
                 android:layout_width="19dp"
                 android:layout_height="21dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
+                android:layout_gravity="end|center_vertical"
                 android:foreground="@drawable/icon_eliminar"
-
                 android:scaleType="fitXY"
                 app:backgroundTint="@android:color/holo_red_light"
                 app:borderWidth="0dp"
-                app:elevation="5dp"
+                app:elevation="0dp"
 
                 app:maxImageSize="10dp" />
 
