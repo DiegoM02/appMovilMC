@@ -177,7 +177,7 @@ public class FragmentFiveDimension extends Fragment {
     public void realizarEvaluacionOtrasDimensiones(View view , ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext(),questions);
+        //adpter = new QuestionAdpater(view.getContext(),questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager) ;
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();

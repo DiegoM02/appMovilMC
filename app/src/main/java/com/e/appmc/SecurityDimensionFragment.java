@@ -136,6 +136,7 @@ public class SecurityDimensionFragment extends Fragment {
         dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
         puntoCritico = new ArrayList<CriticalPoint>();
         valoraciones = new ArrayList<Assessment>();
+        questionsRaitings = new ArrayList<QuestionRating>();
         disableCardView();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
@@ -164,7 +165,8 @@ public class SecurityDimensionFragment extends Fragment {
         this.dimensionActiva = dimensionActiva;
 
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext(), questions);
+        adpter = new QuestionAdpater(view.getContext(), questions,this);
+        this.fillQuestionPoints(questions);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager);
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
@@ -189,18 +191,34 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void agregarValoracion(float valoracion, int posicion, String pregunta) {
 
-        Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
-        this.valoraciones.add(valoraciones);
-
+        int opcion = existeValoracion(posicion,pregunta);
+        if(opcion ==-1) {
+            Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
+            this.valoraciones.add(valoraciones);
+        }
+        else{
+            this.valoraciones.get(opcion).setAssessment(valoracion);
+        }
     }
 
-
+    public int existeValoracion(int posicion,String pregunta)
+    {
+        for(int i =0; i<this.valoraciones.size();i++)
+        {
+            Assessment valoracion= this.valoraciones.get(i);
+            if(valoracion.getQuestion().equals(pregunta) && valoracion.getPosition()== posicion )
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     public void confirmarPregunta(View view, ArrayList<Question> questions) {
 
 
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
 
-
+            this.questionsRaitings.clear();
             if (adpter.getValoracion() < 3) {
                 int index = pagerPregunta.getCurrentItem();
                 Question question = questions.get(index);
@@ -473,14 +491,20 @@ public class SecurityDimensionFragment extends Fragment {
         }
     }
 
-    public void setRating(int index, int rating)
+    public void setRating(int index, float rating)
     {
         this.questionsRaitings.get(index).setPoint(rating);
     }
 
-    public int getRating(int index)
+    public float getRating(int index)
     {
         return this.questionsRaitings.get(index).getPoint();
+    }
+
+    public void confirmClick(View view, ArrayList<Question> questions,int i ,float valoracion)
+    {
+        setRating(i,valoracion);
+        confirmarPregunta(view,questions);
     }
 
 

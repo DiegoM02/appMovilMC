@@ -35,12 +35,14 @@ public class QuestionAdpater extends PagerAdapter   {
     SQLiteOpenHelperDataBase bd;
     ArrayList<Question> questions;
     private float valoracion;
+    private SecurityDimensionFragment fragment;
     private static final String BUNDLE_PAGER_VIEW_STATE = "state_pager";
 
 
-    public QuestionAdpater(Context context, ArrayList<Question> questions) {
+    public QuestionAdpater(Context context, ArrayList<Question> questions,SecurityDimensionFragment fragment) {
         this.context = context;
         this.questions = questions;
+        this.fragment = fragment;
     }
 
     @Override
@@ -86,12 +88,19 @@ public class QuestionAdpater extends PagerAdapter   {
 
             }
         });
+        barPregunta.setRating(fragment.getRating(position));
         cancelarButton = (Button) view.findViewById(R.id.button_cancelar);
         textPregunta = (TextView) view.findViewById(R.id.text_quesion);
         textPunto = (TextView) view.findViewById(R.id.text_point);
         indicadorPages = (TextView) view.findViewById(R.id.indicador_pages);
         textPunto.setText(obtenerPuntoDePregunta(this.questions.get(position).getPoint_id()));
         textPregunta.setText(questions.get(position).getDescription());
+        confirmarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment.confirmClick(view,questions,position,valoracion);
+            }
+        });
         indicadorPages.setText(position + 1 + " de " + questions.size());
         if (position == getCount() - 1) confirmarButton.setText("TERMINAR");
         container.addView(view);

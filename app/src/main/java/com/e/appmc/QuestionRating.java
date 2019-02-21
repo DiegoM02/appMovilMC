@@ -3,9 +3,9 @@ package com.e.appmc;
 public class QuestionRating
 {
     private String name;
-    private int point;
+    private float point;
 
-    public QuestionRating(String name, int point) {
+    public QuestionRating(String name, float point) {
         this.name = name;
         this.point = point;
     }
@@ -18,11 +18,11 @@ public class QuestionRating
         this.name = name;
     }
 
-    public int getPoint() {
+    public float getPoint() {
         return point;
     }
 
-    public void setPoint(int point) {
+    public void setPoint(float point) {
         this.point = point;
     }
 }
