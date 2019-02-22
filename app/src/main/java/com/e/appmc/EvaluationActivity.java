@@ -205,7 +205,7 @@ public class EvaluationActivity extends AppCompatActivity implements
         if (f instanceof FragmentFiveDimension) {
             fragmentoCincoDimensiones.confirmarPreguntaSiNo(view);
         } else if (f instanceof SecurityDimensionFragment) {
-            fragmentoCuatroDimensiones.confirmarPreguntaSiNo(view);
+            fragmentoCuatroDimensiones.confirmarPreguntaSiNo(view,this.questions);
         }
     }
 

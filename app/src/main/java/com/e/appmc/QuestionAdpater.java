@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -35,11 +36,11 @@ public class QuestionAdpater extends PagerAdapter   {
     SQLiteOpenHelperDataBase bd;
     ArrayList<Question> questions;
     private float valoracion;
-    private SecurityDimensionFragment fragment;
+    private Fragment fragment;
     private static final String BUNDLE_PAGER_VIEW_STATE = "state_pager";
 
 
-    public QuestionAdpater(Context context, ArrayList<Question> questions,SecurityDimensionFragment fragment) {
+    public QuestionAdpater(Context context, ArrayList<Question> questions,Fragment fragment) {
         this.context = context;
         this.questions = questions;
         this.fragment = fragment;
@@ -81,6 +82,7 @@ public class QuestionAdpater extends PagerAdapter   {
         bd = new SQLiteOpenHelperDataBase(view.getContext(), "mcapp", null, 1);
         confirmarButton = (Button) view.findViewById(R.id.button_confirmar);
         barPregunta = (RatingBar) view.findViewById(R.id.rating_bar_pregunta);
+        barPregunta.setRating(fillRating(position));
         barPregunta.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -88,7 +90,6 @@ public class QuestionAdpater extends PagerAdapter   {
 
             }
         });
-        barPregunta.setRating(fragment.getRating(position));
         cancelarButton = (Button) view.findViewById(R.id.button_cancelar);
         textPregunta = (TextView) view.findViewById(R.id.text_quesion);
         textPunto = (TextView) view.findViewById(R.id.text_point);
@@ -98,7 +99,7 @@ public class QuestionAdpater extends PagerAdapter   {
         confirmarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment.confirmClick(view,questions,position,valoracion);
+                callerConfirmClick(view,position);
             }
         });
         indicadorPages.setText(position + 1 + " de " + questions.size());
@@ -121,6 +122,33 @@ public class QuestionAdpater extends PagerAdapter   {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((LinearLayout) object);
+
+    }
+
+    public void callerConfirmClick(View view,int position)
+    {
+
+        if(fragment instanceof SecurityDimensionFragment)
+        {
+            ((SecurityDimensionFragment)fragment).confirmClick(view,questions,position,valoracion);
+        }
+        else
+        {
+            ((FragmentFiveDimension)fragment).confirmClick(view,questions,position,valoracion);
+        }
+    }
+
+    public float fillRating(int position)
+    {
+        Toast.makeText(fragment.getContext(),"entre",Toast.LENGTH_SHORT).show();
+        if(fragment instanceof SecurityDimensionFragment)
+        {
+            return ((SecurityDimensionFragment)fragment).getRating(position);
+        }
+        else
+        {
+            return ((FragmentFiveDimension)fragment).getRating(position);
+        }
 
     }
 

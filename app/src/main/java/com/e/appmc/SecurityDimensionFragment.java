@@ -85,7 +85,8 @@ public class SecurityDimensionFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
-    ArrayList<QuestionRating> questionsRaitings;
+    private ArrayList<QuestionRating> questionsRaitings;
+    private ArrayList<QuestionAnswered> questionsAnswered;
 
 
     public SecurityDimensionFragment() {
@@ -137,6 +138,7 @@ public class SecurityDimensionFragment extends Fragment {
         puntoCritico = new ArrayList<CriticalPoint>();
         valoraciones = new ArrayList<Assessment>();
         questionsRaitings = new ArrayList<QuestionRating>();
+        questionsAnswered = new ArrayList<QuestionAnswered>();
         disableCardView();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
@@ -180,7 +182,8 @@ public class SecurityDimensionFragment extends Fragment {
         this.dimensionActiva = dimensionActiva;
 
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
-        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions,this);
+        this.fillQuestionAnswered(questions);
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No);
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         barValoracion = (RatingBar) dialogPreguntaSiNo.findViewById(R.id.rating_bar_pregunta);
@@ -266,6 +269,7 @@ public class SecurityDimensionFragment extends Fragment {
        int index =  pagerPreguntaSiNo.getCurrentItem();
        Question question = questions.get(index);
         this.contadorPreguntasNegativas += 1;
+        this.addQuestionAnsweredNegative(question.getDescription(),index);
        if (question.getType() == 1)
        {
            this.puntoActual = ((EvaluationActivity)getActivity()).obtenerNombrePunto(question.getPoint_id());
@@ -533,7 +537,9 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void confirmarPreguntaSiNo(View view) {
+    public void confirmarPreguntaSiNo(View view,ArrayList<Question> questions) {
+        Question question = questions.get(pagerPreguntaSiNo.getCurrentItem());
+        this.addQuestionAnsweredPositive(question.getDescription(),pagerPreguntaSiNo.getCurrentItem());
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
             construirDialogoResumen(view);
 
@@ -545,6 +551,34 @@ public class SecurityDimensionFragment extends Fragment {
 
         }
 
+    }
+
+    public void addQuestionAnsweredPositive(String name, int position)
+    {
+
+        this.questionsAnswered.get(position).setAnswer(0);
+
+    }
+
+    public void addQuestionAnsweredNegative(String name,int position)
+    {
+
+        this.questionsAnswered.get(position).setAnswer(1);
+
+    }
+
+    public void fillQuestionAnswered(ArrayList<Question> questions)
+    {
+        for(int i=0;i<questions.size();i++)
+        {
+            Question question =questions.get(i);
+            this.questionsAnswered.add(new QuestionAnswered(question.getDescription(),i,-1));
+        }
+    }
+
+    public QuestionAnswered getQuestionAnswered(int position)
+    {
+        return this.questionsAnswered.get(position);
     }
 
     @Override
