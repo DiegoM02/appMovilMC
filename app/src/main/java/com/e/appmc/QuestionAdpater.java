@@ -140,7 +140,7 @@ public class QuestionAdpater extends PagerAdapter   {
 
     public float fillRating(int position)
     {
-        Toast.makeText(fragment.getContext(),"entre",Toast.LENGTH_SHORT).show();
+        Toast.makeText(fragment.getContext(),"entre",Toast.LENGTH_SHORT);
         if(fragment instanceof SecurityDimensionFragment)
         {
             return ((SecurityDimensionFragment)fragment).getRating(position);

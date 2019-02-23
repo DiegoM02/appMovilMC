@@ -2,6 +2,7 @@ package com.e.appmc;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -84,16 +85,17 @@ public class QuestionSiNoAdapter extends PagerAdapter {
         bd =  new SQLiteOpenHelperDataBase(view.getContext(),"mcapp",null,1);
         confirmarButton = (Button) view.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) view.findViewById(R.id.button_cancelar);
+        colorChanger(position,questions.get(position).getDescription());
         textPregunta = (TextView) view.findViewById(R.id.text_quesion);
         textPunto = (TextView) view.findViewById(R.id.text_point);
         indadorPages = (TextView) view.findViewById(R.id.indicador_pages_si_no);
         String punto = obtenerPuntoDePregunta(questions.get(position).getPoint_id());
 
-        Toast.makeText(this.context,"Count Row: "+punto,Toast.LENGTH_LONG);
+        Toast.makeText(this.context,"Count Row: "+position,Toast.LENGTH_LONG);
 
         textPunto.setText(punto);
         textPregunta.setText(questions.get(position).getDescription());
-        //colorChanger(position,questions.get(position).getDescription());
+
         indadorPages.setText(position+1+ " de "+ (questions.size()));
 
         if (position == getCount()-1) confirmarButton.setText("TERMINAR");
@@ -112,23 +114,41 @@ public class QuestionSiNoAdapter extends PagerAdapter {
 
     }
 
+
+
     public void colorChanger(int position,String name)
     {
 
         if(fragment instanceof SecurityDimensionFragment)
         {
             int answer = ((SecurityDimensionFragment)fragment).getQuestionAnswered(position).getAnswer();
-            Toast.makeText(fragment.getContext(),"Answer" + answer,Toast.LENGTH_SHORT).show();
+            Toast.makeText(fragment.getContext(),"Answer" + answer + name,Toast.LENGTH_SHORT);
             if( answer==0)
             {
-                confirmarButton.setBackgroundResource(R.color.colorPrimary);
+                confirmarButton.setBackgroundColor(Color.BLUE);
 
             }
             if(answer ==1)
             {
-                cancelarButton.setBackgroundResource(R.color.negativo);
+                cancelarButton.setBackgroundColor(Color.RED);
             }
         }
+        if(fragment instanceof FragmentFiveDimension)
+        {
+            int answer = ((FragmentFiveDimension)fragment).getQuestionAnswered(position).getAnswer();
+            Toast.makeText(fragment.getContext(),"Answer" + answer + name,Toast.LENGTH_SHORT);
+            if( answer==0)
+            {
+                confirmarButton.setBackgroundColor(Color.BLUE);
+
+            }
+            if(answer ==1)
+            {
+                cancelarButton.setBackgroundColor(Color.RED);
+            }
+
+        }
+
 
 
 
