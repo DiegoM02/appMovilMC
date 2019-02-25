@@ -1,13 +1,12 @@
 package com.e.appmc;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.e.bd.appmc.Facility;
+import com.e.appmc.bd.Facility;
 
 public class FacilitySpinnerAdapter extends ArrayAdapter<Facility> {
 

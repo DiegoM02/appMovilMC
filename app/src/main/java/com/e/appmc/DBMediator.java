@@ -3,17 +3,21 @@ package com.e.appmc;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
-import com.e.bd.appmc.Facility;
-import com.e.bd.appmc.FacilityContract;
-import com.e.bd.appmc.Personal;
-import com.e.bd.appmc.Point;
-import com.e.bd.appmc.Question;
-import com.e.bd.appmc.QuestionContract;
-import com.e.bd.appmc.SQLiteOpenHelperDataBase;
-import com.e.bd.appmc.User;
+import com.e.appmc.bd.Facility;
+import com.e.appmc.bd.FacilityContract;
+import com.e.appmc.bd.Personal;
+import com.e.appmc.bd.Point;
+import com.e.appmc.bd.Question;
+import com.e.appmc.bd.QuestionContract;
+import com.e.appmc.bd.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class DBMediator {
 
@@ -37,7 +41,8 @@ public final class DBMediator {
                     String surname = data.getString(data.getColumnIndex("surname"));
                     String rut = data.getString(data.getColumnIndex("rut"));
                     String created = data.getString(data.getColumnIndex("created"));
-                    personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual, 1,created));
+                    String status = data.getString(data.getColumnIndex("sync_status"));
+                    personal.add(new Personal(id, name, surname, rut, "", "", idCentroActual, 1,created,status));
                 }
             }while(data.moveToNext());
 
@@ -174,5 +179,43 @@ public final class DBMediator {
 
     }
 
+
+    public String composeJSONfromSQLitePersonal(){
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM personal where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idPersonal", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("namePersonal", cursor.getString(cursor.getColumnIndex("name")));
+                map.put("surnamePersonal",cursor.getString(cursor.getColumnIndex("surname")));
+                map.put("rutPersonal",cursor.getString(cursor.getColumnIndex("rut")));
+                map.put("phonePersonal",cursor.getString(cursor.getColumnIndex("phone")));
+                map.put("emailPersonal",cursor.getString(cursor.getColumnIndex("email")));
+                map.put("statePersonal",cursor.getString(cursor.getColumnIndex("state")));
+                map.put("dateCreated",cursor.getString(cursor.getColumnIndex("created")));
+                map.put("facilityId",cursor.getString(cursor.getColumnIndex("facility_id")));
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+
+    public void updateSyncStatus(String id, String status){
+         this.db.getWritableDatabase();
+        String updateQuery = "Update users set udpateStatus = '"+ status +"' where userId="+"'"+ id +"'";
+        Log.d("query",updateQuery);
+        ContentValues values = new ContentValues();
+        values.put("sync_status",status);
+        db.getWritableDatabase().update("personal",values,"id = " + id,null);
+        db.close();
+    }
 
 }

@@ -41,8 +41,7 @@ public class MainMenuActivity extends AppCompatActivity {
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
 
 
-        Bitmap image = loadImageBitmap(this,"profile","jpg");
-        if (image != null) this.imageProfile.setImageBitmap(image);
+
 
     }
 

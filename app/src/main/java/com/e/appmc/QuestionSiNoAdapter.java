@@ -2,7 +2,9 @@ package com.e.appmc;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.e.bd.appmc.Question;
-import com.e.bd.appmc.QuestionContract;
-import com.e.bd.appmc.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Question;
+import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class QuestionSiNoAdapter extends PagerAdapter {
     TextView indadorPages;
     private SQLiteOpenHelperDataBase bd;
     private ArrayList<Question> questions = new ArrayList<Question>();
+    private Fragment fragment;
 
 
     public String obtenerPuntoDePregunta(int id)
@@ -55,9 +57,10 @@ public class QuestionSiNoAdapter extends PagerAdapter {
         return questions;
     }
 
-    public QuestionSiNoAdapter(Context context, ArrayList<Question> questions) {
+    public QuestionSiNoAdapter(Context context, ArrayList<Question> questions,Fragment fragment) {
         this.context = context;
         this.questions = questions;
+        this.fragment = fragment;
     }
 
     @Override
@@ -81,15 +84,19 @@ public class QuestionSiNoAdapter extends PagerAdapter {
         bd =  new SQLiteOpenHelperDataBase(view.getContext(),"mcapp",null,1);
         confirmarButton = (Button) view.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) view.findViewById(R.id.button_cancelar);
+        colorChanger(position,questions.get(position).getDescription());
         textPregunta = (TextView) view.findViewById(R.id.text_quesion);
         textPunto = (TextView) view.findViewById(R.id.text_point);
         indadorPages = (TextView) view.findViewById(R.id.indicador_pages_si_no);
         String punto = obtenerPuntoDePregunta(questions.get(position).getPoint_id());
-        Toast.makeText(this.context,"Count Row: "+punto,Toast.LENGTH_LONG);
+
+        Toast.makeText(this.context,"Count Row: "+position,Toast.LENGTH_LONG);
 
         textPunto.setText(punto);
         textPregunta.setText(questions.get(position).getDescription());
+
         indadorPages.setText(position+1+ " de "+ (questions.size()));
+
         if (position == getCount()-1) confirmarButton.setText("TERMINAR");
 
         container.addView(view);
@@ -103,6 +110,46 @@ public class QuestionSiNoAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((LinearLayout)object);
+
+    }
+
+
+
+    public void colorChanger(int position,String name)
+    {
+
+        if(fragment instanceof SecurityDimensionFragment)
+        {
+            int answer = ((SecurityDimensionFragment)fragment).getQuestionAnswered(position).getAnswer();
+            Toast.makeText(fragment.getContext(),"Answer" + answer + name,Toast.LENGTH_SHORT);
+            if( answer==0)
+            {
+                confirmarButton.setBackgroundColor(Color.BLUE);
+
+            }
+            if(answer ==1)
+            {
+                cancelarButton.setBackgroundColor(Color.RED);
+            }
+        }
+        if(fragment instanceof FragmentFiveDimension)
+        {
+            int answer = ((FragmentFiveDimension)fragment).getQuestionAnswered(position).getAnswer();
+            Toast.makeText(fragment.getContext(),"Answer" + answer + name,Toast.LENGTH_SHORT);
+            if( answer==0)
+            {
+                confirmarButton.setBackgroundColor(Color.BLUE);
+
+            }
+            if(answer ==1)
+            {
+                cancelarButton.setBackgroundColor(Color.RED);
+            }
+
+        }
+
+
+
 
     }
 }

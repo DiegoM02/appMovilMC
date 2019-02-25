@@ -2,12 +2,10 @@ package com.e.appmc;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +15,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.e.bd.appmc.Question;
-import com.e.bd.appmc.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Question;
+import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 
 import java.util.ArrayList;
 
@@ -35,12 +33,14 @@ public class QuestionAdpater extends PagerAdapter   {
     SQLiteOpenHelperDataBase bd;
     ArrayList<Question> questions;
     private float valoracion;
+    private Fragment fragment;
     private static final String BUNDLE_PAGER_VIEW_STATE = "state_pager";
 
 
-    public QuestionAdpater(Context context, ArrayList<Question> questions) {
+    public QuestionAdpater(Context context, ArrayList<Question> questions,Fragment fragment) {
         this.context = context;
         this.questions = questions;
+        this.fragment = fragment;
     }
 
     @Override
@@ -79,6 +79,7 @@ public class QuestionAdpater extends PagerAdapter   {
         bd = new SQLiteOpenHelperDataBase(view.getContext(), "mcapp", null, 1);
         confirmarButton = (Button) view.findViewById(R.id.button_confirmar);
         barPregunta = (RatingBar) view.findViewById(R.id.rating_bar_pregunta);
+        barPregunta.setRating(fillRating(position));
         barPregunta.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -92,6 +93,12 @@ public class QuestionAdpater extends PagerAdapter   {
         indicadorPages = (TextView) view.findViewById(R.id.indicador_pages);
         textPunto.setText(obtenerPuntoDePregunta(this.questions.get(position).getPoint_id()));
         textPregunta.setText(questions.get(position).getDescription());
+        confirmarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callerConfirmClick(view,position);
+            }
+        });
         indicadorPages.setText(position + 1 + " de " + questions.size());
         if (position == getCount() - 1) confirmarButton.setText("TERMINAR");
         container.addView(view);
@@ -112,6 +119,33 @@ public class QuestionAdpater extends PagerAdapter   {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((LinearLayout) object);
+
+    }
+
+    public void callerConfirmClick(View view,int position)
+    {
+
+        if(fragment instanceof SecurityDimensionFragment)
+        {
+            ((SecurityDimensionFragment)fragment).confirmClick(view,questions,position,valoracion);
+        }
+        else
+        {
+            ((FragmentFiveDimension)fragment).confirmClick(view,questions,position,valoracion);
+        }
+    }
+
+    public float fillRating(int position)
+    {
+        Toast.makeText(fragment.getContext(),"entre",Toast.LENGTH_SHORT);
+        if(fragment instanceof SecurityDimensionFragment)
+        {
+            return ((SecurityDimensionFragment)fragment).getRating(position);
+        }
+        else
+        {
+            return ((FragmentFiveDimension)fragment).getRating(position);
+        }
 
     }
 

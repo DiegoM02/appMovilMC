@@ -1,4 +1,4 @@
-package com.e.bd.appmc;
+package com.e.appmc.bd;
 
 import android.provider.BaseColumns;
 
