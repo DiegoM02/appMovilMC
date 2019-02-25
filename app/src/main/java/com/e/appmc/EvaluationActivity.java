@@ -2,7 +2,6 @@
 package com.e.appmc;
 
 import android.app.AlertDialog;
-import android.database.Cursor;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
@@ -11,20 +10,18 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.e.bd.appmc.Facility;
-import com.e.bd.appmc.FacilityContract;
-import com.e.bd.appmc.Personal;
-import com.e.bd.appmc.Point;
-import com.e.bd.appmc.Question;
-import com.e.bd.appmc.QuestionContract;
-import com.e.bd.appmc.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Facility;
+import com.e.appmc.bd.Personal;
+import com.e.appmc.bd.Point;
+import com.e.appmc.bd.Question;
+import com.e.appmc.bd.SQLiteOpenHelperDataBase;
+import com.e.appmc.sync.SyncDatabase;
 
 import java.util.ArrayList;
 
@@ -44,6 +41,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     private AlertDialog listaPersonalFlotante;
     private int idUsuario;
     private int idCentroActual;
+    private SyncDatabase sincroniza;
     private FacilitySpinnerAdapter adapter;
     private ArrayList<Point> points;
     @Override
@@ -53,6 +51,7 @@ public class EvaluationActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_evaluation);
         idUsuario = getIntent().getExtras().getInt("id");
         mediador = new DBMediator(this);
+        sincroniza = new SyncDatabase(this);
         personalButton = (FloatingActionButton) findViewById(R.id.personal);
         funcionalidadBotonPersonal();
         activarSpinnerCentros();
@@ -84,6 +83,8 @@ public class EvaluationActivity extends AppCompatActivity implements
     }
 
     public void listaPersonal() {
+
+        sincroniza.syncPersonaSQLite();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater layoutInflater = getLayoutInflater();
         View customView = layoutInflater.inflate(R.layout.personal_container, null);
@@ -276,6 +277,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     }
 
     private void funcionalidadBotonPersonal() {
+        sincroniza = new SyncDatabase(this);
         this.personalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

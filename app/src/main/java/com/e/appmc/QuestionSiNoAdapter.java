@@ -12,9 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.e.bd.appmc.Question;
-import com.e.bd.appmc.QuestionContract;
-import com.e.bd.appmc.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Question;
+import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 
 import java.util.ArrayList;
 

@@ -2,7 +2,6 @@ package com.e.appmc;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Presentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.e.bd.appmc.Question;
+import com.e.appmc.bd.Question;
 
 import java.util.ArrayList;
 

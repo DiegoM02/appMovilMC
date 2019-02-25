@@ -1,4 +1,4 @@
-package com.e.bd.appmc;
+package com.e.appmc.bd;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -198,8 +198,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             insertTableQuestion(db, new Question(39,"Equipo Telefonico MD",80,0,3,1,3));
             insertTableQuestion(db, new Question(40,"Hervidor",80,0,3,5,3));
             insertTableQuestion(db, new Question(41,"Calefactor",80,0,3,5,3));
-            insertTableQuestion(db, new Question(36,"Articulos de oficina",80,0,3,5,3));
-            insertTableQuestion(db, new Question(36,"Otros",80,0,3,5,3));
+            insertTableQuestion(db, new Question(42,"Articulos de oficina",80,0,3,5,3));
+            insertTableQuestion(db, new Question(43,"Otros",80,0,3,5,3));
 
 
         }
@@ -237,14 +237,14 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2,1,"14-02-2019"));
-            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4,1,"14-02-2019"));
-            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4,1,"14-02-2019"));
+            insertTablePersonal(db,new Personal(1,"Ariel","Cornejo","19.299.833-6","465464","asdas",2,1,"14-02-2019","no"));
+            insertTablePersonal(db, new Personal(2,"Diego","Matus","19.007.996-1","46465","",2,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(3,"Juan","Perez","18.456.203-6","4654654","",3,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(4,"Jose","Acevedo","18.426.203-6","4654654","",3,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(5,"Dylan","Tero","19.299.356-8","a46456","",1,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(6,"Benjamin","Sanhueza","19.626.586-5","64654654","",1,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(7,"Felipe","Ureta","19.741.223-9","64654650","",4,1,"14-02-2019","no"));
+            insertTablePersonal(db,new Personal(8,"Diego","Nuñez","19.987.546-9","5446","",4,1,"14-02-2019","no"));
 
         }
     }
@@ -294,6 +294,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             + PersonalContract.PersonalEntry.STATE + " INTEGER NOT NULL, "
             + PersonalContract.PersonalEntry.CREATED + " TEXT NOT NULL, "
             + PersonalContract.PersonalEntry.FACILITY_ID + " INTEGER NOT NULL, "
+            + PersonalContract.PersonalEntry.SYNC_STATE + " TEXT NOT NULL, "
             + " UNIQUE(" + PersonalContract.PersonalEntry.ID + ")," +
                 " FOREIGN KEY("+ PersonalContract.PersonalEntry.FACILITY_ID+ ") REFERENCES facility(id))";
     }

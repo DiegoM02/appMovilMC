@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.e.bd.appmc.User;
+import com.e.appmc.bd.User;
 
 public class MainActivity extends AppCompatActivity {
     private EditText usuario;

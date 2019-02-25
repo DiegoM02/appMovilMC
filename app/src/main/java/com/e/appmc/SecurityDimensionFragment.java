@@ -6,10 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.se.omapi.SEService;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.FloatRange;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -17,23 +13,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.e.bd.appmc.Point;
-import com.e.bd.appmc.Question;
+import com.e.appmc.bd.Question;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.BreakIterator;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**

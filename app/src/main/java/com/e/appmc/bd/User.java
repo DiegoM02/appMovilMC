@@ -1,8 +1,6 @@
-package com.e.bd.appmc;
+package com.e.appmc.bd;
 
 import android.content.ContentValues;
-
-import java.util.Date;
 
 public class User {
 

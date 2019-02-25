@@ -8,8 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import com.e.bd.appmc.Question;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
