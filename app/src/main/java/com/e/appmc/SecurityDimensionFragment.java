@@ -71,9 +71,14 @@ public class SecurityDimensionFragment extends Fragment {
     private ArrayList<Assessment> valoraciones;
     RatingBar barValoracion;
 
+    private int quantityAnsweredQuestions;
 
     private OnFragmentInteractionListener mListener;
-    ArrayList<QuestionRating> questionsRaitings;
+    private ArrayList<QuestionRating> questionsRaitings;
+    private boolean flagQuestionsRaitings;
+    private ArrayList<QuestionAnswered> questionsAnswered;
+    private boolean flagQuestionAnswered;
+
 
 
     public SecurityDimensionFragment() {
@@ -124,6 +129,11 @@ public class SecurityDimensionFragment extends Fragment {
         dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
         puntoCritico = new ArrayList<CriticalPoint>();
         valoraciones = new ArrayList<Assessment>();
+        questionsRaitings = new ArrayList<QuestionRating>();
+        flagQuestionsRaitings=true;
+        questionsAnswered = new ArrayList<QuestionAnswered>();
+        quantityAnsweredQuestions=0;
+        flagQuestionAnswered=true;
         disableCardView();
         confirmarButton = (Button) dialogPregunta.findViewById(R.id.button_confirmar);
         cancelarButton = (Button) dialogPregunta.findViewById(R.id.button_cancelar);
@@ -150,9 +160,12 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
-
+        if(flagQuestionsRaitings) {
+            this.fillQuestionPoints(questions);
+            flagQuestionsRaitings=false;
+        }
         dialogPregunta.setContentView(R.layout.contenedor_question);
-        adpter = new QuestionAdpater(view.getContext(), questions);
+        adpter = new QuestionAdpater(view.getContext(), questions,this);
         pagerPregunta = (ViewPager) dialogPregunta.findViewById(R.id.viewPager);
         pagerPregunta.setAdapter(adpter);
         dialogPregunta.show();
@@ -166,7 +179,11 @@ public class SecurityDimensionFragment extends Fragment {
         this.dimensionActiva = dimensionActiva;
 
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
-        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions);
+        adapter_si_no = new QuestionSiNoAdapter(view.getContext(), questions,this);
+        if(flagQuestionAnswered) {
+            this.fillQuestionAnswered(questions);
+            flagQuestionAnswered=false;
+        }
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No);
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         barValoracion = (RatingBar) dialogPreguntaSiNo.findViewById(R.id.rating_bar_pregunta);
@@ -177,29 +194,51 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void agregarValoracion(float valoracion, int posicion, String pregunta) {
 
-        Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
-        this.valoraciones.add(valoraciones);
-
+        int opcion = existeValoracion(posicion,pregunta);
+        if(opcion ==-1) {
+            Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
+            this.valoraciones.add(valoraciones);
+        }
+        else{
+            this.valoraciones.get(opcion).setAssessment(valoracion);
+        }
     }
 
-
+    public int existeValoracion(int posicion,String pregunta)
+    {
+        for(int i =0; i<this.valoraciones.size();i++)
+        {
+            Assessment valoracion= this.valoraciones.get(i);
+            if(valoracion.getQuestion().equals(pregunta) && valoracion.getPosition()== posicion )
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     public void confirmarPregunta(View view, ArrayList<Question> questions) {
 
 
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
+            Toast.makeText(this.getContext(),"Check " + checkAllQuestionPointed(),Toast.LENGTH_LONG).show();
+            if(checkAllQuestionPointed()) {
+                this.questionsRaitings.clear();
+                flagQuestionsRaitings=true;
+                if (adpter.getValoracion() < 3) {
+                    int index = pagerPregunta.getCurrentItem();
+                    Question question = questions.get(index);
+                    CriticalPoint punto = new CriticalPoint(adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
+                    puntoCritico.add(punto);
+                    this.contadorPreguntasReporbadas += 1;
+                }
 
-
-            if (adpter.getValoracion() < 3) {
-                int index = pagerPregunta.getCurrentItem();
-                Question question = questions.get(index);
-                CriticalPoint punto = new CriticalPoint( adpter.obtenerPuntoDePregunta(question.getPoint_id()), question.getDescription());
-                puntoCritico.add(punto);
-                this.contadorPreguntasReporbadas += 1;
+                agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
+                        questions.get(pagerPregunta.getCurrentItem()).getDescription());
+                construirDialogoResumen(view);
             }
-
-            agregarValoracion(adpter.getValoracion(), pagerPregunta.getCurrentItem(),
-                    questions.get(pagerPregunta.getCurrentItem()).getDescription());
-            construirDialogoResumen(view);
+            else{
+                Toast.makeText(this.getContext(),"Aun quedan preguntas que responder",Toast.LENGTH_LONG).show();
+            }
 
         } else {
 
@@ -236,6 +275,8 @@ public class SecurityDimensionFragment extends Fragment {
        int index =  pagerPreguntaSiNo.getCurrentItem();
        Question question = questions.get(index);
         this.contadorPreguntasNegativas += 1;
+        this.addQuestionAnsweredNegative(question.getDescription(),index);
+        this.quantityAnsweredQuestions += 1;
        if (question.getType() == 1)
        {
            this.puntoActual = ((EvaluationActivity)getActivity()).obtenerNombrePunto(question.getPoint_id());
@@ -461,14 +502,20 @@ public class SecurityDimensionFragment extends Fragment {
         }
     }
 
-    public void setRating(int index, int rating)
+    public void setRating(int index, float rating)
     {
         this.questionsRaitings.get(index).setPoint(rating);
     }
 
-    public int getRating(int index)
+    public float getRating(int index)
     {
         return this.questionsRaitings.get(index).getPoint();
+    }
+
+    public void confirmClick(View view, ArrayList<Question> questions,int i ,float valoracion)
+    {
+        setRating(i,valoracion);
+        confirmarPregunta(view,questions);
     }
 
 
@@ -497,10 +544,21 @@ public class SecurityDimensionFragment extends Fragment {
     }
 
 
-    public void confirmarPreguntaSiNo(View view) {
+    public void confirmarPreguntaSiNo(View view,ArrayList<Question> questions) {
+        Question question = questions.get(pagerPreguntaSiNo.getCurrentItem());
+        this.addQuestionAnsweredPositive(question.getDescription(),pagerPreguntaSiNo.getCurrentItem());
+        quantityAnsweredQuestions += 1;
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
-            construirDialogoResumen(view);
-
+            Toast.makeText(this.getContext(),"checked: " + checkAllQuestionAnswered() ,Toast.LENGTH_LONG).show();
+            if(checkAllQuestionAnswered()) {
+                this.questionsAnswered.clear();
+                quantityAnsweredQuestions=0;
+                flagQuestionAnswered=true;
+                construirDialogoResumen(view);
+            }
+            else{
+                //Toast.makeText(this.getContext(),"Aun quedan preguntas que responder",Toast.LENGTH_LONG).show();
+            }
 
         } else {
 
@@ -509,6 +567,55 @@ public class SecurityDimensionFragment extends Fragment {
 
         }
 
+    }
+
+    public void addQuestionAnsweredPositive(String name, int position)
+    {
+
+        this.questionsAnswered.get(position).setAnswer(0);
+
+    }
+
+    public void addQuestionAnsweredNegative(String name,int position)
+    {
+
+        this.questionsAnswered.get(position).setAnswer(1);
+
+    }
+
+    public void fillQuestionAnswered(ArrayList<Question> questions)
+    {
+        for(int i=0;i<questions.size();i++)
+        {
+            Question question =questions.get(i);
+            this.questionsAnswered.add(new QuestionAnswered(question.getDescription(),i,-1));
+        }
+    }
+
+    public QuestionAnswered getQuestionAnswered(int position)
+    {
+        return this.questionsAnswered.get(position);
+    }
+
+    public boolean checkAllQuestionPointed()
+    {
+        for(QuestionRating question : this.questionsRaitings)
+        {
+            if(question.getPoint()==0){ return false;}
+        }
+        return true;
+    }
+
+    public boolean checkAllQuestionAnswered()
+    {
+        for(int i =0;i<this.questionsAnswered.size();i++)
+        {
+            QuestionAnswered question = questionsAnswered.get(i);
+            if(question.getAnswer()==-1){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

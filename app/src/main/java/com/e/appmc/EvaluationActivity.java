@@ -204,9 +204,9 @@ public class EvaluationActivity extends AppCompatActivity implements
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
 
         if (f instanceof FragmentFiveDimension) {
-            fragmentoCincoDimensiones.confirmarPreguntaSiNo(view);
+            fragmentoCincoDimensiones.confirmarPreguntaSiNo(view,this.questions);
         } else if (f instanceof SecurityDimensionFragment) {
-            fragmentoCuatroDimensiones.confirmarPreguntaSiNo(view);
+            fragmentoCuatroDimensiones.confirmarPreguntaSiNo(view,this.questions);
         }
     }
 
