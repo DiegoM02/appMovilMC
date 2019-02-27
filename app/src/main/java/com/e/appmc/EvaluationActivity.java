@@ -126,30 +126,35 @@ public class EvaluationActivity extends AppCompatActivity implements
 
             switch (view.getId()) {
                 case R.id.car_view:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(1,
                             1, this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
                             this.questions,1);
                     break;
                 case R.id.car_view_1:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,2);
                     break;
                 case R.id.car_view_2:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,3);
                     break;
                 case R.id.car_view_3:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,4);
                     break;
                 case R.id.car_view_4:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(5, 5,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
@@ -159,24 +164,28 @@ public class EvaluationActivity extends AppCompatActivity implements
         } else if (f instanceof SecurityDimensionFragment) {
             switch (view.getId()) {
                 case R.id.cardView:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(1, 1,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
                             this.questions,1);
                     break;
                 case R.id.cardView2:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,2);
                     break;
                 case R.id.cardView3:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,3);
                     break;
                 case R.id.cardView4:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
@@ -246,6 +255,9 @@ public class EvaluationActivity extends AppCompatActivity implements
 
 
     public void activarSpinnerCentros() {
+
+        this.sincroniza.syncFacilitySQLite();
+
         centroActual = (Spinner) findViewById(R.id.centroActual);
         adapter = new FacilitySpinnerAdapter(this, R.layout.spinner_facility_item,
                 mediador.obtenerCentros(idUsuario));

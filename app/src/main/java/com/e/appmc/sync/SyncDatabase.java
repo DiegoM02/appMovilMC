@@ -18,7 +18,8 @@ import java.io.UnsupportedEncodingException;
 public class SyncDatabase {
 
 
-    private final static String URL = "http://192.168.1.3/syncpersonal/php/insert_personal.php";
+    private final static String URL = "http://192.168.1.10/syncpersonal/php/insert_personal.php";
+    private final static String URL_CENTRO = "http://192.168.1.10/syncpersonal/php/insert_facility.php";
     private AppCompatActivity activity;
     private DBMediator mediator;
 
@@ -47,7 +48,6 @@ public class SyncDatabase {
                     }
                     Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
@@ -67,5 +67,44 @@ public class SyncDatabase {
         });
 
 
+    }
+
+    public void syncFacilitySQLite()
+    {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("centroJSON", mediator.composeJSONfromSQLiteFacility());
+        client.post(URL_CENTRO, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                     JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+                        System.out.println(obj.get("id"));
+                        System.out.println(obj.get("status"));
+                        mediator.updateSyncStatusFacility(obj.get("id").toString(), obj.get("status").toString());
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

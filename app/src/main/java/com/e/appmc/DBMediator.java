@@ -103,7 +103,7 @@ public final class DBMediator {
                 String address = data.getString(data.getColumnIndex("address"));
                 int service_id = data.getInt(data.getColumnIndex("service_id"));
                 int evaluation_id = data.getInt(data.getColumnIndex("evaluation_id"));
-                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id);
+                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no");
                 i=i+1;
             }while(data.moveToNext());
 
@@ -210,12 +210,44 @@ public final class DBMediator {
 
     public void updateSyncStatus(String id, String status){
          this.db.getWritableDatabase();
-        String updateQuery = "Update users set udpateStatus = '"+ status +"' where userId="+"'"+ id +"'";
-        Log.d("query",updateQuery);
         ContentValues values = new ContentValues();
         values.put("sync_status",status);
         db.getWritableDatabase().update("personal",values,"id = " + id,null);
         db.close();
     }
+
+    public String composeJSONfromSQLiteFacility(){
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idCentro", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("userId", cursor.getString(cursor.getColumnIndex("user_id")));
+                map.put("created",cursor.getString(cursor.getColumnIndex("created")));
+                map.put("centroCode",cursor.getString(cursor.getColumnIndex("code")));
+                map.put("centroName",cursor.getString(cursor.getColumnIndex("name")));
+                map.put("centroAddress",cursor.getString(cursor.getColumnIndex("address")));
+
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public void updateSyncStatusFacility(String id, String status){
+        this.db.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("sync_status",status);
+        db.getWritableDatabase().update("facility",values,"id = " + id,null);
+        db.close();
+    }
+
 
 }
