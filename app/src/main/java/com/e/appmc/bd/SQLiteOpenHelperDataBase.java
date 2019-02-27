@@ -23,6 +23,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableSubservice());
         db.execSQL(createTableQuestion());
         db.execSQL(createTablePoint());
+        db.execSQL(createTableSummary());
         createDataUser(db);
         createDataFacility(db);
         createDataVisit(db);
@@ -32,6 +33,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         createDataEvaluation(db);
         createDataQuestion(db);
         createDataPoint(db);
+
 
 
     }
@@ -74,6 +76,10 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         return db.insert(PersonalContract.PersonalEntry.TABLE_NAME,null,personal.toContentValues());
     }
 
+    public long inserTableSummary(SQLiteDatabase db, Summary summary)
+    {
+        return db.insert(SummaryContract.SummaryEntry.TABLE_NAME,null,summary.toContentValue());
+    }
 
     public long insertTableQuestion(SQLiteDatabase db, Question question)
     {
@@ -361,7 +367,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public String createTableQuestion()
     {
         return "CREATE TABLE " + QuestionContract.questionEntry.TABLE_NAME+ " ("
-                + QuestionContract.questionEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + QuestionContract.questionEntry._ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + QuestionContract.questionEntry.ID+ " INTEGER NOT NULL, "
                 + QuestionContract.questionEntry.DESCRIPTION + " TEXT NOT NULL, "
                 + QuestionContract.questionEntry.APROVAL_PORCENTAGE + " TEXT NOT NULL, "
@@ -382,6 +388,18 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + PointContract.pointEntry.NAME+ " TEXT NOT NULL, "
                 + "UNIQUE ("+PointContract.pointEntry.ID+"))";
 
+    }
+
+    public String createTableSummary()
+    {
+        return "CREATE TABLE " + SummaryContract.SummaryEntry.TABLE_NAME +" ("
+                + SummaryContract.SummaryEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SummaryContract.SummaryEntry.FACILITY_ID +" INTEGER NOT NULL, "
+                + SummaryContract.SummaryEntry.CONTENT + " TEXT NOT NULL, "
+                + SummaryContract.SummaryEntry.DATE + " TEXT NOT NULL, "
+                + SummaryContract.SummaryEntry.SYNC_STATE + " TEXT NOT NULL, "
+                + " FOREIGN KEY(" + SummaryContract.SummaryEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
+                + "UNIQUE ("+SummaryContract.SummaryEntry.ID+"))";
     }
 
 

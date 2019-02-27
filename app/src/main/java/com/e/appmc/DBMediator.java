@@ -12,6 +12,7 @@ import com.e.appmc.bd.Point;
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.QuestionContract;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -155,6 +156,11 @@ public final class DBMediator {
         db.insertTablePersonal(db.getWritableDatabase(),personal);
     }
 
+    public void insertarResumen(Summary summary)
+    {
+        db.inserTableSummary(db.getWritableDatabase(),summary);
+    }
+
     public void actualizarEstadoPesonal(int idPersonal)
     {
         ContentValues cv = new ContentValues();
@@ -216,6 +222,29 @@ public final class DBMediator {
         values.put("sync_status",status);
         db.getWritableDatabase().update("personal",values,"id = " + id,null);
         db.close();
+    }
+
+    public String composeJSONFromSQLiteSummary()
+    {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM summary where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idSummary", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("content", cursor.getString(cursor.getColumnIndex("content")));
+                map.put("date",cursor.getString(cursor.getColumnIndex("date")));
+                map.put("facilityId",cursor.getString(cursor.getColumnIndex("facility_id")));
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
     }
 
 }

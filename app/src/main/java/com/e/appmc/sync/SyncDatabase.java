@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 public class SyncDatabase {
 
 
-    private final static String URL = "http://192.168.1.3/syncpersonal/php/insert_personal.php";
+    private final static String URL = "http://192.168.1.100/syncpersonal/php/insert_personal.php";
     private AppCompatActivity activity;
     private DBMediator mediator;
 

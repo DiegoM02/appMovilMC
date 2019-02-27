@@ -50,6 +50,7 @@ public class MainMenuActivity extends AppCompatActivity {
     {
         Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);
         goToEvaluation.putExtra("id",datosUsuario.getInt("id"));
+        goToEvaluation.putExtra("name",datosUsuario.getString("name"));
         startActivity(goToEvaluation);
     }
 
