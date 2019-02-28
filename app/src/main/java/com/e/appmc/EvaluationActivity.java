@@ -290,6 +290,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     public void recargarListaPersonal() {
         listaPersonalFlotante.cancel();
         listaPersonal();
+        sincroniza.updatePersonalSQLite();
     }
 
     public String obtenerNombrePunto(int id)
@@ -318,6 +319,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     public void insertarResumen(Summary summary)
     {
         mediador.insertarResumen(summary);
+        sincroniza.syncSummarySQLite();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

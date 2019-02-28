@@ -214,14 +214,22 @@ public final class DBMediator {
     }
 
 
-    public void updateSyncStatus(String id, String status){
+    public void updateSyncStatus(String id, String status,int type){
          this.db.getWritableDatabase();
-        String updateQuery = "Update users set udpateStatus = '"+ status +"' where userId="+"'"+ id +"'";
-        Log.d("query",updateQuery);
+        //String updateQuery = "Update users set udpateStatus = '"+ status +"' where userId="+"'"+ id +"'";
+        //Log.d("query",updateQuery);
         ContentValues values = new ContentValues();
         values.put("sync_status",status);
-        db.getWritableDatabase().update("personal",values,"id = " + id,null);
-        db.close();
+        switch (type)
+        {
+            case 1:
+                db.getWritableDatabase().update("personal",values,"id = " + id,null);
+                db.close();
+            case 2:
+                db.getWritableDatabase().update("summary",values,"id= " + id, null);
+                db.close();
+        }
+
     }
 
     public String composeJSONFromSQLiteSummary()
@@ -235,12 +243,34 @@ public final class DBMediator {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("idSummary", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
                 map.put("content", cursor.getString(cursor.getColumnIndex("content")));
-                map.put("date",cursor.getString(cursor.getColumnIndex("date")));
+                map.put("created",cursor.getString(cursor.getColumnIndex("created")));
                 map.put("facilityId",cursor.getString(cursor.getColumnIndex("facility_id")));
 
 
                 wordList.add(map);
             } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public String composeJSONfromSQLitePersonalStatus()
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT rut,state FROM personal WHERE state = 0 ";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if(cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("rutPersonal",cursor.getString(cursor.getColumnIndex("rut")));
+                map.put("statePersonal",String.valueOf(cursor.getString(cursor.getColumnIndex("state"))));
+
+                wordList.add(map);
+            }while(cursor.moveToNext());
         }
         db.close();
         Gson gson = new GsonBuilder().create();

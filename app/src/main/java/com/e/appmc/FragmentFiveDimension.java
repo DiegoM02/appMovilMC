@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.Summary;
+import com.e.appmc.sync.SyncDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,6 +141,7 @@ public class FragmentFiveDimension extends Fragment {
         dimension2Valoracion = (TextView) view.findViewById(R.id.text_2);
         dimension3Valoracion = (TextView) view.findViewById(R.id.text_3);
         dimension4Valoracion = (TextView) view.findViewById(R.id.text_4);
+
 
         disableCardView();
         // Inflate the layout for this fragment
@@ -279,6 +281,7 @@ public class FragmentFiveDimension extends Fragment {
         pagerPreguntaSiNo = (ViewPager) dialogPreguntaSiNo.findViewById(R.id.viewPager_Si_No) ;
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         dialogPreguntaSiNo.show();
+
 
     }
 
