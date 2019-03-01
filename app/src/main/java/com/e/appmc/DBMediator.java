@@ -277,4 +277,18 @@ public final class DBMediator {
         return gson.toJson(wordList);
     }
 
+    public String composeJSONfromSQLiteUserLogin(String user,String password)
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        HashMap<String,String> map = new HashMap<>();
+        map.put("user",user);
+        map.put("password",password);
+
+        wordList.add(map);
+
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
 }
