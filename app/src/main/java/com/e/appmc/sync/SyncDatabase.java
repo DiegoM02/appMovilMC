@@ -24,7 +24,7 @@ public class SyncDatabase {
     private final static String URL = "http://192.168.1.100/syncpersonal/php/insert_personal.php";
     private final static String URL_SUMMARY= "http://192.168.1.100/syncpersonal/php/insert_summary.php";
     private final static String URL_UPDATE_PERSONAl = "http://192.168.10.182/syncpersonal/php/update_personal.php";
-    private final static String URL_LOGIN_USER = "http://192.168.1.11/syncpersonal/php/login_mcs.php";
+    private final static String URL_LOGIN_USER = "http://172.16.46.186/syncpersonal/php/login_mcs.php";
     private AppCompatActivity activity;
     private DBMediator mediator;
     private HashMap<String,String> resultLogin;
@@ -33,7 +33,6 @@ public class SyncDatabase {
     public SyncDatabase(AppCompatActivity activity) {
         this.activity = activity;
         this.mediator = new DBMediator(this.activity);
-        resultLogin = new HashMap<>();
 
     }
 
@@ -181,8 +180,8 @@ public class SyncDatabase {
                         JSONObject object = (JSONObject) arr.get(i);
                         System.out.println("ID" + object.getString("id"));
                         System.out.println("name" + object.getString("name"));
-                        fillResulLogin(object.getString("name"),object.getString("id"));
-                        ((MainActivity)activity).betweenSession(object.getString("name"),object.getInt("id"));
+                        String name = object.getString("name") + " " + object.getString("surname");
+                        ((MainActivity)activity).betweenSession(name,object.getInt("id"),object.getInt("role"));
 
 
 
@@ -209,12 +208,7 @@ public class SyncDatabase {
 
     }
 
-    public void fillResulLogin(String name,String id )
-    {
-        resultLogin.put("name",name);
-        resultLogin.put("id",id);
 
-    }
 
 
 }
