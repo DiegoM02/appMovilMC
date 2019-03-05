@@ -2,7 +2,11 @@
 package com.e.appmc;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +49,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     private SyncDatabase sincroniza;
     private FacilitySpinnerAdapter adapter;
     private ArrayList<Point> points;
+    private BroadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,13 @@ public class EvaluationActivity extends AppCompatActivity implements
                     fragmentoCuatroDimensiones).commit();
         }
 
+        this.broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+
 
     }
 
@@ -78,9 +90,24 @@ public class EvaluationActivity extends AppCompatActivity implements
 
     }
 
+
+
     public void realizarEvaluacion(View view) {
 
         obtenerFragmentoActivo(view);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     public void listaPersonal() {
@@ -127,30 +154,35 @@ public class EvaluationActivity extends AppCompatActivity implements
 
             switch (view.getId()) {
                 case R.id.car_view:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(1,
                             1, this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
                             this.questions,1);
                     break;
                 case R.id.car_view_1:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,2);
                     break;
                 case R.id.car_view_2:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,3);
                     break;
                 case R.id.car_view_3:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,4);
                     break;
                 case R.id.car_view_4:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(5, 5,
                             this.idCentroActual);
                     fragmentoCincoDimensiones.realizarEvaluacionOtrasDimensiones(view,
@@ -160,24 +192,28 @@ public class EvaluationActivity extends AppCompatActivity implements
         } else if (f instanceof SecurityDimensionFragment) {
             switch (view.getId()) {
                 case R.id.cardView:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(1, 1,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionDimensionNormasLaborales(view,
                             this.questions,1);
                     break;
                 case R.id.cardView2:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(2, 2,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,2);
                     break;
                 case R.id.cardView3:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(3, 3,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
                             this.questions,3);
                     break;
                 case R.id.cardView4:
+                    if (this.questions.size() > 0) this.questions.clear();
                     this.questions = mediador.llenarPreguntas(4, 4,
                             this.idCentroActual);
                     fragmentoCuatroDimensiones.realizarEvaluacionOtrasDimensiones(view,
@@ -247,6 +283,9 @@ public class EvaluationActivity extends AppCompatActivity implements
 
 
     public void activarSpinnerCentros() {
+
+        this.sincroniza.syncFacilitySQLite();
+
         centroActual = (Spinner) findViewById(R.id.centroActual);
         adapter = new FacilitySpinnerAdapter(this, R.layout.spinner_facility_item,
                 mediador.obtenerCentros(idUsuario));
@@ -290,6 +329,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     public void recargarListaPersonal() {
         listaPersonalFlotante.cancel();
         listaPersonal();
+        sincroniza.updatePersonalSQLite();
     }
 
     public String obtenerNombrePunto(int id)
@@ -318,6 +358,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     public void insertarResumen(Summary summary)
     {
         mediador.insertarResumen(summary);
+        sincroniza.syncSummarySQLite();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -326,6 +367,8 @@ public class EvaluationActivity extends AppCompatActivity implements
             recargarListaPersonal();
         }
     }
+
+
 
 }
 

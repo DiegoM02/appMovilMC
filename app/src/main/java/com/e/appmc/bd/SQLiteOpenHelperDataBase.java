@@ -21,11 +21,12 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableVisit());
         db.execSQL(createTableService());
         db.execSQL(createTableSubservice());
+        db.execSQL(createTableAspect());
         db.execSQL(createTableQuestion());
         db.execSQL(createTablePoint());
         db.execSQL(createTableSummary());
         createDataUser(db);
-        createDataFacility(db);
+        //createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
@@ -55,6 +56,12 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         return db.insert(FacilityContract.FacilityEntry.TABLE_NAME,null,facility.toContentValues());
     }
+
+    public long insertTableAspect(SQLiteDatabase db, Aspect aspect)
+    {
+        return db.insert(AspectContract.AspectEntry.TABLE_NAME,null,aspect.toContentValues());
+    }
+
 
     public long insertTableVisit(SQLiteDatabase db, Visit visit)
     {
@@ -130,7 +137,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         if (db != null) {
             insertTableUser(db,new User(1,"Diego Matus","DMatus","12345","12-14-2019","19.007.996-1","diego@gmail.com",
                     "+56984775979",5));
-            insertTableUser(db,new User(2,"Ariel Cornejo","ABass","12345","12-14-2019","19.299.833-6","ariel@gmail.com",
+            insertTableUser(db,new User(9,"Ariel Cornejo","ABass","12345","12-14-2019","19.299.833-6","ariel@gmail.com",
                     "+56984775979",5));
             insertTableUser(db,new User(3,"Arturo Torres","ATorres","12345","12-14-2019","19.289.833-6","aturo@gmail.com",
                     "+56984775979",1));
@@ -146,10 +153,10 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1));
-            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1));
-            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1));
-            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1));
+            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1,"no"));
+            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
+            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
+            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
         }
     }
 
@@ -282,6 +289,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.EVALUATION_ID + " INTEGER NOT NULL, "
+                + FacilityContract.FacilityEntry.SYNC_STATUS + " TEXT NOT NULL, "
                 + " UNIQUE (" + FacilityContract.FacilityEntry.ID + "),"
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"), "
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
@@ -390,6 +398,16 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
 
     }
 
+    public String createTableAspect()
+    {
+       return "CREATE TABLE "+ AspectContract.AspectEntry.TABLE_NAME+" ("
+                + AspectContract.AspectEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + AspectContract.AspectEntry.ID + " INTEGER NOT NULL, "
+                + AspectContract.AspectEntry.NAME+ " TEXT NOT NULL, "
+               + AspectContract.AspectEntry.CREATED+ " TEXT NOT NULL, "
+               + AspectContract.AspectEntry.APROVAL_PORCENTAGE+ " REAL NOT NULL, "
+                + "UNIQUE ("+PointContract.pointEntry.ID+"))";
+    }
     public String createTableSummary()
     {
         return "CREATE TABLE " + SummaryContract.SummaryEntry.TABLE_NAME +" ("

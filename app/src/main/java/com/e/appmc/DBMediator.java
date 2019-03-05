@@ -1,10 +1,13 @@
 package com.e.appmc;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.e.appmc.bd.Aspect;
 import com.e.appmc.bd.Facility;
 import com.e.appmc.bd.FacilityContract;
 import com.e.appmc.bd.Personal;
@@ -24,7 +27,7 @@ public final class DBMediator {
 
     private SQLiteOpenHelperDataBase db;
 
-    public DBMediator(AppCompatActivity activity) {
+    public DBMediator(Context activity) {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
     }
 
@@ -104,7 +107,7 @@ public final class DBMediator {
                 String address = data.getString(data.getColumnIndex("address"));
                 int service_id = data.getInt(data.getColumnIndex("service_id"));
                 int evaluation_id = data.getInt(data.getColumnIndex("evaluation_id"));
-                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id);
+                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no");
                 i=i+1;
             }while(data.moveToNext());
 
@@ -214,14 +217,20 @@ public final class DBMediator {
     }
 
 
-    public void updateSyncStatus(String id, String status){
+    public void updateSyncStatus(String id, String status,int type){
          this.db.getWritableDatabase();
-        String updateQuery = "Update users set udpateStatus = '"+ status +"' where userId="+"'"+ id +"'";
-        Log.d("query",updateQuery);
         ContentValues values = new ContentValues();
         values.put("sync_status",status);
-        db.getWritableDatabase().update("personal",values,"id = " + id,null);
-        db.close();
+        switch (type)
+        {
+            case 1:
+                db.getWritableDatabase().update("personal",values,"id = " + id,null);
+                db.close();
+            case 2:
+                db.getWritableDatabase().update("summary",values,"id= " + id, null);
+                db.close();
+        }
+
     }
 
     public String composeJSONFromSQLiteSummary()
@@ -235,7 +244,7 @@ public final class DBMediator {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("idSummary", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
                 map.put("content", cursor.getString(cursor.getColumnIndex("content")));
-                map.put("date",cursor.getString(cursor.getColumnIndex("date")));
+                map.put("created",cursor.getString(cursor.getColumnIndex("created")));
                 map.put("facilityId",cursor.getString(cursor.getColumnIndex("facility_id")));
 
 
@@ -247,4 +256,84 @@ public final class DBMediator {
         return gson.toJson(wordList);
     }
 
+    public String composeJSONfromSQLitePersonalStatus()
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT rut,state FROM personal WHERE state = 0 ";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if(cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("rutPersonal",cursor.getString(cursor.getColumnIndex("rut")));
+                map.put("statePersonal",String.valueOf(cursor.getString(cursor.getColumnIndex("state"))));
+
+                wordList.add(map);
+            }while(cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public String composeJSONfromSQLiteUserLogin(String user,String password)
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        HashMap<String,String> map = new HashMap<>();
+        map.put("user",user);
+        map.put("password",password);
+
+        wordList.add(map);
+
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public String composeJSONfromSQLiteFacility(){
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idCentro", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("userId", cursor.getString(cursor.getColumnIndex("user_id")));
+                map.put("created",cursor.getString(cursor.getColumnIndex("created")));
+                map.put("centroCode",cursor.getString(cursor.getColumnIndex("code")));
+                map.put("centroName",cursor.getString(cursor.getColumnIndex("name")));
+                map.put("centroAddress",cursor.getString(cursor.getColumnIndex("address")));
+
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public void updateSyncStatusFacility(String id, String status){
+        this.db.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("sync_status",status);
+        db.getWritableDatabase().update("facility",values,"id = " + id,null);
+        db.close();
+    }
+
+
+    public void insertarFacility(int id, int userId, String name, String code,
+                                 String created, String address,int serviceId) {
+
+        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no"));
+    }
+
+    public void insertarAspect(int id, String name, String created, double approval_percentage) {
+
+        db.insertTableAspect(db.getWritableDatabase(),new Aspect(id,created,name,approval_percentage));
+    }
 }

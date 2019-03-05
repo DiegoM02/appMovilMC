@@ -85,5 +85,30 @@ class DB_Functions {
         return $result;
     }
     
+
+    public function getFacility($FacilityID)
+    {
+        $result =mysqli_query($this->con,"SELECT name FROM facility where id = '$FacilityID'");
+        return $result;
+    }
+    public function getQuestions()
+
+    {
+        $result = mysqli_query($this->con,"SELECT description,aspect_id,point_id FROM question");
+        return $result;
+    }
+
+    public function getAspect($Aspect_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM aspect WHERE id = '$Aspect_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
+    }
+    public function getPoint($Point_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM point WHERE id = '$Point_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
+    }
 }
 ?>

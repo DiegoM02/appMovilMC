@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.Summary;
+import com.e.appmc.sync.SyncDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -225,7 +226,7 @@ public class SecurityDimensionFragment extends Fragment {
 
 
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
-            Toast.makeText(this.getContext(),"Check " + checkAllQuestionPointed(),Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(),"Check " + checkAllQuestionPointed(), Toast.LENGTH_LONG).show();
             if(checkAllQuestionPointed()) {
                 this.questionsRaitings.clear();
                 flagQuestionsRaitings=true;
@@ -554,7 +555,7 @@ public class SecurityDimensionFragment extends Fragment {
         this.addQuestionAnsweredPositive(question.getDescription(),pagerPreguntaSiNo.getCurrentItem());
         quantityAnsweredQuestions += 1;
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
-            Toast.makeText(this.getContext(),"checked: " + checkAllQuestionAnswered() ,Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(),"checked: " + checkAllQuestionAnswered() ,Toast.LENGTH_LONG);
             if(checkAllQuestionAnswered()) {
                 this.questionsAnswered.clear();
                 quantityAnsweredQuestions=0;
@@ -562,7 +563,7 @@ public class SecurityDimensionFragment extends Fragment {
                 construirDialogoResumen(view);
             }
             else{
-                //Toast.makeText(this.getContext(),"Aun quedan preguntas que responder",Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getContext(),"Aun quedan preguntas que responder",Toast.LENGTH_LONG).show();
             }
 
         } else {

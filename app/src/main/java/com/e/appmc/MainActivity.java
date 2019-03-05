@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import com.e.appmc.bd.User;
+import com.e.appmc.sync.SyncDatabase;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private EditText usuario;
@@ -22,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String BD_CREADA ="bd_creada";
     private User user;
     private DBMediator mediador;
+    private SyncDatabase sincronizador;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         usuario = (EditText)findViewById(R.id.EditUsuario);
+        usuario.setText("atorres@mdsg.cl");
         contraseña = (EditText)findViewById(R.id.EditContraseña);
+        contraseña.setText("$2y$10$aZICk1jWBFY4ExoTu8E1iuCwWeGZvbWcfihgGaZZk/0Vgt.e/XK7i");
         session = (CheckBox) findViewById(R.id.checkbox_session);
         this.mediador = new DBMediator(this);
+        sincronizador = new SyncDatabase(this);
         estaActivadoCheckBox = session.isChecked();
         if (obtenerEstadoRecordarSession()) enterSession();
 
@@ -64,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void guardarDatosUsuario()
+    public void guardarDatosUsuario(String name,int id)
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
-        sesionPreferencias.edit().putString(NOMBRE_USUARIO,user.getName()).apply();
-        sesionPreferencias.edit().putInt(ID_USUARIO,user.getId()).apply();
+        sesionPreferencias.edit().putString(NOMBRE_USUARIO,name).apply();
+        sesionPreferencias.edit().putInt(ID_USUARIO,id).apply();
     }
 
 
@@ -111,24 +119,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!usr.isEmpty() && !pass.isEmpty())
         {
-            user = mediador.comprobarUsuario(usr);
-            int opcion = this.validar(usr,pass,user);
-            switch(opcion){
-                case 0:
-                    this.guardarDatosUsuario();
-                    this.guadarEstadoRecordarSesion();
-                    enterSession();
-                    break;
-                case 1:
-                    usuario.setError("Usuario Incorrecto");
-                    break;
-                case 2:
-                    contraseña.setError("Contraseña Incorrecta");
-                    break;
-                case 3:
-                    usuario.setError("Usuario no valido");
-                    break;
-            }
+            sincronizador.loginSQLite(usr,pass);
 
         }
     }
@@ -152,13 +143,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void betweenSession(String name, int id,int role)
+    {
+        switch(name)
+        {
+            case "NoUser ":
+                usuario.setError("Usuario Incorrecto");
+                break;
+            case "NoPass ":
+                contraseña.setError("Contraseña Incorrecta");
+                break;
+            default:
+                roleChecker(name,id,role);
+                break;
+
+        }
+
+    }
+
+    private void roleChecker(String name,int id,int role)
+    {
+        if(role==5)
+        {
+            this.guardarDatosUsuario(name,id);
+            this.guadarEstadoRecordarSesion();
+            enterSession();
+        }
+        else
+        {
+            usuario.setError("Usuario No valido");
+        }
+    }
+
     private  void enterSession() {
 
-            Intent intent = new Intent(this,MainMenuActivity.class);
-            intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
-            intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
-            startActivity(intent);
-            finish();
+        Intent intent = new Intent(this,MainMenuActivity.class);
+        intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
+        intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
+        startActivity(intent);
+        finish();
 
     }
 }
