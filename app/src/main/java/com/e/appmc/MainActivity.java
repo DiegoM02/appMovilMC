@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import com.e.appmc.bd.User;
+import com.e.appmc.sync.SyncDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private EditText usuario;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BD_CREADA ="bd_creada";
     private User user;
     private DBMediator mediador;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private  void enterSession() {
+
 
             Intent intent = new Intent(this,MainMenuActivity.class);
             intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());

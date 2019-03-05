@@ -1,10 +1,13 @@
 package com.e.appmc;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.e.appmc.bd.Aspect;
 import com.e.appmc.bd.Facility;
 import com.e.appmc.bd.FacilityContract;
 import com.e.appmc.bd.Personal;
@@ -23,7 +26,7 @@ public final class DBMediator {
 
     private SQLiteOpenHelperDataBase db;
 
-    public DBMediator(AppCompatActivity activity) {
+    public DBMediator(Context activity) {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
     }
 
@@ -250,4 +253,14 @@ public final class DBMediator {
     }
 
 
+    public void insertarFacility(int id, int userId, String name, String code,
+                                 String created, String address,int serviceId) {
+
+        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no"));
+    }
+
+    public void insertarAspect(int id, String name, String created, double approval_percentage) {
+
+        db.insertTableAspect(db.getWritableDatabase(),new Aspect(id,created,name,approval_percentage));
+    }
 }

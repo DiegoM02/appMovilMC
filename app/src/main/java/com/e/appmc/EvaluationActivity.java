@@ -2,7 +2,11 @@
 package com.e.appmc;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +48,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     private SyncDatabase sincroniza;
     private FacilitySpinnerAdapter adapter;
     private ArrayList<Point> points;
+    private BroadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +74,13 @@ public class EvaluationActivity extends AppCompatActivity implements
                     fragmentoCuatroDimensiones).commit();
         }
 
+        this.broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+
 
     }
 
@@ -77,9 +89,24 @@ public class EvaluationActivity extends AppCompatActivity implements
 
     }
 
+
+
     public void realizarEvaluacion(View view) {
 
         obtenerFragmentoActivo(view);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     public void listaPersonal() {
@@ -323,6 +350,8 @@ public class EvaluationActivity extends AppCompatActivity implements
             recargarListaPersonal();
         }
     }
+
+
 
 }
 

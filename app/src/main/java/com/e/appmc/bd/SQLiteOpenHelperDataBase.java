@@ -21,10 +21,11 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableVisit());
         db.execSQL(createTableService());
         db.execSQL(createTableSubservice());
+        db.execSQL(createTableAspect());
         db.execSQL(createTableQuestion());
         db.execSQL(createTablePoint());
         createDataUser(db);
-        createDataFacility(db);
+        //createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
@@ -53,6 +54,12 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         return db.insert(FacilityContract.FacilityEntry.TABLE_NAME,null,facility.toContentValues());
     }
+
+    public long insertTableAspect(SQLiteDatabase db, Aspect aspect)
+    {
+        return db.insert(AspectContract.AspectEntry.TABLE_NAME,null,aspect.toContentValues());
+    }
+
 
     public long insertTableVisit(SQLiteDatabase db, Visit visit)
     {
@@ -124,7 +131,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         if (db != null) {
             insertTableUser(db,new User(1,"Diego Matus","DMatus","12345","12-14-2019","19.007.996-1","diego@gmail.com",
                     "+56984775979",5));
-            insertTableUser(db,new User(2,"Ariel Cornejo","ABass","12345","12-14-2019","19.299.833-6","ariel@gmail.com",
+            insertTableUser(db,new User(9,"Ariel Cornejo","ABass","12345","12-14-2019","19.299.833-6","ariel@gmail.com",
                     "+56984775979",5));
             insertTableUser(db,new User(3,"Arturo Torres","ATorres","12345","12-14-2019","19.289.833-6","aturo@gmail.com",
                     "+56984775979",1));
@@ -383,6 +390,17 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + PointContract.pointEntry.NAME+ " TEXT NOT NULL, "
                 + "UNIQUE ("+PointContract.pointEntry.ID+"))";
 
+    }
+
+    public String createTableAspect()
+    {
+       return "CREATE TABLE "+ AspectContract.AspectEntry.TABLE_NAME+" ("
+                + AspectContract.AspectEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + AspectContract.AspectEntry.ID + " INTEGER NOT NULL, "
+                + AspectContract.AspectEntry.NAME+ " TEXT NOT NULL, "
+               + AspectContract.AspectEntry.CREATED+ " TEXT NOT NULL, "
+               + AspectContract.AspectEntry.APROVAL_PORCENTAGE+ " REAL NOT NULL, "
+                + "UNIQUE ("+PointContract.pointEntry.ID+"))";
     }
 
 

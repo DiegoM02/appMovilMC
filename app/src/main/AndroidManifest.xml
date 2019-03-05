@@ -3,8 +3,11 @@
     package="com.e.appmc">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
     <protected-broadcast android:name="com.motorola.motocare.INTENT_TRIGGER" />
 
@@ -31,6 +34,11 @@
 
         <activity android:name=".PersonalAdittionActivity" />
         <activity android:name=".PersonalSummaryActivity"></activity>
+        <receiver android:name=".sync.MonitorConnectionInternet">
+            <intent-filter>
+                <action android:name="android.net.con.CONNECTIVITY_CHANGE"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

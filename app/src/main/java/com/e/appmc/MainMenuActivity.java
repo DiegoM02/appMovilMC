@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.e.appmc.sync.SyncDatabase;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,6 +33,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private ImageView imageProfile;
     private static final String  GUARDAR_IMAGE_PROFILE = "guardar_image_profile";
     private static final String RUTA_IMAGE = "ruta_image";
+    private SyncDatabase sincroniza;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,9 @@ public class MainMenuActivity extends AppCompatActivity {
         nombreUsuario= (TextView)findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
         nombreUsuario.setText(datosUsuario.getString("name"));
+        this.sincroniza = new SyncDatabase(this);
+        this.sincroniza.syncAspectWebsite();
+        sincroniza.syncFacilityWebsite();
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
 
 
