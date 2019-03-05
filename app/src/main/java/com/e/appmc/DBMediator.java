@@ -15,6 +15,7 @@ import com.e.appmc.bd.Point;
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.QuestionContract;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
+import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -158,6 +159,11 @@ public final class DBMediator {
         db.insertTablePersonal(db.getWritableDatabase(),personal);
     }
 
+    public void insertarResumen(Summary summary)
+    {
+        db.inserTableSummary(db.getWritableDatabase(),summary);
+    }
+
     public void actualizarEstadoPesonal(int idPersonal)
     {
         ContentValues cv = new ContentValues();
@@ -211,12 +217,79 @@ public final class DBMediator {
     }
 
 
-    public void updateSyncStatus(String id, String status){
+    public void updateSyncStatus(String id, String status,int type){
          this.db.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("sync_status",status);
-        db.getWritableDatabase().update("personal",values,"id = " + id,null);
+        switch (type)
+        {
+            case 1:
+                db.getWritableDatabase().update("personal",values,"id = " + id,null);
+                db.close();
+            case 2:
+                db.getWritableDatabase().update("summary",values,"id= " + id, null);
+                db.close();
+        }
+
+    }
+
+    public String composeJSONFromSQLiteSummary()
+    {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM summary where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idSummary", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("content", cursor.getString(cursor.getColumnIndex("content")));
+                map.put("created",cursor.getString(cursor.getColumnIndex("created")));
+                map.put("facilityId",cursor.getString(cursor.getColumnIndex("facility_id")));
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
         db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public String composeJSONfromSQLitePersonalStatus()
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT rut,state FROM personal WHERE state = 0 ";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if(cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("rutPersonal",cursor.getString(cursor.getColumnIndex("rut")));
+                map.put("statePersonal",String.valueOf(cursor.getString(cursor.getColumnIndex("state"))));
+
+                wordList.add(map);
+            }while(cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+    public String composeJSONfromSQLiteUserLogin(String user,String password)
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        HashMap<String,String> map = new HashMap<>();
+        map.put("user",user);
+        map.put("password",password);
+
+        wordList.add(map);
+
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
     }
 
     public String composeJSONfromSQLiteFacility(){

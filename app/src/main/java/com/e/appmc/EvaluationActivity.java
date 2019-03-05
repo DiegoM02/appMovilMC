@@ -24,6 +24,7 @@ import com.e.appmc.bd.Facility;
 import com.e.appmc.bd.Personal;
 import com.e.appmc.bd.Point;
 import com.e.appmc.bd.Question;
+import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 import com.e.appmc.sync.SyncDatabase;
 
@@ -328,6 +329,7 @@ public class EvaluationActivity extends AppCompatActivity implements
     public void recargarListaPersonal() {
         listaPersonalFlotante.cancel();
         listaPersonal();
+        sincroniza.updatePersonalSQLite();
     }
 
     public String obtenerNombrePunto(int id)
@@ -343,6 +345,21 @@ public class EvaluationActivity extends AppCompatActivity implements
         return "";
     }
 
+    public String obtenerNombreUsuario()
+    {
+        return getIntent().getExtras().getString("name");
+    }
+
+    public int getIdCentroActual()
+    {
+        return idCentroActual;
+    }
+
+    public void insertarResumen(Summary summary)
+    {
+        mediador.insertarResumen(summary);
+        sincroniza.syncSummarySQLite();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -20,8 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.e.appmc.bd.Question;
+import com.e.appmc.bd.Summary;
+import com.e.appmc.sync.SyncDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 
 /**
@@ -136,6 +141,7 @@ public class FragmentFiveDimension extends Fragment {
         dimension2Valoracion = (TextView) view.findViewById(R.id.text_2);
         dimension3Valoracion = (TextView) view.findViewById(R.id.text_3);
         dimension4Valoracion = (TextView) view.findViewById(R.id.text_4);
+
 
         disableCardView();
         // Inflate the layout for this fragment
@@ -276,6 +282,7 @@ public class FragmentFiveDimension extends Fragment {
         pagerPreguntaSiNo.setAdapter(adapter_si_no);
         dialogPreguntaSiNo.show();
 
+
     }
 
     public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
@@ -390,7 +397,7 @@ public class FragmentFiveDimension extends Fragment {
 
     public void construirDialogoResumen(final View view) {
 
-
+        this.addSummaryToDB();
         resumenAdapter = new SummaryAdapter(puntoCritico,(EvaluationActivity) this.getActivity());
         if (dialogPreguntaSiNo.isShowing()) {
             dialogPreguntaSiNo.dismiss();
@@ -664,5 +671,42 @@ public class FragmentFiveDimension extends Fragment {
             }
         }
         return true;
+    }
+
+    public String createContentSummary()
+    {
+        String content = "";
+        content = "Realizado por " + ((EvaluationActivity)getActivity()).obtenerNombreUsuario() + "\n";
+        for(CriticalPoint point : this.puntoCritico)
+        {
+            content =content + point.getPoint() + "\n";
+            HashMap<String,ArrayList<String>> resume = point.getResume();
+            ArrayList<String> questions = new ArrayList<>(resume.keySet());
+            for(String question : questions)
+            {
+                content = content + question +"\n";
+                ArrayList<String> personal = resume.get(question);
+                for(int i =0;i<personal.size();i++)
+                {
+                    content = content + "- " + personal.get(i) +"\n";
+                }
+            }
+
+            content = content + "\n\n";
+        }
+
+        return content;
+    }
+
+    public void addSummaryToDB()
+    {
+        String content = createContentSummary();
+        int faccilityId = ((EvaluationActivity)getActivity()).getIdCentroActual();
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy");
+        String date = dateformat.format(c.getTime());
+        com.e.appmc.bd.Summary summary = new Summary(content,date,faccilityId,"no");
+        ((EvaluationActivity)getActivity()).insertarResumen(summary);
+
     }
 }
