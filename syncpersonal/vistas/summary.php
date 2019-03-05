@@ -23,21 +23,30 @@
   <!-- Links -->
   <ul class="navbar-nav ">
     <li class="nav-item">
-      <a class="nav-link" href="inicio.html">Inicio</a>
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/inicio.php">Inicio</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="personal.php">Personal</a>
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/personal.php">Personal</a>
     </li>
     <li class="nav-item active">
       <a class="nav-link" href="#">Resumen Evaluaciones</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="question.php">Preguntas</a>
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/question.php">Preguntas</a>
     </li>
   </ul>
+  <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
+<ul class="navbar-nav ml-auto flex-nowrap"> 
+
+    <li class="nav-item">
+      <a class="nav-link" href="http://localhost/syncpersonal/modelos/logout.php">Cerrar sesión</a>
+    </li> 
+    
+  </ul>
+</div>
 </nav>
 
-</nav>
+
 
 <div class="container align-content-center mt-5">
   <div class="card  flex-wrap-reverse">
@@ -61,7 +70,7 @@
     </div>
       
 </div>
-  <?php require 'php/viewSummary.php';?>
+  <?php require '../modelos/viewSummary.php';?>
 </div>
   
 </div>

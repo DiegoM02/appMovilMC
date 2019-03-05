@@ -79,6 +79,29 @@ class DB_Functions {
         return $name;   
     }
 
+      public function getAllSummary() 
+    { 
+        $result = mysqli_query($this->con,"SELECT * FROM summary"); 
+        return $result; 
+    } 
+ 
+    public function storeSummary($Id,$Content,$Date,$FacilityID) 
+    { 
+        $result =mysqli_query($this->con,"INSERT INTO summary (id,content,created,facility_id) VALUES ('$Id','$Content','&Date','$FacilityID');"); 
+        if ($result) { 
+            return true; 
+        } else { 
+            if( mysqli_errno($this->con) == 1062) { 
+                // Duplicate key - Primary Key Violation 
+                return false; 
+            } else { 
+                // For other errors 
+                return false; 
+            }             
+        } 
+    } 
+ 
+
     public function getAllFacility() {
 
         $result = mysqli_query($this->con,"SELECT * FROM facility");
@@ -89,6 +112,30 @@ class DB_Functions {
     {
          $result = mysqli_query($this->con,"SELECT * FROM personal WHERE facility_id = '$Id'");
          return $result;
+    }
+    public function getFacility($FacilityID)
+    {
+        $result =mysqli_query($this->con,"SELECT name FROM facility where id = '$FacilityID'");
+        return $result;
+    }
+    public function getQuestions()
+
+    {
+        $result = mysqli_query($this->con,"SELECT description,aspect_id,point_id FROM question");
+        return $result;
+    }
+
+    public function getAspect($Aspect_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM aspect WHERE id = '$Aspect_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
+    }
+    public function getPoint($Point_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM point WHERE id = '$Point_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
     }
     
 }

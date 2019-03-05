@@ -38,7 +38,10 @@
       <a class="nav-link" href="#">Personal</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Resumen Evaluaciones</a>
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/summary.php">Resumen Evaluaciones</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/question.php">Preguntas</a>
     </li>
 
    
