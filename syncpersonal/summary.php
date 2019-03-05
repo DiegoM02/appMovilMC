@@ -31,6 +31,9 @@
     <li class="nav-item active">
       <a class="nav-link" href="#">Resumen Evaluaciones</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="question.php">Preguntas</a>
+    </li>
   </ul>
 </nav>
 

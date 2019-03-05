@@ -25,14 +25,14 @@
     <li class="nav-item">
       <a class="nav-link" href="inicio.html">Inicio</a>
     </li>
-    <li class="nav-item active">
-      <a class="nav-link" href="#">Personal</a>
+    <li class="nav-item">
+      <a class="nav-link" href="personal.php">Personal</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="summary.php">Resumen Evaluaciones</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="question.php">Preguntas</a>
+    <li class="nav-item active">
+      <a class="nav-link" href="#">Preguntas</a>
     </li>
   </ul>
 </nav>
@@ -55,7 +55,7 @@
 
 <div class="container row w-100 mt-2 mb-2 align-content-center">
   <div class="col-11">
-      <input class="form-control" id="myInput" type="text" placeholder="Busca una persona..">
+      <input class="form-control" id="myInput" type="text" placeholder="Busca una pregunta..">
   </div>
  
     <div class="col-1 align-content-end">
@@ -63,7 +63,7 @@
     </div>
       
 </div>
-  <?php require 'php/viewPersonal.php';?>
+  <?php require 'php/viewQuestion.php';?>
 </div>
   
 </div>

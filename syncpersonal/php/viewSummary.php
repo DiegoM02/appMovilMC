@@ -33,7 +33,7 @@
 
     <div id="<?php echo "collapse".$count_summary ?>" class="collapse" role="tabpanel" aria-labelledby="<?php echo "heading".$count_summary ?>">
       <div class="card-body">
-        <textarea id="text" onkeyup="do_resize(this);" disabled cols="100"><?php echo $row["content"]; ?></textarea>
+        <textarea id="text" onkeyup="do_resize(this);" disabled rows ="10" cols="100"><?php echo $row["content"]; ?></textarea>
       </div>
     </div>
   </div>
@@ -45,22 +45,4 @@ No records in MySQL DB
 </div>
   <?php } ?>
 
- <script>
-
-function do_resize(textbox) {
-
- var maxrows=5; 
-  var txt=textbox.value;
-  var cols=textbox.cols;
-
- var arraytxt=txt.split('\n');
-  var rows=arraytxt.length; 
-
- for (i=0;i<arraytxt.length;i++) 
-  rows+=parseInt(arraytxt[i].length/cols);
-
- if (rows>maxrows) textbox.rows=maxrows;
-  else textbox.rows=rows;
- }
-
-</script>
+ 
