@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <protected-broadcast android:name="com.motorola.motocare.INTENT_TRIGGER" />
 
@@ -18,6 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyABBYmVpOII4bWqBLOsFTE16AFfZyrHQrg" />
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity android:name=".EvaluationActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".MainActivity">
@@ -30,15 +39,19 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
+            android:resource="@array/preloaded_fonts"
+            />
         <activity android:name=".PersonalAdittionActivity" />
         <activity android:name=".PersonalSummaryActivity"></activity>
+        <activity android:name=".VisitActivity" />
+
         <receiver android:name=".sync.MonitorConnectionInternet">
             <intent-filter>
                 <action android:name="android.net.con.CONNECTIVITY_CHANGE"></action>
             </intent-filter>
         </receiver>
+
+        <service android:name="com.e.appmc.service.GeofenceTransitionsIntentService" />
     </application>
 
 </manifest>
