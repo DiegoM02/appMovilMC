@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.e.appmc.sync.SyncDatabase;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,6 +36,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private static final String  GUARDAR_IMAGE_PROFILE = "guardar_image_profile";
     private static final String RUTA_IMAGE = "ruta_image";
     private SyncDatabase sincroniza;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +52,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
 
+
     }
 
-
+    public void visitar(View view )
+    {
+        Intent goToVisit= new Intent(MainMenuActivity.this,VisitActivity.class);
+        startActivity(goToVisit);
+    }
     public void evaluar(View view)
     {
         Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);

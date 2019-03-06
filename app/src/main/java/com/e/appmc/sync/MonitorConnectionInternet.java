@@ -39,7 +39,7 @@ public class MonitorConnectionInternet  extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        this.sync = new SyncDatabase(context);
+       /* this.sync = new SyncDatabase(context);
         int [] type = {ConnectivityManager.TYPE_MOBILE, ConnectivityManager.TYPE_WIFI};
 
         if (isConnected(type, context))
@@ -50,6 +50,6 @@ public class MonitorConnectionInternet  extends BroadcastReceiver {
 
         context.sendBroadcast(new Intent("com.e.appmc.EvaluationActivity"));
 
-
+        */
     }
 }
