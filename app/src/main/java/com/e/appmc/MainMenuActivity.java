@@ -44,9 +44,6 @@ public class MainMenuActivity extends AppCompatActivity {
         nombreUsuario= (TextView)findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
         nombreUsuario.setText(datosUsuario.getString("name"));
-        this.sincroniza = new SyncDatabase(this);
-        this.sincroniza.syncAspectWebsite();
-        sincroniza.syncFacilityWebsite();
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
 
 

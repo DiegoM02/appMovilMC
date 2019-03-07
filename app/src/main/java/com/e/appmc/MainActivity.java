@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         usuario = (EditText)findViewById(R.id.EditUsuario);
-        usuario.setText("atorres@mdsg.cl");
+        //usuario.setText("atorres@mdsg.cl");
         contraseña = (EditText)findViewById(R.id.EditContraseña);
-        contraseña.setText("$2y$10$aZICk1jWBFY4ExoTu8E1iuCwWeGZvbWcfihgGaZZk/0Vgt.e/XK7i");
+        //contraseña.setText("$2y$10$aZICk1jWBFY4ExoTu8E1iuCwWeGZvbWcfihgGaZZk/0Vgt.e/XK7i");
         session = (CheckBox) findViewById(R.id.checkbox_session);
         this.mediador = new DBMediator(this);
         sincronizador = new SyncDatabase(this);
@@ -177,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
 
     private  void enterSession() {
 
+
+        this.sincronizador.syncAspectWebsite();
+        this.sincronizador.syncFacilityWebsite();
         Intent intent = new Intent(this,MainMenuActivity.class);
         intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
         intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
