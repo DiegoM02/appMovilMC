@@ -23,10 +23,10 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <service android:name=".GeofenceTransitionsIntentService"/>
-
+        <service android:enabled="true" android:name="com.e.appmc.service.GPSService" />
         <activity android:name=".EvaluationActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

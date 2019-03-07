@@ -32,7 +32,7 @@ public class VisitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit);
         mGeofenceList = new ArrayList<>();
-        Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.0662802,-71.1745578,10000).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+        Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.07468,-71.25500,10000).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                 Geofence.GEOFENCE_TRANSITION_EXIT |
                 Geofence.GEOFENCE_TRANSITION_DWELL).setLoiteringDelay(1).build();
         mGeofenceList.add(geofence);

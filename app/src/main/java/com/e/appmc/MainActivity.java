@@ -1,14 +1,18 @@
 package com.e.appmc;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import com.e.appmc.bd.User;
+import com.e.appmc.service.GPSService;
 import com.e.appmc.sync.SyncDatabase;
 
 import java.util.HashMap;
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     private DBMediator mediador;
     private SyncDatabase sincronizador;
+    private ServiceConnection m_serviceConnection;
+    private GPSService m_service;
 
 
     @Override
@@ -34,14 +40,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         usuario = (EditText)findViewById(R.id.EditUsuario);
-        //usuario.setText("atorres@mdsg.cl");
+        usuario.setText("ABass");
         contraseña = (EditText)findViewById(R.id.EditContraseña);
-        //contraseña.setText("$2y$10$aZICk1jWBFY4ExoTu8E1iuCwWeGZvbWcfihgGaZZk/0Vgt.e/XK7i");
+        contraseña.setText("matanui2009");
         session = (CheckBox) findViewById(R.id.checkbox_session);
         this.mediador = new DBMediator(this);
         sincronizador = new SyncDatabase(this);
         estaActivadoCheckBox = session.isChecked();
         if (obtenerEstadoRecordarSession()) enterSession();
+        m_serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                m_service = ((GPSService.MyBinder)iBinder).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                m_service = null;
+            }
+        };
+
+       // bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
 
 
 
@@ -167,6 +186,12 @@ public class MainActivity extends AppCompatActivity {
         {
             this.guardarDatosUsuario(name,id);
             this.guadarEstadoRecordarSesion();
+            Intent intent = new Intent(this, GPSService.class);
+            intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
+            intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
+            startService(intent);
+            //bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
+
             enterSession();
         }
         else
