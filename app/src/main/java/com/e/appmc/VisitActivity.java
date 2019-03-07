@@ -52,6 +52,12 @@ public class VisitActivity extends AppCompatActivity {
                 });
 
     }
+
+
+
+
+
+
     private GeofencingRequest getGeofencingRequest() {
         return new GeofencingRequest.Builder()
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_DWELL)

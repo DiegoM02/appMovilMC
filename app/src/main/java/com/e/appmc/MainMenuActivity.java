@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -36,10 +37,13 @@ public class MainMenuActivity extends AppCompatActivity {
     private static final String  GUARDAR_IMAGE_PROFILE = "guardar_image_profile";
     private static final String RUTA_IMAGE = "ruta_image";
     private SyncDatabase sincroniza;
+    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       solicitarPermision();
+
         setContentView(R.layout.activity_main_menu);
         nombreUsuario= (TextView)findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
@@ -50,6 +54,13 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void solicitarPermision()
+    {
+        ActivityCompat.requestPermissions(MainMenuActivity.this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_FINE_LOCATION);
     }
 
     public void visitar(View view )
