@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.e.appmc.service.FacilityGeofencing;
+import com.e.appmc.service.GefenceService;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;

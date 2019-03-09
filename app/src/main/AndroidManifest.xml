@@ -21,9 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <receiver
+            android:name="com.e.appmc.service.GeofenceReceiver"
+            android:permission="com.e.appmc.permission.A4S_SEND">
+            <intent-filter>
+                <action android:name="com.ad4screen.sdk.intent.action.TRIGGER" />
+                <category android:name="com.ad4screen.sdk.intent.category.GEOFENCE_NOTIFICATIONS" />
+            </intent-filter>
+        </receiver>
         <service android:name=".GeofenceTransitionsIntentService"/>
         <service android:enabled="true" android:name="com.e.appmc.service.GPSService" />
+        <service android:enabled="true" android:name="com.e.appmc.service.GefenceService"/>
         <activity android:name=".EvaluationActivity" />
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".MainActivity" android:launchMode="singleTop">
