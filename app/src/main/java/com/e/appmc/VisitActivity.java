@@ -42,6 +42,7 @@ public class VisitActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+
                         Toast.makeText(VisitActivity.this,"Geofence listo, ready pa todas las nenas",Toast.LENGTH_LONG).show();
                     }
                 })

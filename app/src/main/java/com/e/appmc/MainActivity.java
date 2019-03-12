@@ -1,5 +1,6 @@
 package com.e.appmc;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -180,7 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void roleChecker(String name,int id,int role)
+    @SuppressLint("NewApi")
+    private void roleChecker(String name, int id, int role)
     {
         if(role==5)
         {

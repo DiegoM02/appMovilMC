@@ -29,7 +29,7 @@ public class SyncDatabase {
     private final static String URL_DIMENSION_WEBSITE = "http://192.168.1.11/syncwebsite/selectAspect.php";
     private final static String URL_SUMMARY= "http://192.168.1.11/syncpersonal/php/insert_summary.php";
     private final static String URL_UPDATE_PERSONAl = "http://192.168.1.11/syncpersonal/php/update_personal.php";
-    private final static String URL_LOGIN_USER = "http://192.168.1.11/syncwebsite/login_mcs.php";
+    private final static String URL_LOGIN_USER = "http://172.16.46.186/syncwebsite/login_mcs.php";
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;

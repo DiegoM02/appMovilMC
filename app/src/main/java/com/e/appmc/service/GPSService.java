@@ -51,6 +51,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("Star GPS Service");
         googleApiClient.reconnect();
+        //startForeground();
         //userID = intent.getExtras().getInt("id");
         return START_STICKY;
 
@@ -63,6 +64,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     {
 
         super.onCreate();
+        //startForeground();
         //GoogleApiClient
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -105,10 +107,12 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
 
     private PendingIntent getGeofencePendingIntent()
     {
-        Intent intent = new Intent(this.getApplicationContext(), GeofenceTransitionsIntentService.class);
+        //Intent intent = new Intent(this.getApplicationContext(), GeofenceTransitionsIntentService.class);
         //intent.putExtra("id",this.userID);
-        mGeofencePendingIntent = PendingIntent.getService(this.getApplicationContext(), 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
+        //mGeofencePendingIntent = PendingIntent.getService(this.getApplicationContext(), 0, intent, PendingIntent.
+          //      FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(this, GeofenceReceiver.class);
+        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return mGeofencePendingIntent;
     }
 
