@@ -1,12 +1,17 @@
 package com.e.appmc;
 
 
+import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -14,16 +19,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.e.appmc.sync.SyncDatabase;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import static java.lang.System.out;
 
@@ -33,23 +44,71 @@ public class MainMenuActivity extends AppCompatActivity {
     private TextView nombreUsuario;
     private Bundle datosUsuario;
     private ImageView imageProfile;
-    private static final String  GUARDAR_IMAGE_PROFILE = "guardar_image_profile";
+    private static final String GUARDAR_IMAGE_PROFILE = "guardar_image_profile";
     private static final String RUTA_IMAGE = "ruta_image";
     private SyncDatabase sincroniza;
+    private PendingIntent mGeofencePendingIntent;
+    private ArrayList<Geofence> mGeofenceList;
+    private GeofencingClient mGeofencingClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        nombreUsuario= (TextView)findViewById(R.id.userText);
+        nombreUsuario = (TextView) findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
         nombreUsuario.setText(datosUsuario.getString("name"));
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
 
+        mGeofenceList = new ArrayList<>();
+        Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.07468, -71.25500, 1000).setExpirationDuration(12*60*60*1000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                Geofence.GEOFENCE_TRANSITION_EXIT).build();
+        mGeofenceList.add(geofence);
+        mGeofencingClient = new GeofencingClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        {
+            mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(MainMenuActivity.this, "Geofence listo, ready pa todas las nenas", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(MainMenuActivity.this, "Error" + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+        }
 
 
 
 
+    }
+
+
+
+
+
+    @NonNull
+    private GeofencingRequest getGeofencingRequest() {
+        return new GeofencingRequest.Builder()
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofences(mGeofenceList)
+                .build();
+    }
+
+    private PendingIntent getGeofencePendingIntent()
+    {
+        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
+        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
     }
 
     public void visitar(View view )
