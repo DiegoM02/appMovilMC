@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Binder;
@@ -14,8 +15,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.e.appmc.DBMediator;
 import com.e.appmc.GeofenceTransitionsIntentService;
+import com.e.appmc.MainActivity;
+import com.e.appmc.Singleton;
 import com.e.appmc.VisitActivity;
+import com.e.appmc.bd.Facility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -40,6 +45,10 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     private String userName;
     private int userID;
     private GoogleApiClient googleApiClient;
+    private DBMediator mediator;
+
+    private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
+    private static final String ID_USUARIO = "id_usuario";
 
 
     @Override
@@ -50,9 +59,11 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("Star GPS Service");
+
         googleApiClient.reconnect();
         //startForeground();
-        //userID = intent.getExtras().getInt("id");
+       // userID = intent.getExtras().getInt("id");
+        System.out.println("Service UserID: " + userID);
         return START_STICKY;
 
     }
@@ -64,6 +75,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     {
 
         super.onCreate();
+        mediator = new DBMediator(getApplicationContext());
         //startForeground();
         //GoogleApiClient
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -73,10 +85,11 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
         //GoogleApiClient
         System.out.println("Entre al Servicio");
         mGeofenceList = new ArrayList<>();
-        Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.07468,-71.25500,50).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+        /*Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.07468,-71.25500,50).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                 Geofence.GEOFENCE_TRANSITION_EXIT |
                 Geofence.GEOFENCE_TRANSITION_DWELL).setLoiteringDelay(1).build();
-        mGeofenceList.add(geofence);
+        mGeofenceList.add(geofence);*/
+        this.fillGeofences();
         mGeofencingClient = new GeofencingClient(this.getApplicationContext());
         /*mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -112,6 +125,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
         //mGeofencePendingIntent = PendingIntent.getService(this.getApplicationContext(), 0, intent, PendingIntent.
           //      FLAG_UPDATE_CURRENT);
         Intent intent = new Intent(this, GeofenceReceiver.class);
+        intent.putExtra("id",userID);
         mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return mGeofencePendingIntent;
     }
@@ -189,6 +203,27 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
                 Log.d(TAG, e.getMessage());
             }
         }
+    }
+
+
+    private void fillGeofences()
+    {
+        int id = this.obtenerIdUsuarioRecordarSesion();
+
+        Facility[] centros = this.mediator.obtenerCentros(id);
+        for(int i=0;i<centros.length;i++)
+        {
+            Geofence geofence = new Geofence.Builder().setRequestId(centros[i].getName()).setCircularRegion(centros[i].getLatitude(),centros[i].getLongitude(),centros[i].getRadius()).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                    Geofence.GEOFENCE_TRANSITION_EXIT |
+                    Geofence.GEOFENCE_TRANSITION_DWELL).setLoiteringDelay(1).build();
+            mGeofenceList.add(geofence);
+        }
+    }
+
+    public int obtenerIdUsuarioRecordarSesion()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getInt(ID_USUARIO,0);
     }
 
 }

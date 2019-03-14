@@ -29,7 +29,7 @@ public class SyncDatabase {
     private final static String URL_DIMENSION_WEBSITE = "http://192.168.1.11/syncwebsite/selectAspect.php";
     private final static String URL_SUMMARY= "http://192.168.1.11/syncpersonal/php/insert_summary.php";
     private final static String URL_UPDATE_PERSONAl = "http://192.168.1.11/syncpersonal/php/update_personal.php";
-    private final static String URL_LOGIN_USER = "http://172.16.46.186/syncwebsite/login_mcs.php";
+    private final static String URL_LOGIN_USER = "http://192.168.1.11/syncwebsite/login_mcs.php";
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;
@@ -136,8 +136,8 @@ public class SyncDatabase {
                     System.out.println(arr.length());
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = (JSONObject) arr.get(i);
-                        mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
-                                obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
+                       // mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
+                          //      obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
                     }
                     Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {

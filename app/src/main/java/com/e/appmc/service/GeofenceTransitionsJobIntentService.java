@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
@@ -14,13 +15,20 @@ import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.e.appmc.DBMediator;
+import com.e.appmc.EvaluationActivity;
 import com.e.appmc.MainActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
@@ -31,12 +39,22 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     private static final String CHANNEL_ID="channel01";
 
+    private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
+
+    private static final String HORA_INICIO="hora_inicio";
+
+    private static final String ID_USUARIO = "id_usuario";
+
+    private int id;
+
+    private DBMediator mediator;
+
     public static void enqueueWork(Context context, Intent intent) {
         enqueueWork(context, GeofenceTransitionsJobIntentService.class, JOB_ID, intent);
     }
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-
+        mediator = new DBMediator(getApplicationContext());
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
             //String errorMessage = GeofenceErrorMessages.getErrorString(this,
@@ -44,13 +62,24 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             Log.e(TAG, "error");
             return;
         }
+        //id = intent.getExtras().getInt("id");
+        System.out.println("On JobIntent: " + id);
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
+
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER)
+            {
+                startVisit();
+            }
+            else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
+            {
+                stopVisit(triggeringGeofences.get(0).getRequestId());
+            }
             // Get the transition details as a String.
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
@@ -91,11 +120,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             mNotificationManager.createNotificationChannel(mChannel);
         }
         // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), EvaluationActivity.class);
         // Construct a task stack.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Add the main Activity to the task stack as the parent.
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(EvaluationActivity.class);
         // Push the content Intent onto the stack.
         stackBuilder.addNextIntent(notificationIntent);
         // Get a PendingIntent containing the entire back stack.
@@ -109,7 +138,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 // to decode the Bitmap.
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         android.R.drawable.ic_lock_idle_alarm))
-                .setColor(Color.RED)
+                .setColor(Color.RED).addAction(android.R.drawable.ic_menu_send,"Inicar Visita",notificationPendingIntent)
                 .setContentTitle(notificationDetails)
                 .setContentText("transition")
                 .setContentIntent(notificationPendingIntent);
@@ -134,5 +163,51 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             default:
                 return "entro_salio";
         }
+    }
+
+    private void startVisit()
+    {
+        if(obtenerHoraInicioRecordarSession().equals("no hay hora"))
+        {
+            SimpleDateFormat format = new SimpleDateFormat("HH", Locale.US);
+            String hour = format.format(new Date());
+            Calendar calendar = Calendar.getInstance();
+            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+            guardarHoraInicio("" + hourOfDay);
+        }
+    }
+
+    private void stopVisit(String requestID)
+    {
+        if(!obtenerHoraInicioRecordarSession().equals("no hay hora"))
+        {
+
+            SimpleDateFormat format = new SimpleDateFormat("HH", Locale.US);
+            String hour = format.format(new Date());
+            Calendar calendar = Calendar.getInstance();
+            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+            mediator.registrarVisita(this.obtenerIdUsuarioRecordarSesion(),requestID,this.obtenerHoraInicioRecordarSession(),"" + hourOfDay);
+            //Toast.makeText(this.getApplicationContext(),"pudimos perrito",Toast.LENGTH_LONG);
+            this.guardarHoraInicio("no hay hora");
+
+        }
+    }
+
+    public void guardarHoraInicio(String hora)
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        horaPreferencias.edit().putString(HORA_INICIO,hora).apply();
+    }
+
+    public String obtenerHoraInicioRecordarSession()
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        return horaPreferencias.getString(HORA_INICIO,"no aplica");
+    }
+
+    public int obtenerIdUsuarioRecordarSesion()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getInt(ID_USUARIO,0);
     }
 }

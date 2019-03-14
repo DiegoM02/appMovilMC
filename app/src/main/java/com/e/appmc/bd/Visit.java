@@ -46,7 +46,7 @@ public class Visit {
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(VisitContract.VisitEntry.ID, id);
+        //values.put(VisitContract.VisitEntry.ID, id);
         values.put(VisitContract.VisitEntry.USER_ID,user_id);
         values.put(VisitContract.VisitEntry.FACILITY_ID,facility_id);
         values.put(VisitContract.VisitEntry.ENTER,enter);
