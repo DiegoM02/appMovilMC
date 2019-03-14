@@ -14,6 +14,8 @@ import com.e.appmc.bd.Personal;
 import com.e.appmc.bd.Point;
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.QuestionContract;
+import com.e.appmc.bd.ResponseEvaluation;
+import com.e.appmc.bd.ResponseQuestion;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.User;
@@ -335,5 +337,15 @@ public final class DBMediator {
     public void insertarAspect(int id, String name, String created, double approval_percentage) {
 
         db.insertTableAspect(db.getWritableDatabase(),new Aspect(id,created,name,approval_percentage));
+    }
+
+    public void insertarResponseQuestion(int id, int id_evaluation, int id_question,float valoracion) {
+
+        db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id,id_evaluation,id_question,valoracion,"no"));
+    }
+
+    public void insertarResponseEvaluation(int id, int id_evaluation,float valoracion) {
+
+        db.insertTableResponseEvaluation(db.getWritableDatabase(), new ResponseEvaluation(id,id_evaluation,valoracion,"no"));
     }
 }

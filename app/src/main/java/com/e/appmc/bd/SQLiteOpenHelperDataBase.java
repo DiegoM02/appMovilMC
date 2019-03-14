@@ -25,6 +25,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableQuestion());
         db.execSQL(createTablePoint());
         db.execSQL(createTableSummary());
+        db.execSQL(createTableResponseQuestion());
+        db.execSQL(createTableResponseEvaluation());
         createDataUser(db);
         //createDataFacility(db);
         createDataVisit(db);
@@ -50,6 +52,16 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public long insertTableUser(SQLiteDatabase db, User user)
     {
         return db.insert(UserContract.UserEntry.TABLE_NAME,null,user.toContentValues());
+    }
+
+    public long insertTableResponseQuestion(SQLiteDatabase db, ResponseQuestion response)
+    {
+        return db.insert(ResponseQuestionContract.ResponseQuestionEntry.TABLE_NAME,null,response.toContentValues());
+    }
+
+    public long insertTableResponseEvaluation(SQLiteDatabase db, ResponseEvaluation response)
+    {
+        return db.insert(ResponseEvaluationContract.ResponseEvaluationEntry.TABLE_NAME,null,response.toContentValues());
     }
 
     public long insertTableFacility(SQLiteDatabase db, Facility facility)
@@ -295,6 +307,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
     }
 
+
+
+
     public String createTablePersonal()
     {
         return "CREATE TABLE " + PersonalContract.PersonalEntry.TABLE_NAME + " ("
@@ -418,6 +433,31 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + SummaryContract.SummaryEntry.SYNC_STATE + " TEXT NOT NULL, "
                 + " FOREIGN KEY(" + SummaryContract.SummaryEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
                 + "UNIQUE ("+SummaryContract.SummaryEntry.ID+"))";
+    }
+
+    public String createTableResponseQuestion()
+    {
+        return "CREATE TABLE " + ResponseQuestionContract.ResponseQuestionEntry.TABLE_NAME +" ("
+                + ResponseQuestionContract.ResponseQuestionEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ID_EVALUATION +" INTEGER NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ID_QUESTION + " TEXT NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ASSESSMENT + " TEXT NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.SYNC_STATE + " TEXT NOT NULL, "
+                + " FOREIGN KEY(" + ResponseQuestionContract.ResponseQuestionEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
+                +   " FOREIGN KEY(" + ResponseQuestionContract.ResponseQuestionEntry.ID_QUESTION +") REFERENCES " + QuestionContract.questionEntry.TABLE_NAME + "(" + QuestionContract.questionEntry.ID+")"
+                + "UNIQUE ("+ ResponseQuestionContract.ResponseQuestionEntry.ID+"))";
+    }
+
+
+    public String createTableResponseEvaluation()
+    {
+        return "CREATE TABLE " + ResponseEvaluationContract.ResponseEvaluationEntry.TABLE_NAME +" ("
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +" INTEGER NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ASSESSMENT + " TEXT NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.SYNC_STATE + " TEXT NOT NULL, "
+                + " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
+                + "UNIQUE ("+ ResponseEvaluationContract.ResponseEvaluationEntry.ID+"))";
     }
 
 
