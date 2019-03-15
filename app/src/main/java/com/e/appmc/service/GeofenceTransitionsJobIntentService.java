@@ -183,11 +183,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
     {
         if(obtenerHoraInicioRecordarSession().equals("no hay hora"))
         {
-            SimpleDateFormat format = new SimpleDateFormat("HH", Locale.US);
-            String hour = format.format(new Date());
             Calendar calendar = Calendar.getInstance();
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            guardarHoraInicio("" + hourOfDay);
+            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            String date = format.format(calendar.getTime());
+            guardarHoraInicio(date);
         }
     }
 
@@ -196,11 +195,10 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         if(!obtenerHoraInicioRecordarSession().equals("no hay hora"))
         {
 
-            SimpleDateFormat format = new SimpleDateFormat("HH", Locale.US);
-            String hour = format.format(new Date());
             Calendar calendar = Calendar.getInstance();
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-            mediator.registrarVisita(this.obtenerIdUsuarioRecordarSesion(),requestID,this.obtenerHoraInicioRecordarSession(),"" + hourOfDay);
+            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            String date = format.format(calendar.getTime());
+            mediator.registrarVisita(this.obtenerIdUsuarioRecordarSesion(),requestID,this.obtenerHoraInicioRecordarSession(),date);
             //Toast.makeText(this.getApplicationContext(),"pudimos perrito",Toast.LENGTH_LONG);
             this.guardarHoraInicio("no hay hora");
 

@@ -45,6 +45,7 @@ public class MyVisitFragment extends Fragment {
     private FacilitySpinnerAdapter adapter;
     private DBMediator mediador;
     private int  idCentroActual;
+    private int idUser;
 
     public MyVisitFragment() {
         // Required empty public constructor
@@ -86,7 +87,7 @@ public class MyVisitFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         myVisitView.setLayoutManager(llm);
-        int idUser = getArguments().getInt("userId");
+        idUser = getArguments().getInt("userId");
         activarSpinnerCentros(v,idUser);
         inicializarDatos(idUser);
         inicializarAdaptador();
@@ -107,6 +108,9 @@ public class MyVisitFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                 Facility user = adapter.getItem(i);
                 idCentroActual = user.getId();
+                inicializarDatos(idUser);
+                inicializarAdaptador();
+
             }
 
             @Override

@@ -34,6 +34,10 @@ public class DBMediator {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
     }
 
+    public DBMediator(Context activity) {
+        this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
+    }
+
     public ArrayList<Personal> rellenarPersonal(int idCentroActual)
     {
         ArrayList<Personal> personal = new ArrayList<>();
@@ -362,9 +366,10 @@ public class DBMediator {
         if (cursor.moveToFirst()) {
             do {
 
-                String name = cursor.getColumnName(cursor.getColumnIndex("facility_name"));
-                String date = cursor.getColumnName(cursor.getColumnIndex("visit_date"));
-
+                String name = cursor.getString(cursor.getColumnIndex("facility_name"));
+                String date = cursor.getString(cursor.getColumnIndex("visit_date"));
+                System.out.println("name: " + name);
+                System.out.println("date: " + date);
                 visit.add(new VisitModel(name,date));
 
             } while (cursor.moveToNext());
@@ -383,10 +388,10 @@ public class DBMediator {
     public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino)
     {
         Cursor data = db.doSelectQuery("SELECT id FROM facility WHERE name = '"+IDRequest+"' AND user_id = " + idUsuario);
-        int idFacility =0;
         if(data.moveToFirst())
         {
-            idFacility = data.getInt(data.getColumnIndex("id"));
+            System.out.println("Encontre Faciity");
+            int idFacility = data.getInt(data.getColumnIndex("id"));
             insertarVisit(idUsuario,idFacility,horaInicio,horaTermino);
         }
 
