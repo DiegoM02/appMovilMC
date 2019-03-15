@@ -55,6 +55,8 @@ public class MainMenuActivity extends AppCompatActivity {
     public void visitar(View view )
     {
         Intent goToVisit= new Intent(MainMenuActivity.this,VisitActivity.class);
+        int idUser = datosUsuario.getInt("id");
+        goToVisit.putExtra("idUser",idUser);
         startActivity(goToVisit);
     }
     public void evaluar(View view)

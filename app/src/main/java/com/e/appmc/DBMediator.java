@@ -19,6 +19,7 @@ import com.e.appmc.bd.ResponseQuestion;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.User;
+import com.e.appmc.bd.Visit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -29,7 +30,7 @@ public final class DBMediator {
 
     private SQLiteOpenHelperDataBase db;
 
-    public DBMediator(Context activity) {
+    public DBMediator(AppCompatActivity activity) {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
     }
 
@@ -347,5 +348,27 @@ public final class DBMediator {
     public void insertarResponseEvaluation(int id, int id_evaluation,float valoracion) {
 
         db.insertTableResponseEvaluation(db.getWritableDatabase(), new ResponseEvaluation(id,id_evaluation,valoracion,"no"));
+    }
+
+    public ArrayList<VisitModel> obtenerVisitasPorUsuarioYCentro(int idUser , int idFacility)
+    {
+        ArrayList<VisitModel> visit = new ArrayList<VisitModel>();
+        String selectQuery = "SELECT facility.name as facility_name, visit.enter as visit_date  FROM visit, facility where facility.id = " + idFacility + " and visit.user_id = " + idUser +
+                " and visit.facility_id = " + idFacility ;
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+
+                String name = cursor.getColumnName(cursor.getColumnIndex("facility_name"));
+                String date = cursor.getColumnName(cursor.getColumnIndex("visit_date"));
+
+                visit.add(new VisitModel(name,date));
+
+            } while (cursor.moveToNext());
+
+
+        }
+
+        return visit;
     }
 }

@@ -4,9 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.e.appmc.bd.Facility;
+import com.e.appmc.bd.Visit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,8 +38,13 @@ public class MyVisitFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-
+    private RecyclerView myVisitView;
+    private  MyVisitAdapter adaptadorVisit;
+    private List<VisitModel> visitas;
+    private Spinner centroActual;
+    private FacilitySpinnerAdapter adapter;
+    private DBMediator mediador;
+    private int  idCentroActual;
 
     public MyVisitFragment() {
         // Required empty public constructor
@@ -62,8 +80,51 @@ public class MyVisitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_visit, container, false);
+      View v = inflater.inflate(R.layout.fragment_my_visit, container, false);
+      myVisitView = (RecyclerView) v.findViewById(R.id.contedor_visit);
+        mediador  = new DBMediator((AppCompatActivity) getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        myVisitView.setLayoutManager(llm);
+        int idUser = getArguments().getInt("userId");
+        activarSpinnerCentros(v,idUser);
+        inicializarDatos(idUser);
+        inicializarAdaptador();
+
+        return v;
+    }
+
+    public void activarSpinnerCentros(View v, int idUsuario) {
+
+
+
+        centroActual = (Spinner) v.findViewById(R.id.centroActual);
+        adapter = new FacilitySpinnerAdapter(getActivity(), R.layout.spinner_facility_item,
+                mediador.obtenerCentros(idUsuario));
+        centroActual.setAdapter(adapter);
+        centroActual.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+                Facility user = adapter.getItem(i);
+                idCentroActual = user.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void inicializarAdaptador() {
+
+        adaptadorVisit = new MyVisitAdapter(visitas,getActivity());
+        myVisitView.setAdapter(adaptadorVisit);
+    }
+
+
+    public void inicializarDatos(int idUser)
+    {  visitas = this.mediador.obtenerVisitasPorUsuarioYCentro(idUser,this.idCentroActual);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

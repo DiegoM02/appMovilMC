@@ -38,9 +38,9 @@ public class VisitActivity extends AppCompatActivity {
         TabLayout.Tab secondTab = tabLayout.newTab();
         secondTab.setText("Mis visitas");
         tabLayout.addTab(secondTab);
-
+        int idUser = getIntent().getExtras().getInt("idUser");
         PagerAdapter adapter = new VisitPagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+                (getSupportFragmentManager(), tabLayout.getTabCount(),idUser );
         simpleViewPager.setAdapter(adapter);
         simpleViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
