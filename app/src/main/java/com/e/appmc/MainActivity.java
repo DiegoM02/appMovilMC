@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOMBRE_USUARIO = "nombre_usuario";
     private static final String ID_USUARIO = "id_usuario";
     private static final String BD_CREADA ="bd_creada";
+    private static final String HORA_INICIO="hora_inicio";
     private User user;
     private DBMediator mediador;
     private SyncDatabase sincronizador;
@@ -99,7 +100,17 @@ public class MainActivity extends AppCompatActivity {
         sesionPreferencias.edit().putInt(ID_USUARIO,id).apply();
     }
 
+    public void guardarHoraInicio(String hora)
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        horaPreferencias.edit().putString(HORA_INICIO,hora).apply();
+    }
 
+    public String obtenerHoraInicioRecordarSession()
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        return horaPreferencias.getString(HORA_INICIO,"no aplica");
+    }
 
     public boolean obtenerEstadoRecordarSession()
     {
@@ -188,10 +199,11 @@ public class MainActivity extends AppCompatActivity {
         {
             this.guardarDatosUsuario(name,id);
             this.guadarEstadoRecordarSesion();
-            Intent intent = new Intent(this, GPSService.class);
-            intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
-            intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
-            startService(intent);
+            Singleton.getInstance().setID(this.obtenerIdUsuarioRecordarSesion());
+            //Intent intent = new Intent(this, GPSService.class);
+            //intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
+            //intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
+            //startService(intent);
             //bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
 
             enterSession();
@@ -207,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.sincronizador.syncAspectWebsite();
         this.sincronizador.syncFacilityWebsite();
+        this.guardarHoraInicio("no hay hora");
         Intent intent = new Intent(this,MainMenuActivity.class);
         intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
         intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());

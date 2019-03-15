@@ -9,17 +9,24 @@ public class Facility {
     private String code;
     private String name;
     private String address;
+    private double latitude;
+    private double longitude;
+    private float radius;
     private int service_id;
     private int evaluation_id;
     private String status_sync;
 
-    public Facility(int id, int user_id, String created, String code, String name, String address,int service_id, int evaluation_id,String status_sync) {
+    public Facility(int id, int user_id, String created, String code, String name, String address,int service_id, int evaluation_id,String status_sync,double latitude,double longitude,
+                    float radius) {
         this.id = id;
         this.user_id = user_id;
         this.created = created;
         this.code = code;
         this.name = name;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.radius = radius;
         this.service_id = service_id;
         this.evaluation_id = evaluation_id;
         this.status_sync = status_sync;
@@ -62,6 +69,18 @@ public class Facility {
         return this.status_sync;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put(FacilityContract.FacilityEntry.ID, id);
@@ -70,6 +89,9 @@ public class Facility {
         values.put(FacilityContract.FacilityEntry.CODE,code);
         values.put(FacilityContract.FacilityEntry.CREATED,created);
         values.put(FacilityContract.FacilityEntry.ADDRESS,address);
+        values.put(FacilityContract.FacilityEntry.LATITUDE,latitude);
+        values.put(FacilityContract.FacilityEntry.LONGITUDE,longitude);
+        values.put(FacilityContract.FacilityEntry.RADIUS,radius);
         values.put(FacilityContract.FacilityEntry.SERVICE_ID,service_id);
         values.put(FacilityContract.FacilityEntry.EVALUATION_ID,evaluation_id);
         values.put(FacilityContract.FacilityEntry.SYNC_STATUS,status_sync);

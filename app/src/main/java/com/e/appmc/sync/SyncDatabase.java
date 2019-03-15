@@ -136,8 +136,8 @@ public class SyncDatabase {
                     System.out.println(arr.length());
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = (JSONObject) arr.get(i);
-                        mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
-                                obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
+                       // mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
+                          //      obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
                     }
                     Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {

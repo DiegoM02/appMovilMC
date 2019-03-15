@@ -28,7 +28,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableResponseQuestion());
         db.execSQL(createTableResponseEvaluation());
         createDataUser(db);
-        //createDataFacility(db);
+        createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
@@ -165,10 +165,15 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1,"no"));
-            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
-            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
-            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
+            //insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1,"no"));
+            //insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
+            //insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
+            //insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
+            insertTableFacility(db,new Facility(5,120,"13-03-2019","646465","Mi casa","Molina",2,1,"no",-35.07468,-71.25500,50));
+            insertTableFacility(db,new Facility(6,120,"13-03-2019","646465","Utalca","Curico",2,1,"no",-35.002079,-71.229846,50));
+            insertTableFacility(db,new Facility(7,120,"13-03-2019","646465","Mujica & Docmac","Curico",2,1,"no",-34.9842428,-71.2331235,50));
+
+
         }
     }
 
@@ -299,6 +304,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + FacilityContract.FacilityEntry.CODE + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.CREATED + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.LATITUDE + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.LONGITUDE + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.RADIUS + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.EVALUATION_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.SYNC_STATUS + " TEXT NOT NULL, "
@@ -348,8 +356,8 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public String createTableVisit()
     {
         return "CREATE TABLE " + VisitContract.VisitEntry.TABLE_NAME +" ("
-                + VisitContract.VisitEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + VisitContract.VisitEntry.ID + " INTEGER NOT NULL, "
+                //+ VisitContract.VisitEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + VisitContract.VisitEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + VisitContract.VisitEntry.USER_ID + " INTEGER NOT NULL, "
                 + VisitContract.VisitEntry.FACILITY_ID + " INTEGER NOT NULL, "
                 + VisitContract.VisitEntry.ENTER + " TEXT NOT NULL, "

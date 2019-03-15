@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public final class DBMediator {
+public class DBMediator {
 
     private SQLiteOpenHelperDataBase db;
 
@@ -108,9 +108,12 @@ public final class DBMediator {
                 String code = data.getString(data.getColumnIndex("code"));
                 String name = data.getString(data.getColumnIndex("name"));
                 String address = data.getString(data.getColumnIndex("address"));
+                double latitude = data.getDouble(data.getColumnIndex("latitude"));
+                double longitude = data.getDouble(data.getColumnIndex("longitude"));
+                float radius = data.getFloat(data.getColumnIndex("radius"));
                 int service_id = data.getInt(data.getColumnIndex("service_id"));
                 int evaluation_id = data.getInt(data.getColumnIndex("evaluation_id"));
-                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no");
+                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no",latitude,longitude,radius);
                 i=i+1;
             }while(data.moveToNext());
 
@@ -330,9 +333,9 @@ public final class DBMediator {
 
 
     public void insertarFacility(int id, int userId, String name, String code,
-                                 String created, String address,int serviceId) {
+                                 String created, String address,double latitude,double longitude,float radius,int serviceId) {
 
-        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no"));
+        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no",latitude,longitude,radius));
     }
 
     public void insertarAspect(int id, String name, String created, double approval_percentage) {
@@ -371,4 +374,25 @@ public final class DBMediator {
 
         return visit;
     }
+
+    public void insertarVisit(int idUsuario,int idFacility,String horaInicio,String horaTermino)
+    {
+        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,horaInicio,horaTermino,""));
+    }
+
+    public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino)
+    {
+        Cursor data = db.doSelectQuery("SELECT id FROM facility WHERE name = '"+IDRequest+"' AND user_id = " + idUsuario);
+        int idFacility =0;
+        if(data.moveToFirst())
+        {
+            idFacility = data.getInt(data.getColumnIndex("id"));
+            insertarVisit(idUsuario,idFacility,horaInicio,horaTermino);
+        }
+
+
+    }
+
+
+
 }
