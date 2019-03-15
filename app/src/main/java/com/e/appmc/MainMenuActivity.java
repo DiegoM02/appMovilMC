@@ -1,6 +1,7 @@
 package com.e.appmc;
 
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.e.appmc.service.GPSService;
 import com.e.appmc.sync.SyncDatabase;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,6 +42,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        iniciarServicio();
         setContentView(R.layout.activity_main_menu);
         nombreUsuario= (TextView)findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
@@ -62,6 +65,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);
         goToEvaluation.putExtra("id",datosUsuario.getInt("id"));
         goToEvaluation.putExtra("name",datosUsuario.getString("name"));
+
         startActivity(goToEvaluation);
     }
 
@@ -145,5 +149,25 @@ public class MainMenuActivity extends AppCompatActivity {
         }
         return bitmap;
     }
+
+    private void iniciarServicio()
+    {
+        if(!comprobarServcioCorriendo(GPSService.class))
+        {
+            Intent intent = new Intent(this, GPSService.class);
+            startService(intent);
+        }
+    }
+
+    private boolean comprobarServcioCorriendo(Class<GPSService> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -21,6 +21,8 @@ public class FacilitySpinnerAdapter extends ArrayAdapter<Facility> {
     }
 
 
+
+
     @Override
     public int getCount(){
         return values.length;
@@ -53,5 +55,17 @@ public class FacilitySpinnerAdapter extends ArrayAdapter<Facility> {
         label.setText(values[position].getName());
 
         return label;
+    }
+
+    public int getPosition(String requestID)
+    {
+        for(int i=0;i<values.length;i++)
+        {
+            if(requestID.equals(values[i].getName()))
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 }

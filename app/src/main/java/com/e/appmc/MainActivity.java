@@ -200,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
             this.guardarDatosUsuario(name,id);
             this.guadarEstadoRecordarSesion();
             Singleton.getInstance().setID(this.obtenerIdUsuarioRecordarSesion());
-            Intent intent = new Intent(this, GPSService.class);
+            //Intent intent = new Intent(this, GPSService.class);
             //intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
             //intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
-            startService(intent);
+            //startService(intent);
             //bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
 
             enterSession();

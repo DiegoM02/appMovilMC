@@ -158,6 +158,10 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             //insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
             //insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
             insertTableFacility(db,new Facility(5,120,"13-03-2019","646465","Mi casa","Molina",2,1,"no",-35.07468,-71.25500,50));
+            insertTableFacility(db,new Facility(6,120,"13-03-2019","646465","Utalca","Curico",2,1,"no",-35.002079,-71.229846,50));
+            insertTableFacility(db,new Facility(7,120,"13-03-2019","646465","Mujica & Docmac","Curico",2,1,"no",-34.9842428,-71.2331235,50));
+
+
         }
     }
 

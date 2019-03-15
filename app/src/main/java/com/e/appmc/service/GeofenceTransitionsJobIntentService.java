@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.e.appmc.DBMediator;
 import com.e.appmc.EvaluationActivity;
 import com.e.appmc.MainActivity;
+import com.e.appmc.MainMenuActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
@@ -49,6 +50,8 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     private DBMediator mediator;
 
+    private String requestID;
+
     public static void enqueueWork(Context context, Intent intent) {
         enqueueWork(context, GeofenceTransitionsJobIntentService.class, JOB_ID, intent);
     }
@@ -72,19 +75,20 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
 
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+            requestID = triggeringGeofences.get(0).getRequestId();
             if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER)
             {
                 startVisit();
             }
             else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
             {
-                stopVisit(triggeringGeofences.get(0).getRequestId());
+                stopVisit(requestID);
             }
             // Get the transition details as a String.
             String geofenceTransitionDetails = getGeofenceTransitionDetails(geofenceTransition,
                     triggeringGeofences);
             // Send notification and log the transition details.
-            sendNotification(geofenceTransitionDetails);
+            sendNotification(geofenceTransitionDetails,geofenceTransition);
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
@@ -106,7 +110,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         String triggeringGeofencesIdsString = TextUtils.join(", ",  triggeringGeofencesIdsList);
         return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
     }
-    private void sendNotification(String notificationDetails) {
+    private void sendNotification(String notificationDetails, int geofenceTrasition) {
         // Get an instance of the Notification manager
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -119,12 +123,22 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             // Set the Notification Channel for the Notification Manager.
             mNotificationManager.createNotificationChannel(mChannel);
         }
-        // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), EvaluationActivity.class);
-        // Construct a task stack.
+        Intent notificationIntent = null;
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Add the main Activity to the task stack as the parent.
-        stackBuilder.addParentStack(EvaluationActivity.class);
+        if(geofenceTrasition == Geofence.GEOFENCE_TRANSITION_ENTER)
+        {
+            notificationIntent = new Intent(getApplicationContext(), EvaluationActivity.class);
+            notificationIntent.putExtra("requestID",requestID);
+            // Add the main Activity to the task stack as the parent.
+            stackBuilder.addParentStack(EvaluationActivity.class);
+        }
+        else if(geofenceTrasition == Geofence.GEOFENCE_TRANSITION_EXIT)
+        {
+            notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+            notificationIntent.putExtra("requestID",requestID);
+            // Add the main Activity to the task stack as the parent.
+            stackBuilder.addParentStack(MainActivity.class);
+        }
         // Push the content Intent onto the stack.
         stackBuilder.addNextIntent(notificationIntent);
         // Get a PendingIntent containing the entire back stack.
@@ -138,7 +152,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
                 // to decode the Bitmap.
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         android.R.drawable.ic_lock_idle_alarm))
-                .setColor(Color.RED).addAction(android.R.drawable.ic_menu_send,"Inicar Visita",notificationPendingIntent)
+                .setColor(Color.RED)//.addAction(android.R.drawable.ic_menu_send,"Inicar Visita",notificationPendingIntent)
                 .setContentTitle(notificationDetails)
                 .setContentText("transition")
                 .setContentIntent(notificationPendingIntent);

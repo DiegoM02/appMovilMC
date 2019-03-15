@@ -65,6 +65,7 @@ public class EvaluationActivity extends AppCompatActivity implements
         personalButton = (FloatingActionButton) findViewById(R.id.personal);
         funcionalidadBotonPersonal();
         activarSpinnerCentros();
+        setFacility();
         this.questions = new ArrayList<Question>();
         this.personal = new ArrayList<Personal>();
         this.points = mediador.obtenerPuntos();
@@ -87,6 +88,16 @@ public class EvaluationActivity extends AppCompatActivity implements
         };
 
 
+    }
+
+    private void setFacility() {
+        String requestID= getIntent().getExtras().getString("requestID");
+        if(requestID!=null)
+        {
+            int i =adapter.getPosition(requestID);
+            centroActual.setSelection(i);
+
+        }
     }
 
     @Override
@@ -309,6 +320,7 @@ public class EvaluationActivity extends AppCompatActivity implements
 
             }
         });
+
     }
 
     public void agregarPersonal(View view) {
