@@ -2,6 +2,7 @@
 package com.e.appmc;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -72,10 +74,15 @@ public class EvaluationActivity extends AppCompatActivity implements
         int opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
             fragmentoCincoDimensiones = new FragmentFiveDimension();
+
             getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones,
                     fragmentoCincoDimensiones).commit();
         } else {
+            Bundle bundle = new Bundle();
+            bundle.putInt("idFacility",-1);
+
             fragmentoCuatroDimensiones = new SecurityDimensionFragment();
+            fragmentoCuatroDimensiones.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones,
                     fragmentoCuatroDimensiones).commit();
         }
@@ -124,6 +131,17 @@ public class EvaluationActivity extends AppCompatActivity implements
         super.onPause();
         unregisterReceiver(broadcastReceiver);
     }
+
+
+    private void goToSecurityFragment(Bundle bundle){
+        fragmentoCuatroDimensiones = new SecurityDimensionFragment();
+       fragmentoCuatroDimensiones.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor_dimensiones,
+                fragmentoCuatroDimensiones).commit();
+
+    }
+
+
 
     public void listaPersonal() {
 
@@ -309,10 +327,14 @@ public class EvaluationActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
                 Facility user = adapter.getItem(i);
+
                 Toast.makeText(EvaluationActivity.this, "ID: " +
                                 user.getId() + "\nName: " + user.getName(),
                         Toast.LENGTH_SHORT).show();
                 idCentroActual = user.getId();
+                Bundle bundle = new Bundle();
+                bundle.putInt("idFacility",idCentroActual);
+                goToSecurityFragment(bundle);
             }
 
             @Override

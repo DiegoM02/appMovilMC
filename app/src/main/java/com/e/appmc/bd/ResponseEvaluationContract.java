@@ -9,6 +9,8 @@ public class ResponseEvaluationContract {
         public static final String ID = "id";
         public static final String ID_EVALUATION = "id_evaluation";
         public static final String ASSESSMENT = "assessment";
+        public static final String FACILITY_ID = "facility_id";
+        public static final String ASPECT = "aspect_id";
         public static final String SYNC_STATE = "sync_status";
     }
 }

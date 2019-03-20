@@ -76,7 +76,7 @@ public class SecurityDimensionFragment extends Fragment {
     private String preguntaActual;
     private ArrayList<Assessment> valoraciones;
     RatingBar barValoracion;
-
+    private int countIDEvaluation = 0;
     private int quantityAnsweredQuestions;
 
     private OnFragmentInteractionListener mListener;
@@ -85,7 +85,9 @@ public class SecurityDimensionFragment extends Fragment {
     private ArrayList<QuestionAnswered> questionsAnswered;
     private boolean flagQuestionAnswered;
     private HashMap<String,Float> questionsRatingsData;
-
+    private int idPregunta;
+    private DBMediator mediador;
+    private int idCentro;
 
 
     public SecurityDimensionFragment() {
@@ -126,6 +128,8 @@ public class SecurityDimensionFragment extends Fragment {
         dialogPregunta = new Dialog(view.getContext());
         dialogPreguntaSiNo = new Dialog(view.getContext());
         dialogoResumen = new Dialog(view.getContext());
+        idCentro = getArguments().getInt("idFacility");
+        System.out.println("Centri id: "  + idCentro);
         dimension = (CardView) view.findViewById(R.id.cardView);
         dimension1 = (CardView) view.findViewById(R.id.cardView2);
         dimension2 = (CardView) view.findViewById(R.id.cardView3);
@@ -134,7 +138,12 @@ public class SecurityDimensionFragment extends Fragment {
         dimension2Valoracion = (TextView) view.findViewById(R.id.textView1);
         dimension3Valoracion = (TextView) view.findViewById(R.id.textView2);
         dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
+        mediador = new DBMediator(getActivity());
         puntoCritico = new ArrayList<CriticalPoint>();
+        setValoracionesPromedioUno();
+        setValoracionesPromedioDos();
+        setValoracionesPromedioTres();
+        setValoracionesPromedioCuatro();
         valoraciones = new ArrayList<Assessment>();
         questionsRaitings = new ArrayList<QuestionRating>();
         flagQuestionsRaitings=true;
@@ -164,6 +173,42 @@ public class SecurityDimensionFragment extends Fragment {
         dimension2.setEnabled(true);
         dimension3.setEnabled(true);
     }
+
+
+
+
+
+    public void setValoracionesPromedioUno()
+    {
+            float valoracion = this.mediador.obtenerValoracionPromedioDimension(1, this.idCentro);
+
+            this.dimension1Valoracion.setText(String.valueOf(valoracion));
+
+    }
+
+    public  void setValoracionesPromedioDos()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(2,this.idCentro);
+
+        this.dimension2Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioTres()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(3,this.idCentro);
+
+        this.dimension3Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioCuatro()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
+
+        this.dimension4Valoracion.setText(String.valueOf(valoracion));
+    }
+
+
+
 
     public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
@@ -357,6 +402,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension1() {
 
         float valor = calcularValoracionSiNoPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(1,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,1,this.idCentro);
+        this.countIDEvaluation++;
         dimension1Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension1Valoracion.setBackgroundResource(R.color.negativo);
@@ -369,6 +417,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension2() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(2,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
         dimension2Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension2Valoracion.setBackgroundResource(R.color.negativo);
@@ -380,6 +431,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension3() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(3,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,3,this.idCentro);
+        this.countIDEvaluation++;
         dimension3Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension3Valoracion.setBackgroundResource(R.color.negativo);
@@ -391,6 +445,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension4() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(4,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,4,this.idCentro);
+        this.countIDEvaluation++;
         dimension4Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
         } else if (valor > 3.0) {
@@ -585,6 +642,7 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void confirmarPreguntaSiNo(View view,ArrayList<Question> questions) {
         Question question = questions.get(pagerPreguntaSiNo.getCurrentItem());
+
         this.addQuestionAnsweredPositive(question.getDescription(),pagerPreguntaSiNo.getCurrentItem());
         quantityAnsweredQuestions += 1;
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
@@ -593,6 +651,7 @@ public class SecurityDimensionFragment extends Fragment {
                 this.questionsAnswered.clear();
                 quantityAnsweredQuestions=0;
                 flagQuestionAnswered=true;
+                idPregunta = question.getId();
                 construirDialogoResumen(view);
             }
             else{

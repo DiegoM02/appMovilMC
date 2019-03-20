@@ -356,10 +356,7 @@ public class DBMediator {
         db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id,id_evaluation,id_question,valoracion,"no"));
     }
 
-    public void insertarResponseEvaluation(int id, int id_evaluation,float valoracion) {
 
-        db.insertTableResponseEvaluation(db.getWritableDatabase(), new ResponseEvaluation(id,id_evaluation,valoracion,"no"));
-    }
 
     public ArrayList<VisitModel> obtenerVisitasPorUsuarioYCentro(int idUser , int idFacility)
     {
@@ -404,9 +401,16 @@ public class DBMediator {
 
     }
 
-    public HashMap<String,Integer> obtenerCentroVisitas()
+    public int obtenerIdEvaluation(int aspectID, int quesionID)
     {
-
+        Cursor data = db.doSelectQuery("SELECT question.evaluation_id as id_evaluation FROM aspect, question WHERE aspect.id = " + aspectID + " AND question.id = " + quesionID +
+                " AND question.aspect_id = " + aspectID );
+        if(data.moveToFirst())
+        {
+            return  data.getInt(data.getColumnIndex("id_evaluation"));
+        }
+        return -1;
+    }
         HashMap<String,Integer> visitas = new HashMap<>();
         String nombrePosibleMas = "";
         int cantidadPosibleMas = 0;
@@ -430,6 +434,7 @@ public class DBMediator {
                 {
                     nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
                     cantidadPosibleMenos = nCounts;
+    
 
                 }
             }while(data.moveToNext());
@@ -463,6 +468,36 @@ public class DBMediator {
         fecha.put(name,formatDate.format(fechaReciente));
         return  fecha;
     }
+
+
+
+
+    public void insertarResponseEvaluation(int id, int idEvaluation, float valoracion, int aspect, int facility_id)
+    {
+        db.insertTableResponseEvaluation(db.getWritableDatabase(),new ResponseEvaluation(id,idEvaluation,valoracion, aspect, "no", facility_id));
+    }
+
+    public float obtenerValoracionPromedioDimension(int idAspect, int idCentro)
+    {
+        String query = "SELECT avg(assessment) as valoracion_promedio FROM response_evaluation where response_evaluation.aspect_id = " + idAspect
+                + " and facility_id = " + idCentro;
+
+
+
+        Cursor cursor = db.doSelectQuery(query);
+
+        if (cursor.moveToFirst())
+
+        {
+
+            float valoracion = cursor.getFloat(cursor.getColumnIndex("valoracion_promedio"));
+
+            return valoracion;
+        }
+        return -1;
+    }
+
+
 
 
 
