@@ -169,9 +169,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             //insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
             //insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
             //insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
-            insertTableFacility(db,new Facility(5,120,"13-03-2019","646465","Mi casa","Molina",2,1,"no",-35.07468,-71.25500,50));
-            insertTableFacility(db,new Facility(6,120,"13-03-2019","646465","Utalca","Curico",2,1,"no",-35.002079,-71.229846,50));
-            insertTableFacility(db,new Facility(7,120,"13-03-2019","646465","Mujica & Docmac","Curico",2,1,"no",-34.9842428,-71.2331235,50));
+            insertTableFacility(db,new Facility(5,300000,"13-03-2019","646465","Mi casa","Molina",2,1,"no",-35.07468,-71.25500,50));
+            insertTableFacility(db,new Facility(6,300000,"13-03-2019","646465","Utalca","Curico",2,1,"no",-35.002079,-71.229846,50));
+            insertTableFacility(db,new Facility(7,300000,"13-03-2019","646465","Mujica & Docmac","Curico",2,1,"no",-34.9842428,-71.2331235,50));
 
 
         }
@@ -429,6 +429,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + AspectContract.AspectEntry.NAME+ " TEXT NOT NULL, "
                + AspectContract.AspectEntry.CREATED+ " TEXT NOT NULL, "
                + AspectContract.AspectEntry.APROVAL_PORCENTAGE+ " REAL NOT NULL, "
+               + AspectContract.AspectEntry.QUESTION_ID + " INTEGER NOT NULL, "
                 + "UNIQUE ("+PointContract.pointEntry.ID+"))";
     }
     public String createTableSummary()
@@ -463,8 +464,11 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + ResponseEvaluationContract.ResponseEvaluationEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +" INTEGER NOT NULL, "
                 + ResponseEvaluationContract.ResponseEvaluationEntry.ASSESSMENT + " TEXT NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ASPECT + " TEXT NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.FACILITY_ID + " INTEGER NOT NULL, "
                 + ResponseEvaluationContract.ResponseEvaluationEntry.SYNC_STATE + " TEXT NOT NULL, "
                 + " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
+                +  " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
                 + "UNIQUE ("+ ResponseEvaluationContract.ResponseEvaluationEntry.ID+"))";
     }
 

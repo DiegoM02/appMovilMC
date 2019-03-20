@@ -10,6 +10,7 @@ public class AspectContract {
         public  static  final String NAME = "name";
         public static final String CREATED = "created";
         public static final String APROVAL_PORCENTAGE = "aproval_porcentage";
+        public static final String QUESTION_ID = "question_id";
 
     }
 }

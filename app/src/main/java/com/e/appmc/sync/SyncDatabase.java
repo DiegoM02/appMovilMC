@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class SyncDatabase {
 
-    private final static String IP = "172.16.46.186";
+    private final static String IP = "192.168.1.4";
     private final static String URL_CENTRO = "http://"+IP+"/syncpersonal/modelos/insert_facility.php";
     private final static String URL = "http://"+IP+"/syncpersonal/modelos/insert_personal.php";
     private final static String URL_CENTRO_WEBSITE = "http://"+IP+"/syncwebsite/selectFacility.php";
