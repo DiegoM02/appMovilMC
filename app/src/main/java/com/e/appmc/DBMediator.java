@@ -411,6 +411,9 @@ public class DBMediator {
         }
         return -1;
     }
+
+    public  HashMap<String,Integer> obtenerCentroVisitas()
+    {
         HashMap<String,Integer> visitas = new HashMap<>();
         String nombrePosibleMas = "";
         int cantidadPosibleMas = 0;
@@ -430,7 +433,7 @@ public class DBMediator {
                     nombrePosibleMas = data.getString(data.getColumnIndex("name"));
                     cantidadPosibleMas = nCounts;
                 }
-                if(nCounts<=cantidadPosibleMas)
+                if(nCounts<=cantidadPosibleMenos || nCounts==0)
                 {
                     nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
                     cantidadPosibleMenos = nCounts;
@@ -449,7 +452,7 @@ public class DBMediator {
         HashMap<String,String> fecha = new HashMap<>();
         String query = "SELECT facility.name as name,visit.date as date FROM facility,visit WHERE facility.id = visit.facility_id ";
         Cursor data = db.doSelectQuery(query);
-        String name = "no hay datos";
+        String name = "No hay datos";
         Date fechaReciente = null;
         if(data.moveToFirst())
         {
@@ -465,7 +468,14 @@ public class DBMediator {
         }
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd-MMM-yyyy");
-        fecha.put(name,formatDate.format(fechaReciente));
+        if(fechaReciente==null)
+        {
+            fecha.put(name,"No hay datos");
+        }
+        else
+        {
+            fecha.put(name,formatDate.format(fechaReciente));
+        }
         return  fecha;
     }
 

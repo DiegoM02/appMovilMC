@@ -82,9 +82,13 @@ public class SummaryVisitFragment extends Fragment {
         ArrayList<String> keys = new ArrayList<>(quantityVisits.keySet());
         mostVisitName.setText(keys.get(0));
         mostVisitNumber.setText("" + quantityVisits.get(keys.get(0)));
-        lessVisitName.setText(keys.get(1));
-        lessVisitNumber.setText("" + quantityVisits.get(keys.get(1)));
-
+        if(keys.size()>1)
+        {
+            lessVisitName.setText(keys.get(1));
+            lessVisitNumber.setText("" + quantityVisits.get(keys.get(1)));
+        }
+        lessVisitName.setText(keys.get(0));
+        lessVisitNumber.setText("" + quantityVisits.get(keys.get(0)));
         TextView lastVisitName = view.findViewById(R.id.last_visit_name);
         TextView lastVisitNumber = view.findViewById(R.id.last_visit_date);
         try {
