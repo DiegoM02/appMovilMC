@@ -53,24 +53,26 @@
             </android.support.v7.widget.CardView>
 
             <TextView
+                android:id="@+id/most_visit_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="30dp"
                 android:text="Mall Center"
                 android:textColor="@color/secondary_text"
-                android:textSize="30dp"
-                android:paddingTop="10dp"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="30dp" />
 
             <TextView
+                android:id="@+id/most_visit_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"
                 android:text="30 visitas"
                 android:textColor="@color/secondary_text"
-                android:textSize="18dp"
-                android:paddingBottom="10dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="18dp" />
         </LinearLayout>
 
 
@@ -119,24 +121,26 @@
             </android.support.v7.widget.CardView>
 
             <TextView
+                android:id="@+id/less_visit_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="30dp"
                 android:text="Universidad de Talca"
                 android:textColor="@color/secondary_text"
-                android:textSize="30dp"
-                android:paddingTop="10dp"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="30dp" />
 
             <TextView
+                android:id="@+id/less_visit_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"
                 android:text="2 visitas"
                 android:textColor="@color/secondary_text"
-                android:textSize="18dp"
-                android:paddingBottom="10dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="18dp" />
         </LinearLayout>
 
 
@@ -176,37 +180,39 @@
                 app:cardBackgroundColor="@color/colorPrimaryDark"
                 android:layout_gravity="center_horizontal"
                 >
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="10dp"
                     android:text="Ultimo visitado"
                     android:textColor="@color/icons"
-                    android:textSize="20dp"
-                    android:padding="10dp"
-                    android:layout_gravity="center_horizontal"
 
-                    />
+                    android:textSize="20dp" />
             </android.support.v7.widget.CardView>
 
             <TextView
+                android:id="@+id/last_visit_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
                 android:text="TopDog - Rodriguez"
                 android:textColor="@color/secondary_text"
-                android:textSize="30dp"
-                android:paddingTop="10dp"
-                android:paddingStart="30dp"
-                android:paddingEnd="10dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="30dp" />
 
             <TextView
+                android:id="@+id/last_visit_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"
                 android:text="10 de marzo de 2019"
                 android:textColor="@color/secondary_text"
-                android:textSize="18dp"
-                android:paddingBottom="10dp"
-                android:layout_gravity="center_horizontal"/>
+                android:textSize="18dp" />
         </LinearLayout>
 
 

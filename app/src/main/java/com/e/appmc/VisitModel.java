@@ -2,19 +2,26 @@ package com.e.appmc;
 
 public class VisitModel {
 
-    private String name;
     private String date;
+    private String enter;
+    private String exit;
 
-    public VisitModel(String name, String date) {
-        this.name = name;
+    public VisitModel(String date,String enter,String exit) {
         this.date = date;
+        this.enter = enter;
+        this.exit = exit;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public String getDate() {
         return date;
+    }
+
+    public String getEnter() {
+        return enter;
+    }
+
+    public String getExit() {
+        return exit;
     }
 }

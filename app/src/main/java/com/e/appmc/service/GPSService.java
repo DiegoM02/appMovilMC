@@ -49,6 +49,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
 
     private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
     private static final String ID_USUARIO = "id_usuario";
+    private static final String ESTADO_CHECK_BOX = "estado_check";
 
 
     @Override
@@ -64,8 +65,19 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
         //startForeground();
        // userID = intent.getExtras().getInt("id");
         System.out.println("Service UserID: " + userID);
-        return START_STICKY;
+        if(this.obtenerEstadoRecordarSession())
+        {
+            System.out.println("Inicio Sticky");
+            return START_STICKY;
+        }
+        return START_NOT_STICKY;
 
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
     }
 
 
@@ -224,6 +236,12 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
         return sesionPreferencias.getInt(ID_USUARIO,0);
+    }
+
+    public boolean obtenerEstadoRecordarSession()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getBoolean(ESTADO_CHECK_BOX,false);
     }
 
 }

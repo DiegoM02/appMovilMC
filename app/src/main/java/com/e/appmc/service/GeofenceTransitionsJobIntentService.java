@@ -46,6 +46,8 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
 
     private static final String ID_USUARIO = "id_usuario";
 
+    private static final String ESTADO_CHECK_BOX ="estado_check_box";
+
     private int id;
 
     private DBMediator mediator;
@@ -184,9 +186,9 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         if(obtenerHoraInicioRecordarSession().equals("no hay hora"))
         {
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-            String date = format.format(calendar.getTime());
-            guardarHoraInicio(date);
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+            String hour = format.format(calendar.getTime());
+            guardarHoraInicio(hour);
         }
     }
 
@@ -196,9 +198,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         {
 
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-            String date = format.format(calendar.getTime());
-            mediator.registrarVisita(this.obtenerIdUsuarioRecordarSesion(),requestID,this.obtenerHoraInicioRecordarSession(),date);
+            SimpleDateFormat formatDate = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat formatHour = new SimpleDateFormat("HH:mm:ss");
+            String date = formatDate.format(calendar.getTime());
+            String hour = formatHour.format(calendar.getTime());
+            mediator.registrarVisita(this.obtenerIdUsuarioRecordarSesion(),requestID,this.obtenerHoraInicioRecordarSession(),hour,date);
             //Toast.makeText(this.getApplicationContext(),"pudimos perrito",Toast.LENGTH_LONG);
             this.guardarHoraInicio("no hay hora");
 
@@ -221,5 +225,11 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
         return sesionPreferencias.getInt(ID_USUARIO,0);
+    }
+
+    public boolean obtenerEstadoRecordarSession()
+    {
+        SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
+        return sesionPreferencias.getBoolean(ESTADO_CHECK_BOX,false);
     }
 }

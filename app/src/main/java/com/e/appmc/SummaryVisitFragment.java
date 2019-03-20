@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -26,6 +31,8 @@ public class SummaryVisitFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private DBMediator mediator;
+
 
 
 
@@ -58,13 +65,38 @@ public class SummaryVisitFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mediator = new DBMediator(this.getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_summary_visit, container, false);
+        View view = inflater.inflate(R.layout.fragment_summary_visit, container, false);
+
+        HashMap<String,Integer> quantityVisits = mediator.obtenerCentroVisitas();
+        TextView mostVisitName = view.findViewById(R.id.most_visit_name);
+        TextView mostVisitNumber = view.findViewById(R.id.most_visit_number);
+        TextView lessVisitName = view.findViewById(R.id.less_visit_name);
+        TextView lessVisitNumber = view.findViewById(R.id.less_visit_number);
+        ArrayList<String> keys = new ArrayList<>(quantityVisits.keySet());
+        mostVisitName.setText(keys.get(0));
+        mostVisitNumber.setText("" + quantityVisits.get(keys.get(0)));
+        lessVisitName.setText(keys.get(1));
+        lessVisitNumber.setText("" + quantityVisits.get(keys.get(1)));
+
+        TextView lastVisitName = view.findViewById(R.id.last_visit_name);
+        TextView lastVisitNumber = view.findViewById(R.id.last_visit_date);
+        try {
+            HashMap<String,String> lastVisit = mediator.visitaReciente();
+            ArrayList<String> key = new ArrayList<>(lastVisit.keySet());
+            lastVisitName.setText(key.get(0));
+            lastVisitNumber.setText("" + lastVisit.get(key.get(0)));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -23,7 +23,11 @@ import com.e.appmc.bd.Visit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class DBMediator {
@@ -360,17 +364,19 @@ public class DBMediator {
     public ArrayList<VisitModel> obtenerVisitasPorUsuarioYCentro(int idUser , int idFacility)
     {
         ArrayList<VisitModel> visit = new ArrayList<VisitModel>();
-        String selectQuery = "SELECT facility.name as facility_name, visit.enter as visit_date  FROM visit, facility where facility.id = " + idFacility + " and visit.user_id = " + idUser +
+        String selectQuery = "SELECT visit.date as visit_date, visit.enter as visit_enter, visit.exit visit_exit  FROM visit, facility where facility.id = " + idFacility + " and visit.user_id = " + idUser +
                 " and visit.facility_id = " + idFacility ;
         Cursor cursor = db.doSelectQuery(selectQuery);
         if (cursor.moveToFirst()) {
             do {
 
-                String name = cursor.getString(cursor.getColumnIndex("facility_name"));
                 String date = cursor.getString(cursor.getColumnIndex("visit_date"));
-                System.out.println("name: " + name);
+                String enter = cursor.getString(cursor.getColumnIndex("visit_enter"));
+                String exit = cursor.getString(cursor.getColumnIndex("visit_exit"));
                 System.out.println("date: " + date);
-                visit.add(new VisitModel(name,date));
+                System.out.println("enter: " + enter);
+                System.out.println("exit: " + exit);
+                visit.add(new VisitModel(date,enter,exit));
 
             } while (cursor.moveToNext());
 
@@ -378,24 +384,84 @@ public class DBMediator {
         }
 
         return visit;
-    }
+}
 
-    public void insertarVisit(int idUsuario,int idFacility,String horaInicio,String horaTermino)
+    public void insertarVisit(int idUsuario,int idFacility,String horaInicio,String horaTermino,String fecha)
     {
-        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,horaInicio,horaTermino,""));
+        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,fecha,horaInicio,horaTermino,""));
     }
 
-    public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino)
+    public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino,String fecha)
     {
         Cursor data = db.doSelectQuery("SELECT id FROM facility WHERE name = '"+IDRequest+"' AND user_id = " + idUsuario);
         if(data.moveToFirst())
         {
             System.out.println("Encontre Faciity");
             int idFacility = data.getInt(data.getColumnIndex("id"));
-            insertarVisit(idUsuario,idFacility,horaInicio,horaTermino);
+            insertarVisit(idUsuario,idFacility,horaInicio,horaTermino,fecha);
         }
 
 
+    }
+
+    public HashMap<String,Integer> obtenerCentroVisitas()
+    {
+
+        HashMap<String,Integer> visitas = new HashMap<>();
+        String nombrePosibleMas = "";
+        int cantidadPosibleMas = 0;
+        String nombrePosibleMenos = "";
+        int cantidadPosibleMenos = 0;
+        String query = "SELECT id,name FROM facility " ;
+        Cursor data = db.doSelectQuery(query);
+        if(data.moveToFirst())
+        {
+            do {
+                int id = data.getInt(data.getColumnIndex("id"));
+                Cursor counts = db.doSelectQuery("SELECT count(id) as number FROM visit WHERE facility_id = " + id );
+                counts.moveToFirst();
+                int nCounts = counts.getInt(counts.getColumnIndex("number"));
+                if(nCounts>=cantidadPosibleMas)
+                {
+                    nombrePosibleMas = data.getString(data.getColumnIndex("name"));
+                    cantidadPosibleMas = nCounts;
+                }
+                if(nCounts<=cantidadPosibleMas)
+                {
+                    nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
+                    cantidadPosibleMenos = nCounts;
+
+                }
+            }while(data.moveToNext());
+        }
+
+        visitas.put(nombrePosibleMas,cantidadPosibleMas);
+        visitas.put(nombrePosibleMenos,cantidadPosibleMenos);
+        return visitas;
+    }
+
+    public HashMap<String,String> visitaReciente() throws ParseException {
+        HashMap<String,String> fecha = new HashMap<>();
+        String query = "SELECT facility.name as name,visit.date as date FROM facility,visit WHERE facility.id = visit.facility_id ";
+        Cursor data = db.doSelectQuery(query);
+        String name = "no hay datos";
+        Date fechaReciente = null;
+        if(data.moveToFirst())
+        {
+            do
+            {
+                Date date = new SimpleDateFormat("dd-MMM-yyyy").parse(data.getString(data.getColumnIndex("date")));
+                if(fechaReciente == null || date.compareTo(fechaReciente)>=0)
+                {
+                    fechaReciente = date;
+                    name = data.getString(data.getColumnIndex("name"));
+                }
+            }while(data.moveToNext());
+        }
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MMM-yyyy");
+        fecha.put(name,formatDate.format(fechaReciente));
+        return  fecha;
     }
 
 

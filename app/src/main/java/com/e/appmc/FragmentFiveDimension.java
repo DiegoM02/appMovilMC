@@ -84,6 +84,7 @@ public class FragmentFiveDimension extends Fragment {
     private int dimensionActiva = 0;
     private String puntoActual;
     private String preguntaActual;
+    private HashMap<String,Float> questionsRatingsData;
 
     public FragmentFiveDimension() {
         // Required empty public constructor
@@ -213,31 +214,44 @@ public class FragmentFiveDimension extends Fragment {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
-        builder.setMultiChoiceItems(personal,null,
-                new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which,
-                                        boolean isChecked) {
-                        if (isChecked) {
-                            mSelectedItems.add(which);
-                        } else if (mSelectedItems.contains(which)) {
-                            mSelectedItems.remove(Integer.valueOf(which));
+        if(personal.length>0) {
+            builder.setMultiChoiceItems(personal, null,
+                    new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which,
+                                            boolean isChecked) {
+                            if (isChecked) {
+                                mSelectedItems.add(which);
+                            } else if (mSelectedItems.contains(which)) {
+                                mSelectedItems.remove(Integer.valueOf(which));
+                            }
                         }
-                    }});
-        builder.setNegativeButton("Cancelar" , new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+                    });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
-        builder.setPositiveButton("Confirmar" , new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                addCriticalPoint(personal,mSelectedItems);
-                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
-            }
-        });
+            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    addCriticalPoint(personal, mSelectedItems);
+                    pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
+                }
+            });
+        }
+        else
+        {
+            builder.setMessage("No hay personal Disponible");
+            builder.setPositiveButton("Confrimar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+        }
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -411,6 +425,13 @@ public class FragmentFiveDimension extends Fragment {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
+        TextView mediumText = (TextView) v.findViewById(R.id.medium_name);
+        if(dimensionActiva != 1)
+        {
+            mediumText.setText("Valoraciones");
+            resumenAdapter = new SummaryAdapter((EvaluationActivity) this.getActivity(),this.questionsRatingsData);
+
+        }
 
         if (this.dimensionActiva == 1) {
             numeroPreguntasPositivas =
@@ -698,9 +719,30 @@ public class FragmentFiveDimension extends Fragment {
         return content;
     }
 
+    public String createContentSummaryRating()
+    {
+        String content = "";
+        content = "Realizado por " + ((EvaluationActivity) getActivity()).obtenerNombreUsuario() + "\n";
+        ArrayList<String> questions = new ArrayList<>(this.questionsRatingsData.keySet());
+        for(String question : questions)
+        {
+            content = content+question +"\n";
+            content = "Calificacion = " + content + this.questionsRatingsData.get(question) + "\n \n";
+        }
+
+        return content;
+    }
+
     public void addSummaryToDB()
     {
-        String content = createContentSummary();
+        String content = "";
+        if(dimensionActiva == 1) {
+            content = createContentSummary();
+        }
+        else
+        {
+            content = createContentSummaryRating();
+        }
         int faccilityId = ((EvaluationActivity)getActivity()).getIdCentroActual();
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy");

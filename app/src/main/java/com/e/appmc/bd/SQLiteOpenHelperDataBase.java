@@ -241,7 +241,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableVisit(db,new Visit(1,1,2,"04-02-2019 11:00AM","04-02-2019 12:00PM","prueba"));
+            //insertTableVisit(db,new Visit(1,1,2,"04-02-2019 11:00AM","04-02-2019 12:00PM","prueba"));
         }
     }
 
@@ -360,6 +360,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + VisitContract.VisitEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + VisitContract.VisitEntry.USER_ID + " INTEGER NOT NULL, "
                 + VisitContract.VisitEntry.FACILITY_ID + " INTEGER NOT NULL, "
+                + VisitContract.VisitEntry.DATE + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.ENTER + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.EXIT + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.COMMENT + " TEXT NOT NULL, "

@@ -42,8 +42,9 @@ public class MyVisitAdapter extends RecyclerView.Adapter<MyVisitAdapter.ViewHold
     public void onBindViewHolder(@NonNull MyVisitAdapter.ViewHolder viewHolder, final int i) {
         final VisitModel visit = visitList.get(i);
 
-        viewHolder.textNameFacility.setText(visit.getName().toString());
-        viewHolder.textDateVisit.setText(visit.getDate().toString());
+        viewHolder.textNameFacility.setText(visit.getDate().toString());
+        String hour = visit.getEnter() + " - " +visit.getExit();
+        viewHolder.textDateVisit.setText(hour.toString());
 
 
 

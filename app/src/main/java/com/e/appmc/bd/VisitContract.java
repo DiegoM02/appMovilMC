@@ -9,6 +9,7 @@ public class VisitContract {
         public static final String ID = "id";
         public static final String USER_ID = "user_id";
         public static final String FACILITY_ID = "facility_id";
+        public static final String DATE = "date";
         public static final String ENTER = "enter";
         public static final String EXIT = "exit";
         public static final String COMMENT = "comment";

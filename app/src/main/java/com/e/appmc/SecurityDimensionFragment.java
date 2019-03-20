@@ -84,6 +84,7 @@ public class SecurityDimensionFragment extends Fragment {
     private boolean flagQuestionsRaitings;
     private ArrayList<QuestionAnswered> questionsAnswered;
     private boolean flagQuestionAnswered;
+    private HashMap<String,Float> questionsRatingsData;
 
 
 
@@ -228,6 +229,7 @@ public class SecurityDimensionFragment extends Fragment {
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
             Toast.makeText(this.getContext(),"Check " + checkAllQuestionPointed(), Toast.LENGTH_LONG).show();
             if(checkAllQuestionPointed()) {
+                this.questionsRatingsData = this.rellenarRatingQuestions();
                 this.questionsRaitings.clear();
                 flagQuestionsRaitings=true;
                 if (adpter.getValoracion() < 3) {
@@ -300,36 +302,49 @@ public class SecurityDimensionFragment extends Fragment {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
-        builder.setMultiChoiceItems(personal, null,
-                new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which,
-                                        boolean isChecked) {
-                        if (isChecked) {
-                            mSelectedItems.add(which);
-                        } else if (mSelectedItems.contains(which)) {
-                            mSelectedItems.remove(Integer.valueOf(which));
+        if(personal.length>0) {
+            builder.setMultiChoiceItems(personal, null,
+                    new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which,
+                                            boolean isChecked) {
+                            if (isChecked) {
+                                mSelectedItems.add(which);
+                            } else if (mSelectedItems.contains(which)) {
+                                mSelectedItems.remove(Integer.valueOf(which));
+                            }
                         }
-                    }
-                });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+                    });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
-        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                addCriticalPoint(personal,mSelectedItems);
-                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
-            }
-        });
+            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    addCriticalPoint(personal, mSelectedItems);
+                    pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
+                }
+            });
+        }
+        else
+        {
+            builder.setMessage("No hay personal Disponible");
+            builder.setPositiveButton("Confrimar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
+                }
+            });
+        }
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
 
 
     public void cancelarPregunta(View view) {
@@ -418,6 +433,13 @@ public class SecurityDimensionFragment extends Fragment {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
+        TextView mediumText = (TextView) v.findViewById(R.id.medium_name);
+        if(dimensionActiva != 1)
+        {
+            mediumText.setText("Valoraciones");
+            resumenAdapter = new SummaryAdapter((EvaluationActivity) this.getActivity(),this.questionsRatingsData);
+
+        }
 
         if (this.dimensionActiva == 1) {
             numeroPreguntasPositivas =
@@ -457,6 +479,17 @@ public class SecurityDimensionFragment extends Fragment {
         });
 
 
+    }
+
+    private HashMap<String,Float> rellenarRatingQuestions()
+    {
+        HashMap<String,Float> datos = new HashMap<>();
+        for(QuestionRating questtion : this.questionsRaitings)
+        {
+            datos.put(questtion.getName(),questtion.getPoint());
+        }
+
+        return datos;
     }
 
 
@@ -624,22 +657,18 @@ public class SecurityDimensionFragment extends Fragment {
         return true;
     }
 
-    public String createContentSummary()
-    {
+    public String createContentSummary() {
         String content = "";
-        content = "Realizado por " + ((EvaluationActivity)getActivity()).obtenerNombreUsuario() + "\n";
-        for(CriticalPoint point : this.puntoCritico)
-        {
-            content =content + point.getPoint() + "\n";
-            HashMap<String,ArrayList<String>> resume = point.getResume();
+        content = "Realizado por " + ((EvaluationActivity) getActivity()).obtenerNombreUsuario() + "\n";
+        for (CriticalPoint point : this.puntoCritico) {
+            content = content + point.getPoint() + "\n";
+            HashMap<String, ArrayList<String>> resume = point.getResume();
             ArrayList<String> questions = new ArrayList<>(resume.keySet());
-            for(String question : questions)
-            {
-                content = content + question +"\n";
+            for (String question : questions) {
+                content = content + question + "\n";
                 ArrayList<String> personal = resume.get(question);
-                for(int i =0;i<personal.size();i++)
-                {
-                    content = content + "- " + personal.get(i) +"\n";
+                for (int i = 0; i < personal.size(); i++) {
+                    content = content + "- " + personal.get(i) + "\n";
                 }
             }
 
@@ -649,9 +678,30 @@ public class SecurityDimensionFragment extends Fragment {
         return content;
     }
 
+    public String createContentSummaryRating()
+    {
+        String content = "";
+        content = "Realizado por " + ((EvaluationActivity) getActivity()).obtenerNombreUsuario() + "\n";
+        ArrayList<String> questions = new ArrayList<>(this.questionsRatingsData.keySet());
+        for(String question : questions)
+        {
+            content = content+question +"\n";
+            content = "Calificacion = " + content + this.questionsRatingsData.get(question) + "\n \n";
+        }
+
+        return content;
+    }
+
     public void addSummaryToDB()
     {
-        String content = createContentSummary();
+        String content = "";
+        if(dimensionActiva == 1) {
+            content = createContentSummary();
+        }
+        else
+        {
+            content = createContentSummaryRating();
+        }
         int faccilityId = ((EvaluationActivity)getActivity()).getIdCentroActual();
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy");

@@ -1,6 +1,7 @@
 package com.e.appmc;
 
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -76,6 +78,8 @@ public class MainMenuActivity extends AppCompatActivity {
     {
        MainActivity.changeEstadoSession(MainMenuActivity.this,false);
         Intent goToLogin = new Intent(MainMenuActivity.this,MainActivity.class);
+        Intent stop = new Intent(MainMenuActivity.this,GPSService.class);
+        this.stopService(stop);
         startActivity(goToLogin);
         finish();
     }
@@ -156,6 +160,7 @@ public class MainMenuActivity extends AppCompatActivity {
     {
         if(!comprobarServcioCorriendo(GPSService.class))
         {
+            System.out.println("entre en servicio");
             Intent intent = new Intent(this, GPSService.class);
             startService(intent);
         }
