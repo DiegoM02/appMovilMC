@@ -14,18 +14,29 @@ import com.e.appmc.bd.Personal;
 import com.e.appmc.bd.Point;
 import com.e.appmc.bd.Question;
 import com.e.appmc.bd.QuestionContract;
+import com.e.appmc.bd.ResponseEvaluation;
+import com.e.appmc.bd.ResponseQuestion;
 import com.e.appmc.bd.SQLiteOpenHelperDataBase;
 import com.e.appmc.bd.Summary;
 import com.e.appmc.bd.User;
+import com.e.appmc.bd.Visit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
-public final class DBMediator {
+public class DBMediator {
 
     private SQLiteOpenHelperDataBase db;
+
+    public DBMediator(AppCompatActivity activity) {
+        this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
+    }
 
     public DBMediator(Context activity) {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
@@ -105,9 +116,12 @@ public final class DBMediator {
                 String code = data.getString(data.getColumnIndex("code"));
                 String name = data.getString(data.getColumnIndex("name"));
                 String address = data.getString(data.getColumnIndex("address"));
+                double latitude = data.getDouble(data.getColumnIndex("latitude"));
+                double longitude = data.getDouble(data.getColumnIndex("longitude"));
+                float radius = data.getFloat(data.getColumnIndex("radius"));
                 int service_id = data.getInt(data.getColumnIndex("service_id"));
                 int evaluation_id = data.getInt(data.getColumnIndex("evaluation_id"));
-                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no");
+                centros[i] = new Facility(id,idUsuario,created,code,name,address,service_id,evaluation_id,"no",latitude,longitude,radius);
                 i=i+1;
             }while(data.moveToNext());
 
@@ -327,13 +341,197 @@ public final class DBMediator {
 
 
     public void insertarFacility(int id, int userId, String name, String code,
-                                 String created, String address,int serviceId) {
+                                 String created, String address,double latitude,double longitude,float radius,int serviceId) {
 
-        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no"));
+        db.insertTableFacility(db.getWritableDatabase(),new Facility(id,userId,created,code,name,address,serviceId,1,"no",latitude,longitude,radius));
     }
 
     public void insertarAspect(int id, String name, String created, double approval_percentage) {
 
         db.insertTableAspect(db.getWritableDatabase(),new Aspect(id,created,name,approval_percentage));
     }
+
+    public void insertarResponseQuestion(int id, int id_evaluation, int id_question,float valoracion) {
+
+        db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id,id_evaluation,id_question,valoracion,"no"));
+    }
+
+
+
+    public ArrayList<VisitModel> obtenerVisitasPorUsuarioYCentro(int idUser , int idFacility)
+    {
+        ArrayList<VisitModel> visit = new ArrayList<VisitModel>();
+        String selectQuery = "SELECT visit.date as visit_date, visit.enter as visit_enter, visit.exit visit_exit  FROM visit, facility where facility.id = " + idFacility + " and visit.user_id = " + idUser +
+                " and visit.facility_id = " + idFacility ;
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+
+                String date = cursor.getString(cursor.getColumnIndex("visit_date"));
+                String enter = cursor.getString(cursor.getColumnIndex("visit_enter"));
+                String exit = cursor.getString(cursor.getColumnIndex("visit_exit"));
+                System.out.println("date: " + date);
+                System.out.println("enter: " + enter);
+                System.out.println("exit: " + exit);
+                visit.add(new VisitModel(date,enter,exit));
+
+            } while (cursor.moveToNext());
+
+
+        }
+
+        return visit;
+}
+
+    public void insertarVisit(int idUsuario,int idFacility,String horaInicio,String horaTermino,String fecha)
+    {
+        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,fecha,horaInicio,horaTermino,""));
+    }
+
+    public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino,String fecha)
+    {
+        Cursor data = db.doSelectQuery("SELECT id FROM facility WHERE name = '"+IDRequest+"' AND user_id = " + idUsuario);
+        if(data.moveToFirst())
+        {
+            System.out.println("Encontre Faciity");
+            int idFacility = data.getInt(data.getColumnIndex("id"));
+            insertarVisit(idUsuario,idFacility,horaInicio,horaTermino,fecha);
+        }
+
+
+    }
+
+    public int obtenerIdEvaluation(int aspectID, int quesionID)
+    {
+        Cursor data = db.doSelectQuery("SELECT question.evaluation_id as id_evaluation FROM aspect, question WHERE aspect.id = " + aspectID + " AND question.id = " + quesionID +
+                " AND question.aspect_id = " + aspectID );
+        if(data.moveToFirst())
+        {
+            return  data.getInt(data.getColumnIndex("id_evaluation"));
+        }
+        return -1;
+    }
+
+    public  HashMap<String,Integer> obtenerCentroVisitas()
+    {
+        HashMap<String,Integer> visitas = new HashMap<>();
+        String nombrePosibleMas = "No hay datos";
+        int cantidadPosibleMas = 0;
+        String nombrePosibleMenos = "No hay datos";
+        int cantidadPosibleMenos = 0;
+        String query = "SELECT count(facility.id) as number, facility.name as name FROM facility,visit " +
+                "WHERE facility.id = visit.facility_id GROUP BY facility.name ORDER BY count(facility.id) desc" ;
+        Cursor data = db.doSelectQuery(query);
+        if(data.moveToFirst())
+        {
+            nombrePosibleMas = data.getString(data.getColumnIndex("name"));
+            cantidadPosibleMas = data.getInt(data.getColumnIndex("number"));
+            if(data.moveToLast())
+            {
+                nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
+                cantidadPosibleMenos = data.getInt(data.getColumnIndex("number"));
+            }
+            else
+            {
+                nombrePosibleMenos = nombrePosibleMas;
+                cantidadPosibleMenos = cantidadPosibleMas;
+            }
+            String cero = this.comprobarCero();
+            if(cero.isEmpty())
+            {
+                visitas.put(nombrePosibleMenos,cantidadPosibleMenos);
+            }
+            else
+            {
+                visitas.put(cero,0);
+            }
+            visitas.put(nombrePosibleMas,cantidadPosibleMas);
+        }
+
+        return visitas;
+    }
+
+    private  String comprobarCero()
+    {
+
+        String query = "SELECT id,name FROM facility";
+        Cursor data = db.doSelectQuery(query);
+        if(data.moveToFirst())
+        {
+            do {
+                int id = data.getInt(data.getColumnIndex("id"));
+                Cursor count = db.doSelectQuery("SELECT count(visit.id) as number FROM visit WHERE visit.facility_id = " + id);
+                count.moveToFirst();
+                if (count.getInt(count.getColumnIndex("number")) == 0) {
+                    return data.getString(data.getColumnIndex("name"));
+                }
+            }while(data.moveToNext());
+        }
+
+        return "";
+    }
+
+    public HashMap<String,String> visitaReciente() throws ParseException {
+        HashMap<String,String> fecha = new HashMap<>();
+        String query = "SELECT facility.name as name,visit.date as date FROM facility,visit WHERE facility.id = visit.facility_id ";
+        Cursor data = db.doSelectQuery(query);
+        String name = "No hay datos";
+        Date fechaReciente = null;
+        if(data.moveToFirst())
+        {
+            do
+            {
+                Date date = new SimpleDateFormat("dd-MMM-yyyy").parse(data.getString(data.getColumnIndex("date")));
+                if(fechaReciente == null || date.compareTo(fechaReciente)>=0)
+                {
+                    fechaReciente = date;
+                    name = data.getString(data.getColumnIndex("name"));
+                }
+            }while(data.moveToNext());
+        }
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MMM-yyyy");
+        if(fechaReciente==null)
+        {
+            fecha.put(name,"No hay datos");
+        }
+        else
+        {
+            fecha.put(name,formatDate.format(fechaReciente));
+        }
+        return  fecha;
+    }
+
+
+
+
+    public void insertarResponseEvaluation(int id, int idEvaluation, float valoracion, int aspect, int facility_id)
+    {
+        db.insertTableResponseEvaluation(db.getWritableDatabase(),new ResponseEvaluation(id,idEvaluation,valoracion, aspect, "no", facility_id));
+    }
+
+    public float obtenerValoracionPromedioDimension(int idAspect, int idCentro)
+    {
+        String query = "SELECT avg(assessment) as valoracion_promedio FROM response_evaluation where response_evaluation.aspect_id = " + idAspect
+                + " and facility_id = " + idCentro;
+
+
+
+        Cursor cursor = db.doSelectQuery(query);
+
+        if (cursor.moveToFirst())
+
+        {
+
+            float valoracion = cursor.getFloat(cursor.getColumnIndex("valoracion_promedio"));
+
+            return valoracion;
+        }
+        return -1;
+    }
+
+
+
+
+
 }

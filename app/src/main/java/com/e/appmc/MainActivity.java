@@ -1,14 +1,21 @@
 package com.e.appmc;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import com.e.appmc.bd.User;
+import com.e.appmc.service.GPSService;
 import com.e.appmc.sync.SyncDatabase;
 
 import java.util.HashMap;
@@ -23,25 +30,41 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOMBRE_USUARIO = "nombre_usuario";
     private static final String ID_USUARIO = "id_usuario";
     private static final String BD_CREADA ="bd_creada";
+    private static final String HORA_INICIO="hora_inicio";
     private User user;
     private DBMediator mediador;
     private SyncDatabase sincronizador;
+    private ServiceConnection m_serviceConnection;
+    private GPSService m_service;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},111);
         usuario = (EditText)findViewById(R.id.EditUsuario);
-        usuario.setText("atorres@mdsg.cl");
+        usuario.setText("ABass");
         contraseña = (EditText)findViewById(R.id.EditContraseña);
-        contraseña.setText("$2y$10$aZICk1jWBFY4ExoTu8E1iuCwWeGZvbWcfihgGaZZk/0Vgt.e/XK7i");
+        contraseña.setText("matanui2009");
         session = (CheckBox) findViewById(R.id.checkbox_session);
         this.mediador = new DBMediator(this);
         sincronizador = new SyncDatabase(this);
         estaActivadoCheckBox = session.isChecked();
         if (obtenerEstadoRecordarSession()) enterSession();
+        m_serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                m_service = ((GPSService.MyBinder)iBinder).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                m_service = null;
+            }
+        };
+
+       // bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
 
 
 
@@ -79,7 +102,17 @@ public class MainActivity extends AppCompatActivity {
         sesionPreferencias.edit().putInt(ID_USUARIO,id).apply();
     }
 
+    public void guardarHoraInicio(String hora)
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        horaPreferencias.edit().putString(HORA_INICIO,hora).apply();
+    }
 
+    public String obtenerHoraInicioRecordarSession()
+    {
+        SharedPreferences horaPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
+        return horaPreferencias.getString(HORA_INICIO,"no aplica");
+    }
 
     public boolean obtenerEstadoRecordarSession()
     {
@@ -161,12 +194,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void roleChecker(String name,int id,int role)
+    @SuppressLint("NewApi")
+    private void roleChecker(String name, int id, int role)
     {
         if(role==5)
         {
             this.guardarDatosUsuario(name,id);
             this.guadarEstadoRecordarSesion();
+            Singleton.getInstance().setID(this.obtenerIdUsuarioRecordarSesion());
+            //Intent intent = new Intent(this, GPSService.class);
+            //intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());
+            //intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
+            //startService(intent);
+            //bindService(intent, m_serviceConnection, BIND_AUTO_CREATE);
+
             enterSession();
         }
         else
@@ -177,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
 
     private  void enterSession() {
 
+        this.sincronizador.syncAspectWebsite();
+        this.sincronizador.syncFacilityWebsite();
+        this.guardarHoraInicio("no hay hora");
         Intent intent = new Intent(this,MainMenuActivity.class);
         intent.putExtra("id",this.obtenerIdUsuarioRecordarSesion());
         intent.putExtra("name",this.obtenerNombreUsuarioRecordarSesion());

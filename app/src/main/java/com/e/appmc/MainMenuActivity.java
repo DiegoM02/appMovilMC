@@ -1,12 +1,15 @@
 package com.e.appmc;
 
 
+import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.e.appmc.service.GPSService;
 import com.e.appmc.sync.SyncDatabase;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,13 +44,11 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        iniciarServicio();
         setContentView(R.layout.activity_main_menu);
         nombreUsuario= (TextView)findViewById(R.id.userText);
         datosUsuario = getIntent().getExtras();
         nombreUsuario.setText(datosUsuario.getString("name"));
-        this.sincroniza = new SyncDatabase(this);
-        this.sincroniza.syncAspectWebsite();
-        sincroniza.syncFacilityWebsite();
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
 
 
@@ -58,6 +60,8 @@ public class MainMenuActivity extends AppCompatActivity {
     public void visitar(View view )
     {
         Intent goToVisit= new Intent(MainMenuActivity.this,VisitActivity.class);
+        int idUser = datosUsuario.getInt("id");
+        goToVisit.putExtra("idUser",idUser);
         startActivity(goToVisit);
     }
     public void evaluar(View view)
@@ -65,6 +69,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);
         goToEvaluation.putExtra("id",datosUsuario.getInt("id"));
         goToEvaluation.putExtra("name",datosUsuario.getString("name"));
+
         startActivity(goToEvaluation);
     }
 
@@ -73,6 +78,8 @@ public class MainMenuActivity extends AppCompatActivity {
     {
        MainActivity.changeEstadoSession(MainMenuActivity.this,false);
         Intent goToLogin = new Intent(MainMenuActivity.this,MainActivity.class);
+        Intent stop = new Intent(MainMenuActivity.this,GPSService.class);
+        this.stopService(stop);
         startActivity(goToLogin);
         finish();
     }
@@ -148,5 +155,26 @@ public class MainMenuActivity extends AppCompatActivity {
         }
         return bitmap;
     }
+
+    private void iniciarServicio()
+    {
+        if(!comprobarServcioCorriendo(GPSService.class))
+        {
+            System.out.println("entre en servicio");
+            Intent intent = new Intent(this, GPSService.class);
+            startService(intent);
+        }
+    }
+
+    private boolean comprobarServcioCorriendo(Class<GPSService> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

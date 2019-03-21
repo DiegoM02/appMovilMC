@@ -22,14 +22,14 @@ import java.util.HashMap;
 
 public class SyncDatabase {
 
-
-    private final static String URL_CENTRO = "http://192.168.1.3/syncpersonal/php/insert_facility.php";
-    private final static String URL = "";
-    private final static String URL_CENTRO_WEBSITE = "http://192.168.1.3/syncwebsite/selectFacility.php";
-    private final static String URL_DIMENSION_WEBSITE = "http://192.168.1.3/syncwebsite/selectAspect.php";
-    private final static String URL_SUMMARY= "http://192.168.1.100/syncpersonal/php/insert_summary.php";
-    private final static String URL_UPDATE_PERSONAl = "http://192.168.10.182/syncpersonal/php/update_personal.php";
-    private final static String URL_LOGIN_USER = "http://172.16.46.186/syncpersonal/php/login_mcs.php";
+    private final static String IP = "172.16.43.18";
+    private final static String URL_CENTRO = "http://"+IP+"/syncpersonal/modelos/insert_facility.php";
+    private final static String URL = "http://"+IP+"/syncpersonal/modelos/insert_personal.php";
+    private final static String URL_CENTRO_WEBSITE = "http://"+IP+"/syncwebsite/selectFacility.php";
+    private final static String URL_DIMENSION_WEBSITE = "http://"+IP+"/syncwebsite/selectAspect.php";
+    private final static String URL_SUMMARY= "http://"+IP+"/syncpersonal/php/insert_summary.php";
+    private final static String URL_UPDATE_PERSONAl = "http://"+IP+"/syncpersonal/php/update_personal.php";
+    private final static String URL_LOGIN_USER = "http://"+IP+"/syncwebsite/login_mcs.php";
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;
@@ -125,7 +125,7 @@ public class SyncDatabase {
     {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("idUser", "9");
+        params.put("idUser", "30000");
         client.setTimeout(10000);
         client.post(URL_CENTRO_WEBSITE, params, new AsyncHttpResponseHandler() {
             @Override
@@ -136,8 +136,8 @@ public class SyncDatabase {
                     System.out.println(arr.length());
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject obj = (JSONObject) arr.get(i);
-                        mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
-                                obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
+                       // mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
+                          //      obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
                     }
                     Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {

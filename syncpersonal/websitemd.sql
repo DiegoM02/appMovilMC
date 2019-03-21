@@ -82,6 +82,17 @@ CREATE TABLE `evaluation_question` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
+--
+-- Estructura de tabla para la tabla `response_evaluation`
+--
+CREATE TABLE `response_evaluation`(
+  `id` int(11) NOT NULL,
+  `id_evaluation` int(11) NOT NULL,
+  `assessment` float(11) NOT NULL,
+  `facility_id` int(11) NOT NULL,
+  `aspect_id` int(11) NOT NULL
+
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Estructura de tabla para la tabla `facility`
@@ -187,10 +198,10 @@ CREATE TABLE `report` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `services`
+-- Estructura de tabla para la tabla `service`
 --
 
-CREATE TABLE `services` (
+CREATE TABLE `service` (
   `id` int(10) NOT NULL,
   `code` varchar(16) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -201,10 +212,10 @@ CREATE TABLE `services` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `subservices`
+-- Estructura de tabla para la tabla `subservice`
 --
 
-CREATE TABLE `subservices` (
+CREATE TABLE `subservice` (
   `id` int(10) NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -357,15 +368,15 @@ ALTER TABLE `report`
   ADD KEY `task_id` (`task_id`);
 
 --
--- Indices de la tabla `services`
+-- Indices de la tabla `service`
 --
-ALTER TABLE `services`
+ALTER TABLE `service`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `subservices`
+-- Indices de la tabla `subservice`
 --
-ALTER TABLE `subservices`
+ALTER TABLE `subservice`
   ADD PRIMARY KEY (`id`),
   ADD KEY `service_key_1` (`service_id`);
 
@@ -392,22 +403,30 @@ ALTER TABLE `visit`
   ADD KEY `user_id` (`user_id`),
   ADD KEY `facility_id` (`facility_id`);
 
+ALTER TABLE `response_evaluation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_evaluation` (`id_evaluation`),
+  ADD KEY `facility_id` (`facility_id`),
+  ADD KEY `aspect_id` (`aspect_id`);
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `services`
+-- AUTO_INCREMENT de la tabla `service`
 --
-ALTER TABLE `services`
+ALTER TABLE `service`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `subservices`
+-- AUTO_INCREMENT de la tabla `subservice`
 --
-ALTER TABLE `subservices`
+ALTER TABLE `subservice`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
+
+ALTER TABLE `response_evaluation`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 --
 -- Restricciones para tablas volcadas
 --
@@ -449,10 +468,10 @@ ALTER TABLE `report`
   ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`);
 
 --
--- Filtros para la tabla `subservices`
+-- Filtros para la tabla `subservice`
 --
-ALTER TABLE `subservices`
-  ADD CONSTRAINT `service_key_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`);
+ALTER TABLE `subservice`
+  ADD CONSTRAINT `service_key_1` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`);
 
 --
 -- Filtros para la tabla `task`
@@ -462,6 +481,10 @@ ALTER TABLE `task`
   ADD CONSTRAINT `task_ibfk_2` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
   ADD CONSTRAINT `task_ibfk_3` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`);
 
+ALTER TABLE `response_evaluation`
+  ADD CONSTRAINT `response_evaluation_ibfk_1` FOREIGN KEY (`id_evaluation`) REFERENCES `evaluation` (`id`),
+  ADD CONSTRAINT `response_evaluation_ibfk_2` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
+  ADD CONSTRAINT `response_evaluation_ibfk_3` FOREIGN KEY (`aspect_id`) REFERENCES `aspect` (`id`);
 --
 -- Filtros para la tabla `visit`
 --

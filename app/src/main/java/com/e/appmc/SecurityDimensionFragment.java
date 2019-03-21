@@ -76,7 +76,7 @@ public class SecurityDimensionFragment extends Fragment {
     private String preguntaActual;
     private ArrayList<Assessment> valoraciones;
     RatingBar barValoracion;
-
+    private int countIDEvaluation = 0;
     private int quantityAnsweredQuestions;
 
     private OnFragmentInteractionListener mListener;
@@ -84,7 +84,10 @@ public class SecurityDimensionFragment extends Fragment {
     private boolean flagQuestionsRaitings;
     private ArrayList<QuestionAnswered> questionsAnswered;
     private boolean flagQuestionAnswered;
-
+    private HashMap<String,Float> questionsRatingsData;
+    private int idPregunta;
+    private DBMediator mediador;
+    private int idCentro;
 
 
     public SecurityDimensionFragment() {
@@ -125,6 +128,8 @@ public class SecurityDimensionFragment extends Fragment {
         dialogPregunta = new Dialog(view.getContext());
         dialogPreguntaSiNo = new Dialog(view.getContext());
         dialogoResumen = new Dialog(view.getContext());
+        idCentro = getArguments().getInt("idFacility");
+        System.out.println("Centri id: "  + idCentro);
         dimension = (CardView) view.findViewById(R.id.cardView);
         dimension1 = (CardView) view.findViewById(R.id.cardView2);
         dimension2 = (CardView) view.findViewById(R.id.cardView3);
@@ -133,7 +138,12 @@ public class SecurityDimensionFragment extends Fragment {
         dimension2Valoracion = (TextView) view.findViewById(R.id.textView1);
         dimension3Valoracion = (TextView) view.findViewById(R.id.textView2);
         dimension4Valoracion = (TextView) view.findViewById(R.id.textView3);
+        mediador = new DBMediator(getActivity());
         puntoCritico = new ArrayList<CriticalPoint>();
+        setValoracionesPromedioUno();
+        setValoracionesPromedioDos();
+        setValoracionesPromedioTres();
+        setValoracionesPromedioCuatro();
         valoraciones = new ArrayList<Assessment>();
         questionsRaitings = new ArrayList<QuestionRating>();
         flagQuestionsRaitings=true;
@@ -163,6 +173,42 @@ public class SecurityDimensionFragment extends Fragment {
         dimension2.setEnabled(true);
         dimension3.setEnabled(true);
     }
+
+
+
+
+
+    public void setValoracionesPromedioUno()
+    {
+            float valoracion = this.mediador.obtenerValoracionPromedioDimension(1, this.idCentro);
+
+            this.dimension1Valoracion.setText(String.valueOf(valoracion));
+
+    }
+
+    public  void setValoracionesPromedioDos()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(2,this.idCentro);
+
+        this.dimension2Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioTres()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(3,this.idCentro);
+
+        this.dimension3Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioCuatro()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
+
+        this.dimension4Valoracion.setText(String.valueOf(valoracion));
+    }
+
+
+
 
     public void realizarEvaluacionOtrasDimensiones(View view, ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
@@ -228,6 +274,7 @@ public class SecurityDimensionFragment extends Fragment {
         if (pagerPregunta.getCurrentItem() == pagerPregunta.getAdapter().getCount() - 1) {
             Toast.makeText(this.getContext(),"Check " + checkAllQuestionPointed(), Toast.LENGTH_LONG).show();
             if(checkAllQuestionPointed()) {
+                this.questionsRatingsData = this.rellenarRatingQuestions();
                 this.questionsRaitings.clear();
                 flagQuestionsRaitings=true;
                 if (adpter.getValoracion() < 3) {
@@ -300,36 +347,49 @@ public class SecurityDimensionFragment extends Fragment {
         final ArrayList<Integer> mSelectedItems = new ArrayList();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.personal_dialogo, null));
-        builder.setMultiChoiceItems(personal, null,
-                new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which,
-                                        boolean isChecked) {
-                        if (isChecked) {
-                            mSelectedItems.add(which);
-                        } else if (mSelectedItems.contains(which)) {
-                            mSelectedItems.remove(Integer.valueOf(which));
+        if(personal.length>0) {
+            builder.setMultiChoiceItems(personal, null,
+                    new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which,
+                                            boolean isChecked) {
+                            if (isChecked) {
+                                mSelectedItems.add(which);
+                            } else if (mSelectedItems.contains(which)) {
+                                mSelectedItems.remove(Integer.valueOf(which));
+                            }
                         }
-                    }
-                });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+                    });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
 
-        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                addCriticalPoint(personal,mSelectedItems);
-                pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem()+1,true);
-            }
-        });
+            builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    addCriticalPoint(personal, mSelectedItems);
+                    pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
+                }
+            });
+        }
+        else
+        {
+            builder.setMessage("No hay personal Disponible");
+            builder.setPositiveButton("Confrimar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
+                }
+            });
+        }
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
 
 
     public void cancelarPregunta(View view) {
@@ -342,6 +402,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension1() {
 
         float valor = calcularValoracionSiNoPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(1,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,1,this.idCentro);
+        this.countIDEvaluation++;
         dimension1Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension1Valoracion.setBackgroundResource(R.color.negativo);
@@ -354,6 +417,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension2() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(2,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
         dimension2Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension2Valoracion.setBackgroundResource(R.color.negativo);
@@ -365,6 +431,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension3() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(3,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,3,this.idCentro);
+        this.countIDEvaluation++;
         dimension3Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension3Valoracion.setBackgroundResource(R.color.negativo);
@@ -376,6 +445,9 @@ public class SecurityDimensionFragment extends Fragment {
     public void setValoracionPromedioDimension4() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(4,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,4,this.idCentro);
+        this.countIDEvaluation++;
         dimension4Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
         } else if (valor > 3.0) {
@@ -418,6 +490,13 @@ public class SecurityDimensionFragment extends Fragment {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.summaryrecycler, null);
         buttonFinalizarEvaluacion = (Button) v.findViewById(R.id.button_finalizar);
+        TextView mediumText = (TextView) v.findViewById(R.id.medium_name);
+        if(dimensionActiva != 1)
+        {
+            mediumText.setText("Valoraciones");
+            resumenAdapter = new SummaryAdapter((EvaluationActivity) this.getActivity(),this.questionsRatingsData);
+
+        }
 
         if (this.dimensionActiva == 1) {
             numeroPreguntasPositivas =
@@ -457,6 +536,17 @@ public class SecurityDimensionFragment extends Fragment {
         });
 
 
+    }
+
+    private HashMap<String,Float> rellenarRatingQuestions()
+    {
+        HashMap<String,Float> datos = new HashMap<>();
+        for(QuestionRating questtion : this.questionsRaitings)
+        {
+            datos.put(questtion.getName(),questtion.getPoint());
+        }
+
+        return datos;
     }
 
 
@@ -552,6 +642,7 @@ public class SecurityDimensionFragment extends Fragment {
 
     public void confirmarPreguntaSiNo(View view,ArrayList<Question> questions) {
         Question question = questions.get(pagerPreguntaSiNo.getCurrentItem());
+
         this.addQuestionAnsweredPositive(question.getDescription(),pagerPreguntaSiNo.getCurrentItem());
         quantityAnsweredQuestions += 1;
         if (pagerPreguntaSiNo.getCurrentItem() == pagerPreguntaSiNo.getAdapter().getCount() - 1) {
@@ -560,6 +651,7 @@ public class SecurityDimensionFragment extends Fragment {
                 this.questionsAnswered.clear();
                 quantityAnsweredQuestions=0;
                 flagQuestionAnswered=true;
+                idPregunta = question.getId();
                 construirDialogoResumen(view);
             }
             else{
@@ -624,22 +716,18 @@ public class SecurityDimensionFragment extends Fragment {
         return true;
     }
 
-    public String createContentSummary()
-    {
+    public String createContentSummary() {
         String content = "";
-        content = "Realizado por " + ((EvaluationActivity)getActivity()).obtenerNombreUsuario() + "\n";
-        for(CriticalPoint point : this.puntoCritico)
-        {
-            content =content + point.getPoint() + "\n";
-            HashMap<String,ArrayList<String>> resume = point.getResume();
+        content = "Realizado por " + ((EvaluationActivity) getActivity()).obtenerNombreUsuario() + "\n";
+        for (CriticalPoint point : this.puntoCritico) {
+            content = content + point.getPoint() + "\n";
+            HashMap<String, ArrayList<String>> resume = point.getResume();
             ArrayList<String> questions = new ArrayList<>(resume.keySet());
-            for(String question : questions)
-            {
-                content = content + question +"\n";
+            for (String question : questions) {
+                content = content + question + "\n";
                 ArrayList<String> personal = resume.get(question);
-                for(int i =0;i<personal.size();i++)
-                {
-                    content = content + "- " + personal.get(i) +"\n";
+                for (int i = 0; i < personal.size(); i++) {
+                    content = content + "- " + personal.get(i) + "\n";
                 }
             }
 
@@ -649,9 +737,30 @@ public class SecurityDimensionFragment extends Fragment {
         return content;
     }
 
+    public String createContentSummaryRating()
+    {
+        String content = "";
+        content = "Realizado por " + ((EvaluationActivity) getActivity()).obtenerNombreUsuario() + "\n";
+        ArrayList<String> questions = new ArrayList<>(this.questionsRatingsData.keySet());
+        for(String question : questions)
+        {
+            content = content+question +"\n";
+            content = "Calificacion = " + content + this.questionsRatingsData.get(question) + "\n \n";
+        }
+
+        return content;
+    }
+
     public void addSummaryToDB()
     {
-        String content = createContentSummary();
+        String content = "";
+        if(dimensionActiva == 1) {
+            content = createContentSummary();
+        }
+        else
+        {
+            content = createContentSummaryRating();
+        }
         int faccilityId = ((EvaluationActivity)getActivity()).getIdCentroActual();
         Calendar c = Calendar.getInstance();
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy");

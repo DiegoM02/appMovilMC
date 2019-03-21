@@ -8,6 +8,7 @@ public class Aspect {
     private String created;
     private String name;
     private double aproval_procentage;
+    private int question_id;
 
     public Aspect(int id, String created, String name, double aproval_procentage) {
         this.id = id;
@@ -39,6 +40,7 @@ public class Aspect {
         values.put(AspectContract.AspectEntry.NAME,name);
         values.put(AspectContract.AspectEntry.CREATED,created);
         values.put(AspectContract.AspectEntry.APROVAL_PORCENTAGE,aproval_procentage);
+        values.put(AspectContract.AspectEntry.QUESTION_ID,question_id);
         return  values;
 
     }

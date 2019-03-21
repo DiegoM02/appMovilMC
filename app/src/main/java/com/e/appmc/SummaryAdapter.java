@@ -17,11 +17,25 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
 
 
     private ArrayList<CriticalPoint> puntosCriticos;
+    private ArrayList<QuestionRating> questions;
     private HashMap<String,ArrayList<String>> resumes;
+    private HashMap<String,Float> datos;
     private Activity activity;
+    private int mode;
+
     public SummaryAdapter(ArrayList<CriticalPoint> puntosCriticos, EvaluationActivity activity) {
         this.puntosCriticos =  puntosCriticos;
         this.activity = activity;
+        mode=0;
+    }
+
+    public SummaryAdapter(EvaluationActivity activity,HashMap<String,Float> datos)
+    {
+        this.activity = activity;
+        mode=1;
+        puntosCriticos = new ArrayList<>();
+        puntosCriticos.add(new CriticalPoint("resumen","lol"));
+        this.datos = datos;
     }
 
     @NonNull
@@ -37,19 +51,33 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
     public void onBindViewHolder(@NonNull SummaryViewHolder summaryViewHolder, int i) {
         final CriticalPoint puntoCritico = this.puntosCriticos.get(i);
 
+        if(mode==0) {
+            summaryViewHolder.textPunto.setText(puntoCritico.getPoint());
 
-        summaryViewHolder.textPunto.setText(puntoCritico.getPoint());
-
-        summaryViewHolder.textPunto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent enter = new Intent(activity,PersonalSummaryActivity.class);
-                HashMap<String,ArrayList<String>> hash = puntoCritico.getResume();
-                enter.putExtra("hash",hash);
-                enter.putExtra("point",puntoCritico.getPoint());
-                activity.startActivity(enter);
-            }
-        });
+            summaryViewHolder.textPunto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent enter = new Intent(activity, PersonalSummaryActivity.class);
+                    HashMap<String, ArrayList<String>> hash = puntoCritico.getResume();
+                    enter.putExtra("hash", hash);
+                    enter.putExtra("rating",0);
+                    enter.putExtra("point", puntoCritico.getPoint());
+                    activity.startActivity(enter);
+                }
+            });
+        }
+        else{
+            summaryViewHolder.textPunto.setText("Resumenadsd");
+            summaryViewHolder.textPunto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent enter = new Intent(activity, PersonalSummaryActivity.class);
+                    enter.putExtra("rating",1);
+                    enter.putExtra("hash",datos);
+                    activity.startActivity(enter);
+                }
+            });
+        }
 
 
 

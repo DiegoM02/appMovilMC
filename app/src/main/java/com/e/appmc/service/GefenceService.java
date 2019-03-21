@@ -1,36 +1,41 @@
-package com.e.appmc;
+package com.e.appmc.service;
 
-import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.e.appmc.EvaluationActivity;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
-import java.util.List;
+public class GefenceService extends Service {
+    private Intent intent;
 
-import static android.support.constraint.Constraints.TAG;
-
-public class GeofenceTransitionsIntentService extends IntentService {
-
-    public GeofenceTransitionsIntentService() {
-
-        super("");
+    @Override
+    public IBinder onBind(Intent intent) {
+        this.intent = intent;
+        return null;
     }
 
     @Override
-    protected void onHandleIntent( Intent intent) {
-        //int userID = intent.getExtras().getInt("id");
-        MainMenuActivity main = new MainMenuActivity();
-        System.out.println("onHandeleIntent: Entro");
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        //this.intent = intent;
+        return START_STICKY;
+
+    }
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         String details = geofencingEvent.getTriggeringGeofences().get(0).getRequestId();
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
@@ -40,9 +45,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             // do something else
             System.out.println("Salida: Utalca");
-            sendNotification(details);
 
-                Toast.makeText(this,"adasdada",Toast.LENGTH_LONG);
+            Toast.makeText(this,"adasdada",Toast.LENGTH_LONG);
         } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
             // do something else again
             sendNotification2(details);
@@ -53,7 +57,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
             System.out.println("Estoy fuera: Utalca");
         }
     }
-
 
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts the main Activity.
@@ -76,11 +79,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         // Define the notification settings.
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder//.setSmallIcon(R.mipmap.ic_launcher)
                 // In a real app, you may want to use a library like Volley
                 // to decode the Bitmap.
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.mipmap.ic_launcher))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                      //  R.mipmap.ic_launcher))
                 .setColor(Color.RED)
                 .setContentTitle(notificationDetails)
                 .setContentText("Ha iniciado una visita")
@@ -118,11 +121,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         // Define the notification settings.
-        builder.setSmallIcon(R.mipmap.ic_launcher)
+        builder//.setSmallIcon(R.mipmap.ic_launcher)
                 // In a real app, you may want to use a library like Volley
                 // to decode the Bitmap.
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.mipmap.ic_launcher))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                 //       R.mipmap.ic_launcher))
                 .setColor(Color.RED)
                 .setContentTitle(notificationDetails)
                 .setContentText("Sigues en visita")
@@ -138,9 +141,5 @@ public class GeofenceTransitionsIntentService extends IntentService {
         // Issue the notification
         mNotificationManager.notify(0, builder.build());
     }
-
-
-
-
 
 }

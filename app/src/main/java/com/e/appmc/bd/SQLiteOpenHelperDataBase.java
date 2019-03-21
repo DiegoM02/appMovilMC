@@ -25,8 +25,10 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
         db.execSQL(createTableQuestion());
         db.execSQL(createTablePoint());
         db.execSQL(createTableSummary());
+        db.execSQL(createTableResponseQuestion());
+        db.execSQL(createTableResponseEvaluation());
         createDataUser(db);
-        //createDataFacility(db);
+        createDataFacility(db);
         createDataVisit(db);
         createDataService(db);
         createDataSubservice(db);
@@ -50,6 +52,16 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public long insertTableUser(SQLiteDatabase db, User user)
     {
         return db.insert(UserContract.UserEntry.TABLE_NAME,null,user.toContentValues());
+    }
+
+    public long insertTableResponseQuestion(SQLiteDatabase db, ResponseQuestion response)
+    {
+        return db.insert(ResponseQuestionContract.ResponseQuestionEntry.TABLE_NAME,null,response.toContentValues());
+    }
+
+    public long insertTableResponseEvaluation(SQLiteDatabase db, ResponseEvaluation response)
+    {
+        return db.insert(ResponseEvaluationContract.ResponseEvaluationEntry.TABLE_NAME,null,response.toContentValues());
     }
 
     public long insertTableFacility(SQLiteDatabase db, Facility facility)
@@ -153,10 +165,15 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1,"no"));
-            insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
-            insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
-            insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
+            //insertTableFacility(db,new Facility(1,2,"04-02-2019","03 02 015","Mall center","Curico",2,1,"no"));
+            //insertTableFacility(db,new Facility(2,1,"05-02-2019","46554","Utalca","Los Niches",1,1,"no"));
+            //insertTableFacility(db,new Facility(3,1,"07-02-2019","4654654","Top Dog","Curico",1,1,"no"));
+            //insertTableFacility(db,new Facility(4,2,"07-02-2019","464654","Mujica & Docmac Oficina","Curico",2,1,"no"));
+            insertTableFacility(db,new Facility(5,300000,"13-03-2019","646465","Mi casa","Molina",2,1,"no",-35.07468,-71.25500,50));
+            insertTableFacility(db,new Facility(6,300000,"13-03-2019","646465","Utalca","Curico",2,1,"no",-35.002079,-71.229846,50));
+            insertTableFacility(db,new Facility(7,300000,"13-03-2019","646465","Mujica & Docmac","Curico",2,1,"no",-34.9842428,-71.2331235,50));
+
+
         }
     }
 
@@ -224,7 +241,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     {
         if(db !=null)
         {
-            insertTableVisit(db,new Visit(1,1,2,"04-02-2019 11:00AM","04-02-2019 12:00PM","prueba"));
+            //insertTableVisit(db,new Visit(1,1,2,"04-02-2019 11:00AM","04-02-2019 12:00PM","prueba"));
         }
     }
 
@@ -287,6 +304,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + FacilityContract.FacilityEntry.CODE + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.CREATED + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.ADDRESS + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.LATITUDE + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.LONGITUDE + " TEXT NOT NULL, "
+                + FacilityContract.FacilityEntry.RADIUS + " TEXT NOT NULL, "
                 + FacilityContract.FacilityEntry.SERVICE_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.EVALUATION_ID + " INTEGER NOT NULL, "
                 + FacilityContract.FacilityEntry.SYNC_STATUS + " TEXT NOT NULL, "
@@ -294,6 +314,9 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"), "
                 + " FOREIGN KEY(" + FacilityContract.FacilityEntry.SERVICE_ID + ") REFERENCES "+ ServiceContract.ServiceEntry.TABLE_NAME +"(" + ServiceContract.ServiceEntry.ID+"))";
     }
+
+
+
 
     public String createTablePersonal()
     {
@@ -333,10 +356,11 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
     public String createTableVisit()
     {
         return "CREATE TABLE " + VisitContract.VisitEntry.TABLE_NAME +" ("
-                + VisitContract.VisitEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + VisitContract.VisitEntry.ID + " INTEGER NOT NULL, "
+                //+ VisitContract.VisitEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + VisitContract.VisitEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + VisitContract.VisitEntry.USER_ID + " INTEGER NOT NULL, "
                 + VisitContract.VisitEntry.FACILITY_ID + " INTEGER NOT NULL, "
+                + VisitContract.VisitEntry.DATE + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.ENTER + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.EXIT + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.COMMENT + " TEXT NOT NULL, "
@@ -406,6 +430,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + AspectContract.AspectEntry.NAME+ " TEXT NOT NULL, "
                + AspectContract.AspectEntry.CREATED+ " TEXT NOT NULL, "
                + AspectContract.AspectEntry.APROVAL_PORCENTAGE+ " REAL NOT NULL, "
+               + AspectContract.AspectEntry.QUESTION_ID + " INTEGER NOT NULL, "
                 + "UNIQUE ("+PointContract.pointEntry.ID+"))";
     }
     public String createTableSummary()
@@ -418,6 +443,34 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + SummaryContract.SummaryEntry.SYNC_STATE + " TEXT NOT NULL, "
                 + " FOREIGN KEY(" + SummaryContract.SummaryEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
                 + "UNIQUE ("+SummaryContract.SummaryEntry.ID+"))";
+    }
+
+    public String createTableResponseQuestion()
+    {
+        return "CREATE TABLE " + ResponseQuestionContract.ResponseQuestionEntry.TABLE_NAME +" ("
+                + ResponseQuestionContract.ResponseQuestionEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ID_EVALUATION +" INTEGER NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ID_QUESTION + " TEXT NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.ASSESSMENT + " TEXT NOT NULL, "
+                + ResponseQuestionContract.ResponseQuestionEntry.SYNC_STATE + " TEXT NOT NULL, "
+                + " FOREIGN KEY(" + ResponseQuestionContract.ResponseQuestionEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
+                +   " FOREIGN KEY(" + ResponseQuestionContract.ResponseQuestionEntry.ID_QUESTION +") REFERENCES " + QuestionContract.questionEntry.TABLE_NAME + "(" + QuestionContract.questionEntry.ID+")"
+                + "UNIQUE ("+ ResponseQuestionContract.ResponseQuestionEntry.ID+"))";
+    }
+
+
+    public String createTableResponseEvaluation()
+    {
+        return "CREATE TABLE " + ResponseEvaluationContract.ResponseEvaluationEntry.TABLE_NAME +" ("
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +" INTEGER NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ASSESSMENT + " TEXT NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.ASPECT + " TEXT NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.FACILITY_ID + " INTEGER NOT NULL, "
+                + ResponseEvaluationContract.ResponseEvaluationEntry.SYNC_STATE + " TEXT NOT NULL, "
+                + " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
+                +  " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
+                + "UNIQUE ("+ ResponseEvaluationContract.ResponseEvaluationEntry.ID+"))";
     }
 
 
