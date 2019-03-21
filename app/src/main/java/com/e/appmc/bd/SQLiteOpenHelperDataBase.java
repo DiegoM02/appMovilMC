@@ -470,6 +470,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + ResponseEvaluationContract.ResponseEvaluationEntry.SYNC_STATE + " TEXT NOT NULL, "
                 + " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.ID_EVALUATION +") REFERENCES " + EvaluationContract.EvaluationEntry.TABLE_NAME + "(" + EvaluationContract.EvaluationEntry.ID+")"
                 +  " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.FACILITY_ID +") REFERENCES " + FacilityContract.FacilityEntry.TABLE_NAME + "(" + FacilityContract.FacilityEntry.ID+")"
+                +   " FOREIGN KEY(" + ResponseEvaluationContract.ResponseEvaluationEntry.ASPECT+") REFERENCES " + AspectContract.AspectEntry.TABLE_NAME + "(" + AspectContract.AspectEntry.ID+")"
                 + "UNIQUE ("+ ResponseEvaluationContract.ResponseEvaluationEntry.ID+"))";
     }
 
