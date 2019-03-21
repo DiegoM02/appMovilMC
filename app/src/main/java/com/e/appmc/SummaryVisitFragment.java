@@ -87,8 +87,11 @@ public class SummaryVisitFragment extends Fragment {
             lessVisitName.setText(keys.get(1));
             lessVisitNumber.setText("" + quantityVisits.get(keys.get(1)));
         }
-        lessVisitName.setText(keys.get(0));
-        lessVisitNumber.setText("" + quantityVisits.get(keys.get(0)));
+        else
+        {
+            lessVisitName.setText(keys.get(0));
+            lessVisitNumber.setText("" + quantityVisits.get(keys.get(0)));
+        }
         TextView lastVisitName = view.findViewById(R.id.last_visit_name);
         TextView lastVisitNumber = view.findViewById(R.id.last_visit_date);
         try {

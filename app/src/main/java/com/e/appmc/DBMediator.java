@@ -415,37 +415,60 @@ public class DBMediator {
     public  HashMap<String,Integer> obtenerCentroVisitas()
     {
         HashMap<String,Integer> visitas = new HashMap<>();
-        String nombrePosibleMas = "";
+        String nombrePosibleMas = "No hay datos";
         int cantidadPosibleMas = 0;
-        String nombrePosibleMenos = "";
+        String nombrePosibleMenos = "No hay datos";
         int cantidadPosibleMenos = 0;
-        String query = "SELECT id,name FROM facility " ;
+        String query = "SELECT count(facility.id) as number, facility.name as name FROM facility,visit " +
+                "WHERE facility.id = visit.facility_id GROUP BY facility.name ORDER BY count(facility.id) desc" ;
+        Cursor data = db.doSelectQuery(query);
+        if(data.moveToFirst())
+        {
+            nombrePosibleMas = data.getString(data.getColumnIndex("name"));
+            cantidadPosibleMas = data.getInt(data.getColumnIndex("number"));
+            if(data.moveToLast())
+            {
+                nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
+                cantidadPosibleMenos = data.getInt(data.getColumnIndex("number"));
+            }
+            else
+            {
+                nombrePosibleMenos = nombrePosibleMas;
+                cantidadPosibleMenos = cantidadPosibleMas;
+            }
+            String cero = this.comprobarCero();
+            if(cero.isEmpty())
+            {
+                visitas.put(nombrePosibleMenos,cantidadPosibleMenos);
+            }
+            else
+            {
+                visitas.put(cero,0);
+            }
+            visitas.put(nombrePosibleMas,cantidadPosibleMas);
+        }
+
+        return visitas;
+    }
+
+    private  String comprobarCero()
+    {
+
+        String query = "SELECT id,name FROM facility";
         Cursor data = db.doSelectQuery(query);
         if(data.moveToFirst())
         {
             do {
                 int id = data.getInt(data.getColumnIndex("id"));
-                Cursor counts = db.doSelectQuery("SELECT count(id) as number FROM visit WHERE facility_id = " + id );
-                counts.moveToFirst();
-                int nCounts = counts.getInt(counts.getColumnIndex("number"));
-                if(nCounts>=cantidadPosibleMas)
-                {
-                    nombrePosibleMas = data.getString(data.getColumnIndex("name"));
-                    cantidadPosibleMas = nCounts;
-                }
-                if(nCounts<=cantidadPosibleMenos || nCounts==0)
-                {
-                    nombrePosibleMenos = data.getString(data.getColumnIndex("name"));
-                    cantidadPosibleMenos = nCounts;
-    
-
+                Cursor count = db.doSelectQuery("SELECT count(visit.id) as number FROM visit WHERE visit.facility_id = " + id);
+                count.moveToFirst();
+                if (count.getInt(count.getColumnIndex("number")) == 0) {
+                    return data.getString(data.getColumnIndex("name"));
                 }
             }while(data.moveToNext());
         }
 
-        visitas.put(nombrePosibleMas,cantidadPosibleMas);
-        visitas.put(nombrePosibleMenos,cantidadPosibleMenos);
-        return visitas;
+        return "";
     }
 
     public HashMap<String,String> visitaReciente() throws ParseException {
