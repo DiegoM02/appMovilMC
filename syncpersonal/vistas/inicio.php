@@ -24,7 +24,7 @@
     <li class="nav-item">
       <a class="nav-link" href="http://localhost/syncpersonal/vistas/personal.php">Personal</a>
     </li>
-     <li class="nav-item">
+    <li class="nav-item">
       <a class="nav-link" href="http://localhost/syncpersonal/vistas/summary.php">Resumen Evaluaciones</a>
     </li>
     <li class="nav-item">

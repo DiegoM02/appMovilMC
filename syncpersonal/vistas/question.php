@@ -31,8 +31,8 @@
     <li class="nav-item">
       <a class="nav-link" href="http://localhost/syncpersonal/vistas/summary.php">Resumen Evaluaciones</a>
     </li>
-    <li class="nav-item active">
-      <a class="nav-link" href="#">Preguntas</a>
+    <li class="nav-item">
+      <a class="nav-link" href="http://localhost/syncpersonal/vistas/question.php">Preguntas</a>
     </li>
   </ul>
   <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">

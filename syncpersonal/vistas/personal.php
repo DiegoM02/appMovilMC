@@ -43,7 +43,6 @@
     <li class="nav-item">
       <a class="nav-link" href="http://localhost/syncpersonal/vistas/question.php">Preguntas</a>
     </li>
-
    
 
 </ul>

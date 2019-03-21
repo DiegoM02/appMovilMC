@@ -79,7 +79,63 @@ class DB_Functions {
         return $name;   
     }
 
-      public function getAllSummary() 
+    public function getAllFacility() {
+
+        $result = mysqli_query($this->con,"SELECT * FROM facility");
+        return $result;
+    }
+
+    public function getPersonalForIdFacility($Id)
+    {
+         $result = mysqli_query($this->con,"SELECT * FROM personal WHERE facility_id = '$Id'");
+         return $result;
+    }
+
+    public function selectAllFacility($id)
+    {
+        $result = mysqli_query($this->con,"SELECT facilities.id AS id_facility, T1.user_id_facility AS user_id, facilities.created AS date_facility,facilities.code AS code_facility, facilities.name AS name_facility, facilities.address AS address_facility, facilities.service_id AS service_id_facility FROM facilities, (SELECT facility_id AS facility_id_users, facilities_users.user_id AS user_id_facility  FROM facilities_users WHERE  facilities_users.user_id = '$id') AS T1 WHERE  facilities.id = T1.facility_id_users;") ;
+        return $result;
+    
+    }
+
+    function selectAllAspect()
+    {
+        $result = mysqli_query($this->con,"SELECT id, name, created, approval_percentage  FROM aspects;");
+        return $result;
+    }
+
+    public function login($User,$Password)
+    {
+        $result = mysqli_query($this->con,"SELECT name,surname,id,role FROM users WHERE password='$Password' AND username = '$User'");
+        return $result;
+    }
+
+    public function  checkUser($User)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM users WHERE username ='$User'");
+        return $result;
+    } 
+    public function getQuestions()
+    {
+        $result = mysqli_query($this->con,"SELECT description,aspect_id,point_id FROM question");
+        return $result;
+    }
+
+    public function getAspect($Aspect_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM aspect WHERE id = '$Aspect_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
+    }
+
+    public function getPoint($Point_id)
+    {
+        $result = mysqli_query($this->con,"SELECT name FROM point WHERE id = '$Point_id'");
+        $row = mysqli_fetch_array($result);
+        return $row["name"];
+    }
+
+    public function getAllSummary() 
     { 
         $result = mysqli_query($this->con,"SELECT * FROM summary"); 
         return $result; 
@@ -99,44 +155,6 @@ class DB_Functions {
                 return false; 
             }             
         } 
-    } 
- 
-
-    public function getAllFacility() {
-
-        $result = mysqli_query($this->con,"SELECT * FROM facility");
-        return $result;
     }
-
-    public function getPersonalForIdFacility($Id)
-    {
-         $result = mysqli_query($this->con,"SELECT * FROM personal WHERE facility_id = '$Id'");
-         return $result;
-    }
-    public function getFacility($FacilityID)
-    {
-        $result =mysqli_query($this->con,"SELECT name FROM facility where id = '$FacilityID'");
-        return $result;
-    }
-    public function getQuestions()
-
-    {
-        $result = mysqli_query($this->con,"SELECT description,aspect_id,point_id FROM question");
-        return $result;
-    }
-
-    public function getAspect($Aspect_id)
-    {
-        $result = mysqli_query($this->con,"SELECT name FROM aspect WHERE id = '$Aspect_id'");
-        $row = mysqli_fetch_array($result);
-        return $row["name"];
-    }
-    public function getPoint($Point_id)
-    {
-        $result = mysqli_query($this->con,"SELECT name FROM point WHERE id = '$Point_id'");
-        $row = mysqli_fetch_array($result);
-        return $row["name"];
-    }
-    
 }
 ?>
