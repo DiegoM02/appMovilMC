@@ -65,7 +65,7 @@ public class FragmentFiveDimension extends Fragment {
     private TextView dimension2Valoracion;
     private TextView dimension3Valoracion;
     private TextView dimension4Valoracion;
-
+    private TextView dimension5Valoracion;
     private OnFragmentInteractionListener mListener;
     private int contadorPreguntasNegativas;
     private ArrayList<CriticalPoint> puntoCritico;
@@ -85,6 +85,11 @@ public class FragmentFiveDimension extends Fragment {
     private String puntoActual;
     private String preguntaActual;
     private HashMap<String,Float> questionsRatingsData;
+    private DBMediator mediador;
+    private int idCentro;
+    private int idPregunta;
+    private int countIDEvaluation;
+
 
     public FragmentFiveDimension() {
         // Required empty public constructor
@@ -142,11 +147,57 @@ public class FragmentFiveDimension extends Fragment {
         dimension2Valoracion = (TextView) view.findViewById(R.id.text_2);
         dimension3Valoracion = (TextView) view.findViewById(R.id.text_3);
         dimension4Valoracion = (TextView) view.findViewById(R.id.text_4);
+        dimension5Valoracion = (TextView) view.findViewById(R.id.text_5);
+        this.mediador = new DBMediator(getActivity());
+        idCentro = getArguments().getInt("idFacility");
+
+        setValoracionesPromedioUno();
+        setValoracionesPromedioDos();
+        setValoracionesPromedioTres();
+        setValoracionesPromedioCuatro();
+        setValoracionesPromedioCinco();
 
 
         disableCardView();
         // Inflate the layout for this fragment
         return view;
+    }
+
+
+    public void setValoracionesPromedioUno()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(1, this.idCentro);
+
+        this.dimension1Valoracion.setText(String.valueOf(valoracion));
+
+    }
+
+    public  void setValoracionesPromedioDos()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(2,this.idCentro);
+
+        this.dimension2Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioTres()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(3,this.idCentro);
+
+        this.dimension3Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioCuatro()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
+
+        this.dimension4Valoracion.setText(String.valueOf(valoracion));
+    }
+
+    public  void setValoracionesPromedioCinco()
+    {
+        float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
+
+        this.dimension5Valoracion.setText(String.valueOf(valoracion));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -322,6 +373,9 @@ public class FragmentFiveDimension extends Fragment {
     public void setValoracionPromedioDimension1() {
 
         float valor = calcularValoracionSiNoPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(1,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor,1,this.idCentro);
+        this.countIDEvaluation++;
         dimension1Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension1Valoracion.setBackgroundResource(R.color.negativo);
@@ -343,6 +397,9 @@ public class FragmentFiveDimension extends Fragment {
     public void setValoracionPromedioDimension2() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(2,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
         dimension2Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension2Valoracion.setBackgroundResource(R.color.negativo);
@@ -354,6 +411,9 @@ public class FragmentFiveDimension extends Fragment {
     public void setValoracionPromedioDimension3() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(3,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
         dimension3Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
             dimension3Valoracion.setBackgroundResource(R.color.negativo);
@@ -365,10 +425,26 @@ public class FragmentFiveDimension extends Fragment {
     public void setValoracionPromedioDimension4() {
 
         float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(4,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
         dimension4Valoracion.setText(String.valueOf(valor));
         if (valor < 3.0) {
         } else if (valor > 3.0) {
             dimension4Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
+        }
+    }
+
+    public void setValoracionPromedioDimension5() {
+
+        float valor = calcularValoracionPromedio();
+        int idEvaluation = this.mediador.obtenerIdEvaluation(5,this.idPregunta);
+        this.mediador.insertarResponseEvaluation(this.countIDEvaluation,idEvaluation,valor, 2, this.idCentro);
+        this.countIDEvaluation++;
+        dimension4Valoracion.setText(String.valueOf(valor));
+        if (valor < 3.0) {
+        } else if (valor > 3.0) {
+            dimension5Valoracion.setBackgroundResource(R.color.colorPrimaryDark);
         }
     }
 
@@ -387,6 +463,10 @@ public class FragmentFiveDimension extends Fragment {
             case 4:
                 setValoracionPromedioDimension4();
                 break;
+            case 5:
+                setValoracionPromedioDimension5();
+                break;
+
         }
     }
 

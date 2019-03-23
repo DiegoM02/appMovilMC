@@ -56,6 +56,8 @@ public class EvaluationActivity extends AppCompatActivity implements
 
     private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
     private static final String ID_USUARIO = "id_usuario";
+    private int opcion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,10 +73,13 @@ public class EvaluationActivity extends AppCompatActivity implements
         this.questions = new ArrayList<Question>();
         this.personal = new ArrayList<Personal>();
         this.points = mediador.obtenerPuntos();
-        int opcion = mediador.comprobarServicio(idUsuario);
+        opcion = mediador.comprobarServicio(idUsuario);
         if (opcion == 1) {
-            fragmentoCincoDimensiones = new FragmentFiveDimension();
 
+            Bundle bundle = new Bundle();
+            bundle.putInt("idFacility",-1);
+            fragmentoCincoDimensiones = new FragmentFiveDimension();
+            fragmentoCincoDimensiones.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().add(R.id.contenedor_dimensiones,
                     fragmentoCincoDimensiones).commit();
         } else {
@@ -133,11 +138,22 @@ public class EvaluationActivity extends AppCompatActivity implements
     }
 
 
-    private void goToSecurityFragment(Bundle bundle){
-        fragmentoCuatroDimensiones = new SecurityDimensionFragment();
-       fragmentoCuatroDimensiones.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenedor_dimensiones,
-                fragmentoCuatroDimensiones).commit();
+    private void goToFragment(Bundle bundle){
+
+
+        if (opcion == 1) {
+            fragmentoCincoDimensiones = new FragmentFiveDimension();
+            fragmentoCincoDimensiones.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.contenedor_dimensiones,
+                    fragmentoCincoDimensiones).commit();
+        } else {
+
+
+            fragmentoCuatroDimensiones = new SecurityDimensionFragment();
+            fragmentoCuatroDimensiones.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.contenedor_dimensiones,
+                    fragmentoCuatroDimensiones).commit();
+        }
 
     }
 
@@ -334,7 +350,7 @@ public class EvaluationActivity extends AppCompatActivity implements
                 idCentroActual = user.getId();
                 Bundle bundle = new Bundle();
                 bundle.putInt("idFacility",idCentroActual);
-                goToSecurityFragment(bundle);
+                goToFragment(bundle);
             }
 
             @Override

@@ -22,14 +22,14 @@ import java.util.HashMap;
 
 public class SyncDatabase {
 
-    private final static String IP = "172.16.43.18";
+    private final static String IP = "192.168.1.4";
     private final static String URL_CENTRO = "http://"+IP+"/syncpersonal/modelos/insert_facility.php";
     private final static String URL = "http://"+IP+"/syncpersonal/modelos/insert_personal.php";
-    private final static String URL_CENTRO_WEBSITE = "http://"+IP+"/syncwebsite/selectFacility.php";
-    private final static String URL_DIMENSION_WEBSITE = "http://"+IP+"/syncwebsite/selectAspect.php";
+    private final static String URL_CENTRO_WEBSITE = "http://"+IP+"/syncpersonal/modelos/selectFacility.php";
+    private final static String URL_DIMENSION_WEBSITE = "http://"+IP+"/syncpersonal/modelos/selectAspect.php";
     private final static String URL_SUMMARY= "http://"+IP+"/syncpersonal/php/insert_summary.php";
     private final static String URL_UPDATE_PERSONAl = "http://"+IP+"/syncpersonal/php/update_personal.php";
-    private final static String URL_LOGIN_USER = "http://"+IP+"/syncwebsite/login_mcs.php";
+    private final static String URL_LOGIN_USER = "http://"+IP+"/syncpersonal/modelos/login_mcs.php";
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;
