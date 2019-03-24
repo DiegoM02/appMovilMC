@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-
+/*
+* Clase de modelo de un punto critico,
+* este alamacena el  nombre del punto, y un estructura que genera el resumen
+* de ese punto.
+*
+* */
 public class CriticalPoint {
 
 

@@ -1,5 +1,11 @@
 package com.e.appmc;
 
+
+/**
+ * Clase encargada de modelar las visitas.
+ * Esta contiene la fecha de la visitas , lo hora de entrada
+ * y salida de esta.
+ * */
 public class VisitModel {
 
     private String date;

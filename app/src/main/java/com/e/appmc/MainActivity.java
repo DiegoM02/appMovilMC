@@ -20,6 +20,14 @@ import com.e.appmc.sync.SyncDatabase;
 
 import java.util.HashMap;
 
+
+
+
+/******************************************
+ * Actividad encargada de administrar la interfaz de logeo
+ * y sus funcionalidades.
+ * */
+
 public class MainActivity extends AppCompatActivity {
     private EditText usuario;
     private EditText contraseña;
@@ -69,12 +77,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    /*
+    * Metodo que permite cambiar el estado de mantencion de sesion
+    * seteando en true o false el estado del check de recordar sesion.
+    * Recibe como parametro el contexto de la aplicacion y el valor booleano del
+    * estado del recordar sesion.
+    * */
     public static void changeEstadoSession(Context c , boolean estadoSession)
     {
         SharedPreferences sessionPreferences = c.getSharedPreferences(SESSION_ESTADO_RECORDAR,MODE_PRIVATE);
         sessionPreferences.edit().putBoolean(ESTADO_CHECK_BOX,estadoSession).apply();
     }
 
+
+    /*
+    * Metodo encargado de gatillar evento cuando se selecciona
+    * el checkbox de recordar sesion, activando o desactivando el check
+    * segun corresponda.
+    *
+    * Recibe como parametro la vista en donde se genera el evento.
+    * */
     public void activarGuardarSesion(View view)
     {
         if (estaActivadoCheckBox)
@@ -86,6 +109,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
+    * Metodo encargado de guardar el estado de la sesion dentro
+    * del cache SheredPreferences, guardando el
+    * estado del checkbox de recordar sesion.
+    *
+    * */
     public  void guadarEstadoRecordarSesion()
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
@@ -93,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    /*
+     * Metodo encargado de guardar los datos relevantes del usuario dentro
+     * del cache SheredPreferences, guardando el id del usuario y su nomabre.
+     *
+     * */
     public void guardarDatosUsuario(String name,int id)
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR,MainActivity.MODE_PRIVATE);
@@ -112,18 +147,38 @@ public class MainActivity extends AppCompatActivity {
         return horaPreferencias.getString(HORA_INICIO,"no aplica");
     }
 
+
+
+    /*
+    * Metodo encargado de obtener el estado actual de la sesion desde el cache
+    * SharedPreferences.
+    *
+    * */
+
     public boolean obtenerEstadoRecordarSession()
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
         return sesionPreferencias.getBoolean(ESTADO_CHECK_BOX,false);
     }
 
+
+    /*
+     * Metodo encargado de obtener el nombre del usuario logeado actualmente desde el cache
+     * SharedPreferences.
+     *
+     * */
     public String obtenerNombreUsuarioRecordarSesion()
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
         return sesionPreferencias.getString(NOMBRE_USUARIO,"no aplica");
     }
 
+
+    /*
+     * Metodo encargado de obtener el id del usuario logeado actualmente desde el cache
+     * SharedPreferences.
+     *
+     * */
     public int obtenerIdUsuarioRecordarSesion()
     {
         SharedPreferences sesionPreferencias = getSharedPreferences(SESSION_ESTADO_RECORDAR, MainActivity.MODE_PRIVATE);
@@ -136,6 +191,11 @@ public class MainActivity extends AppCompatActivity {
         return sesionPreferencias.getBoolean(BD_CREADA,false);
     }
 
+
+    /*Metodo que es gatillado cuendo se inicia el evento onclick del boton de logeo
+    * validando los campos necesarios
+    *
+    * Recibe como parametro la vista en donde se gatilla el evento onclic*/
     public void logear(View view)
     {
         String usr = usuario.getText().toString();
@@ -174,6 +234,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
+    /*Metodo encargado de validar que los datos ingresados existan y sean correctos.
+    Ademas que tengan autorizacion para el ingreso a la aplicacion.
+    *
+    * Recibe como paramentro el nombre del usuario , su ida y su rol.
+    *
+    * */
     public void betweenSession(String name, int id,int role)
     {
         switch(name)
@@ -192,6 +260,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    /*
+    * Metodo encargado de verificar el rol permitido dentro de la aplicacion,
+    * en esta caso aceptando solo el rol de supervisor identificado con el id 5.
+    * Recibe como parametro el nombre del usuario , id y su rol.
+    * */
     @SuppressLint("NewApi")
     private void roleChecker(String name, int id, int role)
     {
@@ -214,6 +288,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    /*
+    * Metodo encargado de hacer la transicion de la actividad de logeo
+    * a la actividad de menu principal, una vez validado y verificado que los
+    * datos ingresados son correctos.
+    * */
     private  void enterSession() {
 
         this.sincronizador.syncAspectWebsite();

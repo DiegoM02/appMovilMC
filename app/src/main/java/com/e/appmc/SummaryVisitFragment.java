@@ -35,7 +35,10 @@ public class SummaryVisitFragment extends Fragment {
 
 
 
-
+    /**
+     * Fragmento que administra la visualizacion del resumen de visitas
+     * mostrando el centro mas visitado , el menos visitado y el ultimo visitado.
+     * */
     public SummaryVisitFragment() {
         // Required empty public constructor
     }

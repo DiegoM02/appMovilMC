@@ -30,12 +30,8 @@ import java.util.HashMap;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentFiveDimension.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentFiveDimension#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragmento de la interfaz de evaluaciones para las dimensiones
+ * de la division de aseo con cinco dimensiones.
  */
 public class FragmentFiveDimension extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -164,6 +160,12 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
+
+    /**
+    * Metodo encargado de setear el valor promedio entre evaluaciones realizadas
+     * por la dimension de normas laborales, obteniendo las evaluaciones e la base
+     * de datos interna y calculando el promedio de esas valoraciones.
+    * */
     public void setValoracionesPromedioUno()
     {
         float valoracion = this.mediador.obtenerValoracionPromedioDimension(1, this.idCentro);
@@ -172,12 +174,26 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+
+    /**
+     * Metodo encargado de setear el valor promedio entre evaluaciones realizadas
+     * por la dimension de presentacion personal, obteniendo las evaluaciones e la base
+     * de datos interna y calculando el promedio de esas valoraciones.
+     * */
     public  void setValoracionesPromedioDos()
     {
         float valoracion = this.mediador.obtenerValoracionPromedioDimension(2,this.idCentro);
 
         this.dimension2Valoracion.setText(String.valueOf(valoracion));
     }
+
+
+    /**
+     * Metodo encargado de setear el valor promedio entre evaluaciones realizadas
+     * por la dimension de equipos y maquinas del servicio, obteniendo las evaluaciones e la base
+     * de datos interna y calculando el promedio de esas valoraciones.
+     * */
 
     public  void setValoracionesPromedioTres()
     {
@@ -186,6 +202,12 @@ public class FragmentFiveDimension extends Fragment {
         this.dimension3Valoracion.setText(String.valueOf(valoracion));
     }
 
+
+    /**
+     * Metodo encargado de setear el valor promedio entre evaluaciones realizadas
+     * por la dimension de ejecucion del servicio, obteniendo las evaluaciones e la base
+     * de datos interna y calculando el promedio de esas valoraciones.
+     * */
     public  void setValoracionesPromedioCuatro()
     {
         float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
@@ -193,6 +215,12 @@ public class FragmentFiveDimension extends Fragment {
         this.dimension4Valoracion.setText(String.valueOf(valoracion));
     }
 
+
+    /**
+     * Metodo encargado de setear el valor promedio entre evaluaciones realizadas
+     * por la dimension de insumos e implementos, obteniendo las evaluaciones e la base
+     * de datos interna y calculando el promedio de esas valoraciones.
+     * */
     public  void setValoracionesPromedioCinco()
     {
         float valoracion = this.mediador.obtenerValoracionPromedioDimension(4,this.idCentro);
@@ -239,7 +267,10 @@ public class FragmentFiveDimension extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-
+    /**
+     * Metodo encargado de iniciar el evento onclick desde la vista evaluaciones para dimensiones
+     * con peguntas de escala de 1 a 5.
+     * */
     public void realizarEvaluacionOtrasDimensiones(View view , ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
         dialogPregunta.setContentView(R.layout.contenedor_question);
@@ -258,7 +289,12 @@ public class FragmentFiveDimension extends Fragment {
 
 
 
-
+    /**
+     * Metodo encargado de construir el dialogo de personal seteando las multiples opciones
+     * utilizando checkbox , y sus respectivos botones de confirmacion y cancelacion.
+     * Recibe como parametro un a lista con las preguntas asociadas a una dimension, el array de
+     * nombres del personal del centro actual, y la vista.
+     * */
     public void construirDialogoPersonal(ArrayList<Question> questions, final String[] personal,
                                          LayoutInflater inflater)
     {
@@ -308,6 +344,13 @@ public class FragmentFiveDimension extends Fragment {
         dialog.show();
     }
 
+
+    /**
+     * Metodo encargado de agregar un punto critico de una pregunta especifica y sus estructura
+     * de datos con la pregunta negativa y el personal asociado que incumple dicha pregunta.
+     * Recibe como parametro la lista del personal , el arreglo de items seleccionados en el dialogo
+     * de personal.
+     * */
     public void addCriticalPoint(String [] personal, ArrayList<Integer> selectedItems)
     {
         ArrayList<String> personals= new ArrayList<>();
@@ -333,7 +376,11 @@ public class FragmentFiveDimension extends Fragment {
 
 
 
-
+    /**
+     * Metodo iniciado cuando el evento onclick de la dimension de normas laborales es presionada.
+     * Recibe como parametro la vista que inicio el evento, la lista de preguntas asociadas a esa dimension y
+     * la dimension activa.
+     * */
     public void realizarEvaluacionDimensionNormasLaborales(View view , ArrayList<Question> questions, int dimensionActiva) {
         this.dimensionActiva = dimensionActiva;
         dialogPreguntaSiNo.setContentView(R.layout.contenedor_question_si_no);
@@ -350,6 +397,12 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+    /**
+     * Metodo iniciado al momento de marcar una pregunta de si y no , como que incumple
+     * dicha pregunta.
+     * Recibe como parametro la vista que inicio el evento, la lista de preguntas  y la lista de personal.
+     * */
     public void noPreguntaSiNo(View view, ArrayList<Question> questions, String[] personal)
     {
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -373,7 +426,9 @@ public class FragmentFiveDimension extends Fragment {
 
 
 
-
+    /**
+     * Metodo encargado de setear la valoracion promedio de normas laborales despues de hacer una evaluacion.
+     * */
     public void setValoracionPromedioDimension1() {
 
         float valor = calcularValoracionSiNoPromedio();
@@ -388,6 +443,10 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+   /**
+    * Metodo encargado de calcular las valoraciones promedios de las preguntas con formato
+    * de si y no.
+    * */
     public float calcularValoracionSiNoPromedio() {
 
         float pregunta = pagerPreguntaSiNo.getAdapter().getCount() - this.contadorPreguntasNegativas;
@@ -398,6 +457,9 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
+    /**
+     * Metodo encargado de setear la valoracion promedio de presentacion personal despues de hacer una evaluacion.
+     * */
     public void setValoracionPromedioDimension2() {
 
         float valor = calcularValoracionPromedio();
@@ -412,6 +474,13 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+
+
+
+
+    /**
+     * Metodo encargado de setear la valoracion promedio de equipos y maquinas del servicio despues de hacer una evaluacion.
+     * */
     public void setValoracionPromedioDimension3() {
 
         float valor = calcularValoracionPromedio();
@@ -426,6 +495,10 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+
+    /**
+     * Metodo encargado de setear la valoracion promedio de ejecucion del servicio despues de hacer una evaluacion.
+     * */
     public void setValoracionPromedioDimension4() {
 
         float valor = calcularValoracionPromedio();
@@ -439,6 +512,10 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+
+    /**
+     * Metodo encargado de setear la valoracion promedio de insumos e implementos despues de hacer una evaluacion.
+     * */
     public void setValoracionPromedioDimension5() {
 
         float valor = calcularValoracionPromedio();
@@ -452,7 +529,10 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
-
+    /**
+     * Metodo encargado de setear las valoraciones despues de hacer una evaluacion
+     * promedio dependiendo de cual de estas dimensiones este activa.
+     * */
     public void elegirDimension() {
         switch (this.dimensionActiva) {
             case 1:
@@ -474,7 +554,10 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
-
+    /**
+     * Metodo encargado de calcular las valoraciones promedios de las preguntas con formato
+     * de escala de 1 a 5.
+     * */
     public float calcularValoracionPromedio() {
 
         float suma = 0;
@@ -492,7 +575,12 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-
+    /**
+     * Metodo encargado de construir el dialogo de resumen luego de haber realizado una
+     * evaluacion, incorporando los puntos criticos de una evaluacion, el numero de preguntas negativas, y
+     * las preguntas positivas.
+     * Recibe como parametro al vista en la cual sera lanzado el dialogo.
+     * */
     public void construirDialogoResumen(final View view) {
 
         this.addSummaryToDB();
@@ -560,13 +648,21 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-
+    /**
+     * Metodo iniciado cuando se presiona el boton cancelar dentro de una pregunta con formato
+     * de escala de 1 a 5.
+     * */
     public void cancelarPregunta(View view)
     {
         dialogPregunta.dismiss();
 
     }
 
+
+    /**
+     * Metodo encargado de construir la alerta de una respuesta vacia en las preguntas con
+     * formato de escala de 1 a 5.
+     * */
     public void alertaValoracionVacia() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Debes evaluar la pregunta");
@@ -582,6 +678,11 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+
+    /**
+     * Metodo para agregar una valoracion en tiempo de ejecucion en un arryalist.
+     * */
     public void agregarValoracion(float valoracion, int posicion, String pregunta) {
 
         int opcion = existeValoracion(posicion,pregunta);
@@ -594,6 +695,9 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+    /**
+     * Metodo encargado de verificar si una valoracion de una pregunta especifica existe o no.
+     * */
     public int existeValoracion(int posicion,String pregunta)
     {
         for(int i =0; i<this.valoraciones.size();i++)
@@ -608,7 +712,12 @@ public class FragmentFiveDimension extends Fragment {
     }
 
 
-
+    /**
+     * Metodo iniciado cuando se confirma la respuesta de una pregunta con
+     * formato de escala de 1 a 5, el cual confirma si es la ultima pregunta o otra,
+     * pasando a la siguiente si no es la ultima o terminado la evaluacion si es la ultima pregunta.
+     * Recibe como parametro la vista que lo inicio, la lista de preguntas.
+     * */
     public void confirmarPregunta(View view, ArrayList<Question> questions) {
 
 
@@ -662,6 +771,13 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+    /**
+     * Metodo iniciado cuando se confirma la respuesta de una pregunta con
+     * formato de si y no, el cual confirma si es la ultima pregunta o otra,
+     * pasando a la siguiente si no es la ultima o terminado la evaluacion si es la ultima pregunta.
+     * Recibe como parametro la vista que lo inicio, la lista de preguntas.
+     * */
     public void confirmarPreguntaSiNo(View view,ArrayList<Question> questions)
     {
         Question question = questions.get(pagerPreguntaSiNo.getCurrentItem());
@@ -684,6 +800,10 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+    /**
+     * Metodo encargado de agregar las preguntas psositivas.
+     * */
     public void addQuestionAnsweredPositive(String name, int position)
     {
 
@@ -691,6 +811,10 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+    /**
+     * Metodo encargado de agregar las preguntas negativas.
+     * */
     public void addQuestionAnsweredNegative(String name,int position)
     {
 
@@ -698,6 +822,12 @@ public class FragmentFiveDimension extends Fragment {
 
     }
 
+
+   /**
+    * Metodo encargado de llenar las respuesta de las preguntas
+    * segun corresponda, despues de cerrar una evaluacion no terminada.
+    *
+    * */
     public void fillQuestionAnswered(ArrayList<Question> questions)
     {
         for(int i=0;i<questions.size();i++)
@@ -707,11 +837,21 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+
+    /**
+     * Metodo encargado de obtener las respuesta de las preguntas
+     * segun corresponda, despues de cerrar una evaluacion no terminada.
+     *
+     * */
     public QuestionAnswered getQuestionAnswered(int position)
     {
         return this.questionsAnswered.get(position);
     }
 
+
+    /**
+     * Metodo encargado de deshabilitar las dimensiones.
+     * */
     public void disableCardView()
     {
         dimension.setEnabled(false);
@@ -721,6 +861,9 @@ public class FragmentFiveDimension extends Fragment {
         dimension4.setEnabled(false);
     }
 
+    /**
+     * Metodo encargado de habilitar las dimensiones.
+     * */
     public void enableCardView()
     {
         dimension.setEnabled(true);
@@ -730,6 +873,11 @@ public class FragmentFiveDimension extends Fragment {
         dimension4.setEnabled(true);
     }
 
+
+    /**
+     * Metodo encargado de llenar las preguntas segun los puntos criticos para construir
+     * el resumen de la evaluacion.
+     * */
     public void fillQuestionPoints(ArrayList<Question> questions)
     {
         for(int i =0;i<questions.size();i++)
@@ -740,22 +888,40 @@ public class FragmentFiveDimension extends Fragment {
         }
     }
 
+    /**
+     * Metodo encargado de setear el valor de la repuesta en las pregunta de
+     * formato de escala de 1 a 5.
+     *
+     * */
     public void setRating(int index, float rating)
     {
         this.questionsRaitings.get(index).setPoint(rating);
     }
 
+    /**
+     * Metodo encargado de obtener el valor de la repuesta en las pregunta de
+     * formato de escala de 1 a 5.
+     *
+     * */
     public float getRating(int index)
     {
         return this.questionsRaitings.get(index).getPoint();
     }
 
+
+    /**
+     * Metodo encargado de confirmar que una pregunta ha sido respondida, seteando su valor.
+     * */
     public void confirmClick(View view, ArrayList<Question> questions,int i ,float valoracion)
     {
         setRating(i,valoracion);
         confirmarPregunta(view,questions);
     }
 
+
+    /**
+     * Metodo encargado de chequear que todas las preguntas segun el punto critico.
+     * */
     public boolean checkAllQuestionPointed()
     {
         for(int i=0; i<this.questionsRaitings.size()-1;i++)
@@ -766,6 +932,9 @@ public class FragmentFiveDimension extends Fragment {
         return true;
     }
 
+    /**
+     * Metodo encargado de chequear que todas las preguntas han sido responidas.
+     * */
     public boolean checkAllQuestionAnswered()
     {
         for(int i =0;i<this.questionsAnswered.size();i++)
@@ -778,6 +947,11 @@ public class FragmentFiveDimension extends Fragment {
         return true;
     }
 
+
+    /**
+     * Metodo encargado de construir el resumen para eveluaciones con preguntas de si y no segun el contenido que se ha generado
+     * tras realizar una evaluacion.
+     * */
     public String createContentSummary()
     {
         String content = "";
@@ -803,6 +977,10 @@ public class FragmentFiveDimension extends Fragment {
         return content;
     }
 
+    /**
+     * Metodo encargado de construir el resumen para eveluaciones con preguntas de 1 a 5 segun el contenido que se ha generado
+     * tras realizar una evaluacion.
+     * */
     public String createContentSummaryRating()
     {
         String content = "";
@@ -817,6 +995,11 @@ public class FragmentFiveDimension extends Fragment {
         return content;
     }
 
+
+    /**
+     * Metodo encargado de agregar o insertar el resumen dentro de la tabla resumen
+     * en la base de datos interna.
+     * */
     public void addSummaryToDB()
     {
         String content = "";

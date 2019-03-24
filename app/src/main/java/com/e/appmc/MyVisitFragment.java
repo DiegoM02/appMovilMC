@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link MyVisitFragment#newInstance} factory method to
- * create an instance of this fragment.
+/***
+ * Fragmento que permite administrar la visualizacion de las pestaña de
+ * mis visitas en visitas previas, mostrando el listados de visitas realizadas
+ * en un determinado centro.
+ *
  */
+
 public class MyVisitFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

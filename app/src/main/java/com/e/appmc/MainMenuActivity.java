@@ -32,6 +32,11 @@ import java.io.InputStream;
 import static java.lang.System.out;
 
 
+/******************************************************************
+* Actividad encargada de administrar las funcionalidades del menu principal.
+*
+* */
+
 public class MainMenuActivity extends AppCompatActivity {
     private static final String SESSION_ESTADO_RECORDAR = "estado_recordado";
     private TextView nombreUsuario;
@@ -57,6 +62,13 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
+
+    /*
+    * Metodo gatillado al momento de ingresar a la vista de visitas previas,
+    * Pasando como parametro a la vista el id del usuario logeado actualmente.
+    *
+    * Recibe como paramtro la vista actual en donde se gatillo el evento.
+    * */
     public void visitar(View view )
     {
         Intent goToVisit= new Intent(MainMenuActivity.this,VisitActivity.class);
@@ -64,6 +76,14 @@ public class MainMenuActivity extends AppCompatActivity {
         goToVisit.putExtra("idUser",idUser);
         startActivity(goToVisit);
     }
+
+
+    /*
+     * Metodo gatillado al momento de ingresar a la vista de evaluaciones,
+     * Pasando como parametro a la vista el id del usuario logeado actualmente.
+     *
+     * Recibe como paramtro la vista actual en donde se gatillo el evento.
+     * */
     public void evaluar(View view)
     {
         Intent goToEvaluation = new Intent(MainMenuActivity.this,EvaluationActivity.class);
@@ -73,7 +93,10 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(goToEvaluation);
     }
 
-
+    /*
+     * Metodo gatillado al momento de salir del menu principal, llevando al usuario a la vista de logeo,
+     * Recibe como paramtro la vista actual en donde se gatillo el evento.
+     * */
     public void salir(View view)
     {
        MainActivity.changeEstadoSession(MainMenuActivity.this,false);
@@ -104,6 +127,12 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+
+
+    /*
+    * Metodo encargado de procesar la imgen de perfil cambiando su forma a una forma circular.
+    * Recibe como parametro la URI en donde se encuentra la imagen de perfil.
+    * */
     public void transformarImagePerfil(Uri path)
     {
         Bitmap result = null;
@@ -129,6 +158,13 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+
+    /*Metodo encargado de guardar en un archivo la imagen de perfil trasformandola
+    *en un mapa de bits.
+    * Recibe como parametro el contexto de la aplicacion , el mapa de bit creado apartir
+    * de la imagen de perfil que se desea guardar y ademas la extension de la imagen.
+    *
+    * */
     public void saveImage(Context context, Bitmap bitmap, String name, String extension){
         name = name + "." + extension;
         FileOutputStream fileOutputStream;
@@ -156,6 +192,11 @@ public class MainMenuActivity extends AppCompatActivity {
         return bitmap;
     }
 
+
+    /*
+    * Metodo encargado de inicar el servicio de locacion al momento de ingresar
+    * al menu principal.
+    * */
     private void iniciarServicio()
     {
         if(!comprobarServcioCorriendo(GPSService.class))
@@ -165,6 +206,9 @@ public class MainMenuActivity extends AppCompatActivity {
             startService(intent);
         }
     }
+
+
+
 
     private boolean comprobarServcioCorriendo(Class<GPSService> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

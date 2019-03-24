@@ -1,5 +1,10 @@
 package com.e.appmc;
 
+
+/*
+* Clase de modelo de valoraciones de una pregunta
+* Alamacena la posicion de la pregunta, su valoracion y la pregunta en si.
+* */
 public class Assessment {
 
     private int position;

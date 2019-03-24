@@ -5,6 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+
+/**
+ * Clase para el adaptador de las paginas en la vista de visitas previas.
+ * En esta se selecciona cual de los dos fragmentos de resumen o mis visitas debe activarse
+ * para ser visualizado
+ * */
 public class VisitPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private int idUser;

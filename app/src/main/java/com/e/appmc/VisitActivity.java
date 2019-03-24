@@ -20,6 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
+
+/**
+ * Actividad encargada de administrar las funcionalidades de visitas previas.
+ * */
 public class VisitActivity extends AppCompatActivity {
 
 

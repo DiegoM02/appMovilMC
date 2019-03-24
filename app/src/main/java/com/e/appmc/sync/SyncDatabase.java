@@ -19,9 +19,16 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
-
+/**
+ * Clase encargada de administrar las peticiones de actualizaciones entre la base de datos interna
+ * con la base de daros MySQL externa.
+ *
+ * */
 public class SyncDatabase {
 
+
+
+    /**     direcciones url de los web services           */
     private final static String IP = "192.168.1.7";
     private final static String URL_CENTRO = "http://"+IP+"/syncpersonal/modelos/insert_facility.php";
     private final static String URL = "http://"+IP+"/syncpersonal/modelos/insert_personal.php";
@@ -41,6 +48,15 @@ public class SyncDatabase {
 
     }
 
+
+
+
+    /**
+     * Metodo encargado de enviar una peticion al servidor para sincronizar el personal
+     * insertando este en la plataforma web, este envia los datos de registro del personal
+     * mediante un peticion post y recibe un respuesta segun el estado en que termino la peticion
+     * si el status es no entonces la peticion no se realizo con exito, en caso contrario la peticion devuelve yes.
+     * */
     public void syncPersonaSQLite() {
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -82,6 +98,12 @@ public class SyncDatabase {
 
     }
 
+
+    /**
+     * Metodo encargado de sincronizar los datos de los centros de costos en la base de datos interna hacia la base externa MYSQL
+     * de la plataforma web, este envia todos los centros del usuario logeado.
+     *
+     * */
     public void syncFacilitySQLite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -121,6 +143,10 @@ public class SyncDatabase {
         });
     }
 
+    /**
+     * Metodo encargado de sincronizar desde la base de datos de la plataforma web los centros de costos
+     * hacia la base de datos interna, enviando el id del usuario logeado actualmente.
+     * */
     public void syncFacilityWebsite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -159,7 +185,11 @@ public class SyncDatabase {
         });
     }
 
-
+    /**
+     * Metodo encargado de sincronizar los datos de los aspectos de las dimensiones a evaluar
+     * desde la plataforma web hacia la base de datos interna de la aplicacion.
+     * Este recibe el id , nombre , fecha de creacion del aspecto  y porcentaje de aprobacion de este.
+     * */
     public void syncAspectWebsite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -195,6 +225,11 @@ public class SyncDatabase {
         });
     }
 
+    /**
+     * Metodo encargado de sincronizar los resumenes de las evaluaciones generados en la base de datos
+     * internas llevando los datos a la plataforma web.
+     * Este envia los datos correspondientes al resumen , ya se el personal involurado , las preguntas y puntos criticos.
+     * **/
     public void syncSummarySQLite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -238,6 +273,11 @@ public class SyncDatabase {
         });
     }
 
+    /**
+     * Metodo encargado de actualizar el estado del personal ha habilitado o deshabilitado segun
+     * se estime conveniente, enviando los datos de actualizacion a la plataforma web desde
+     * la base de datos interna.
+     * */
     public void updatePersonalSQLite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -319,6 +359,12 @@ public class SyncDatabase {
 
     }
 
+    /**
+     * Metodo encargado de verificar si el usuario ingresado existe en la plataforma web y validarlo
+     * en la aplicacion movil para que el usuario ingrese a esta.
+     * Se envian los datos de usario username y password para realizar la verificacion.
+     * Si la petecion es exitosa se devuelve el id y el nombre del usuario
+     * */
     public void loginSQLite(String user, String password)
     {
         SyncHttpClient clientSync = new SyncHttpClient();

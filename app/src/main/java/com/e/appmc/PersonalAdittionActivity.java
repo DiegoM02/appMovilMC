@@ -13,7 +13,10 @@ import com.e.appmc.sync.SyncDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * Actividad que administrar las funcionalidades y componentes de la vista de
+ * agregar personal.
+ * */
 public class PersonalAdittionActivity extends AppCompatActivity {
     private EditText dateText;
     private EditText nameText;
@@ -38,6 +41,10 @@ public class PersonalAdittionActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Metodo encargado de registrar una fecha de contratado mendiente un datepicker,
+     * cuando en este sea seleaccionado una fecha.
+     * */
     public void agregarFechaContrato (View view)
     {
         DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
@@ -51,6 +58,11 @@ public class PersonalAdittionActivity extends AppCompatActivity {
         newFragment.show(this.getFragmentManager(),"DatePicker");
     }
 
+
+    /**
+     * Metodo encargado de agregar al personal, cuando el boton de aceptar es presionado
+     * este es iniciado y registra , valida los campos que sean correctos y agrega el personal.
+     * */
     public void añadirPersonal(View view)
     {
         int flag =0;
@@ -106,11 +118,20 @@ public class PersonalAdittionActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Metodo encargado de cancelar el ingreso de personal.
+     * */
     public void cancelar(View view)
     {
         this.finish();
     }
 
+
+    /**
+     * Metodo encargado de validar el formato de un rut aceptando guiones y numeros.
+     * Recibe como parametro un String.
+     * */
     public boolean validarRut(String rut)
     {
         Pattern pattern = Pattern.compile("^0*(\\d{1,3}(\\.?\\d{3})*)\\-?([\\dkK])$");
@@ -123,6 +144,11 @@ public class PersonalAdittionActivity extends AppCompatActivity {
 
         return true;
     }
+
+    /***
+     * Metodo encargado de validar que solo se ingrese texto , sin numeros ni caracteres especiales.
+     *
+     */
 
     public boolean validarTexto(String texto )
     {
