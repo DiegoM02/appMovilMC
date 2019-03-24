@@ -363,6 +363,10 @@ public class FragmentFiveDimension extends Fragment {
             this.preguntaActual = question.getDescription();
             construirDialogoPersonal(questions,personal,inflater);
         }
+        else
+        {
+            pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
+        }
     }
 
 

@@ -419,11 +419,13 @@ public class DBMediator {
         int cantidadPosibleMas = 0;
         String nombrePosibleMenos = "No hay datos";
         int cantidadPosibleMenos = 0;
+        int flag =0;
         String query = "SELECT count(facility.id) as number, facility.name as name FROM facility,visit " +
                 "WHERE facility.id = visit.facility_id GROUP BY facility.name ORDER BY count(facility.id) desc" ;
         Cursor data = db.doSelectQuery(query);
         if(data.moveToFirst())
         {
+            flag=1;
             nombrePosibleMas = data.getString(data.getColumnIndex("name"));
             cantidadPosibleMas = data.getInt(data.getColumnIndex("number"));
             if(data.moveToLast())
@@ -446,6 +448,10 @@ public class DBMediator {
                 visitas.put(cero,0);
             }
             visitas.put(nombrePosibleMas,cantidadPosibleMas);
+        }
+        if(flag==0)
+        {
+            visitas.put(nombrePosibleMas,0);
         }
 
         return visitas;

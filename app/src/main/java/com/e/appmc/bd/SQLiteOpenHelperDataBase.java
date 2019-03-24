@@ -172,7 +172,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
             insertTableFacility(db,new Facility(5,300000,"13-03-2019","646465","Mi casa","Molina",1,1,"no",-35.07468,-71.25500,50));
             insertTableFacility(db,new Facility(6,300000,"13-03-2019","646465","Utalca","Curico",1,1,"no",-35.002079,-71.229846,50));
             insertTableFacility(db,new Facility(7,300000,"13-03-2019","646465","Mujica & Docmac","Curico",1,1,"no",-34.9842428,-71.2331235,50));
-
+            insertTableFacility(db,new Facility(8,150,"13-03-2019","646465","Mujica & Docmac","Curico",1,1,"no",-34.9842428,-71.2331235,50));
 
         }
     }

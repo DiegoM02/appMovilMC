@@ -44,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},111);
         usuario = (EditText)findViewById(R.id.EditUsuario);
-        usuario.setText("ABass");
         contraseña = (EditText)findViewById(R.id.EditContraseña);
-        contraseña.setText("matanui2009");
         session = (CheckBox) findViewById(R.id.checkbox_session);
         this.mediador = new DBMediator(this);
         sincronizador = new SyncDatabase(this);
