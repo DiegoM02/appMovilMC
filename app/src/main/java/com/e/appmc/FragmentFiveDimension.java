@@ -299,7 +299,7 @@ public class FragmentFiveDimension extends Fragment {
             builder.setPositiveButton("Confrimar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                    pagerPreguntaSiNo.setCurrentItem(pagerPreguntaSiNo.getCurrentItem() + 1, true);
                 }
             });
         }
