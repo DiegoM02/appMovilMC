@@ -56,7 +56,12 @@ public class FacilitySpinnerAdapter extends ArrayAdapter<Facility> {
 
         return label;
     }
-
+    /*
+     * Metodo encargado de devolver la posicion segun el id del centro que sea solicitado.
+     * Recibe como parametro un entero con el id solicitado
+     * Retorna un entero con la posicion en el arreglo del centro y el valor -1 si es que
+     * este no se llegara a encontrar.
+     */
     public int getPosition(String requestID)
     {
         for(int i=0;i<values.length;i++)

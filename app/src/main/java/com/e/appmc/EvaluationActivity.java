@@ -101,7 +101,10 @@ public class EvaluationActivity extends AppCompatActivity implements
 
 
     }
-
+    /*
+     * Metodo encargado de setear el centro que se mando en el intent
+     * al spinner centroActual, es llamado durante el proceso onCreate de la actividad
+     */
     private void setFacility() {
         String requestID= getIntent().getExtras().getString("requestID");
         if(requestID!=null)
@@ -118,7 +121,11 @@ public class EvaluationActivity extends AppCompatActivity implements
     }
 
 
-
+    /*
+     * Meetodo encargado de funcionar como mediador a la seleccion de set de preguntas.
+     * Recibe como parametro un el view generado internamente por los card view dentro
+     * de los fragmentos.
+     */
     public void realizarEvaluacion(View view) {
 
         obtenerFragmentoActivo(view);
@@ -137,7 +144,11 @@ public class EvaluationActivity extends AppCompatActivity implements
         unregisterReceiver(broadcastReceiver);
     }
 
-
+    /*
+     * Metodo encargado de lanzar los fragmentos dependidendo del tipo que se necesite.
+     * Recibe como parametro un onbjeto de la clase Bundle con los parametros necesarios
+     * para el correcto funcionamiento del fragmento.
+     */
     private void goToFragment(Bundle bundle){
 
 
@@ -158,7 +169,11 @@ public class EvaluationActivity extends AppCompatActivity implements
     }
 
 
-
+    /*
+     * Metodo encargado de de desplegar la lista de personal, se encarga de
+     * desplegar el custom layout ademas de setear los elementos que iran dentro
+     * de este.
+     */
     public void listaPersonal() {
 
         sincroniza.syncPersonaSQLite();
@@ -172,10 +187,6 @@ public class EvaluationActivity extends AppCompatActivity implements
         list.setAdapter(personal);
         list.setItemAnimator(new DefaultItemAnimator());
         list.setLayoutManager(new LinearLayoutManager(this));
-       /* SwipeController swipeController = new SwipeController();
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-        itemTouchHelper.attachToRecyclerView(list);*/
-
 
         builder.setView(customView);
         listaPersonalFlotante = builder.create();
@@ -183,7 +194,10 @@ public class EvaluationActivity extends AppCompatActivity implements
         enableDimensiones();
     }
 
-
+    /*
+     * Metodo encargado de llamar al activador de los cardview que contienen las dimensiones,
+     * para que estos sean clickeables por el usuario.
+     */
     public void enableDimensiones() {
         android.support.v4.app.Fragment f =
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
@@ -194,7 +208,13 @@ public class EvaluationActivity extends AppCompatActivity implements
         }
     }
 
-
+    /*
+     * Metodo encargado de determinar cual ser el tipo de evaluacion que se realizara,
+     * esto dependiendo del tipo de fragment en el cual se este trabajando y el card view
+     * seleccionado correspondiente a este, ademas se encarga de cargar las preguntas necesarias
+     * para el view pager que sera desplegado.
+     * Recibe como parametro un objeto de la clase View generado por los botones.
+     */
     public void obtenerFragmentoActivo(View view) {
         android.support.v4.app.Fragment f =
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
@@ -284,7 +304,12 @@ public class EvaluationActivity extends AppCompatActivity implements
         }
 
     }
-
+    /*
+     * Metodo encargado de funcionar como intermediario para la llamada de la confirmacion de pregunta,
+     * este llama al metodo correspondiente dependiendo del fragmento activo con el cual se este trabajando.
+     * Recibe como parametro un objeto de tipo View generado por el boton si del view Pager
+     * contenedor de la pregunta que se este repondiendo.
+     */
     public void confirmarPreguntaSiNo(View view) {
         android.support.v4.app.Fragment f =
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
@@ -296,7 +321,13 @@ public class EvaluationActivity extends AppCompatActivity implements
         }
     }
 
-
+    /*
+     * Metodo encargado de funcioanar como intermedario para la llamada de la cancelacion de
+     * evaluacion, este llama al metodo correspondiente dependiendo de cual sea el fragmento
+     * activo.
+     * Recibe como parametro un objeto de clase vie generado por el boton cancelar presente
+     * en los view pager contendores de las preguntas.
+     */
     public void cancelarEvaluacion(View view) {
         android.support.v4.app.Fragment f =
                 getSupportFragmentManager().findFragmentById(R.id.contenedor_dimensiones);
@@ -307,7 +338,11 @@ public class EvaluationActivity extends AppCompatActivity implements
         }
     }
 
-
+    /*
+     * Metodo encargado de completar y devolver la lista de personal asociada
+     * al centro que este seleccionado.
+     * Retorna un arreglo de strings con los nombres del personal.
+     */
     public String[] arrayPersonal() {
         this.personal = mediador.rellenarPersonal(this.idCentroActual);
         String[] personal = new String[this.personal.size()];
@@ -318,7 +353,12 @@ public class EvaluationActivity extends AppCompatActivity implements
 
         return personal;
     }
-
+    /*
+     *  Metodo encargado de funcionar como intermediario para la llamada de no de la  pregunta,
+     * este llama al metodo correspondiente dependiendo del fragmento activo con el cual se este trabajando.
+     * Recibe como parametro un objeto de tipo View generado por el boton no del view Pager
+     * contenedor de la pregunta que se este repondiendo.
+     */
     public void buttonClickNegative(View view) {
 
         android.support.v4.app.Fragment f =
@@ -330,7 +370,10 @@ public class EvaluationActivity extends AppCompatActivity implements
         }
     }
 
-
+    /*
+     * Metodo encargado de instanciar al spinner centroActual, ademas de setear su adapter correspondiente
+     * y asignar el comportamiento que tendran los elementos dentro de este una vez sean seleccionados.
+     */
     public void activarSpinnerCentros() {
 
         this.sincroniza.syncFacilitySQLite();
@@ -361,6 +404,11 @@ public class EvaluationActivity extends AppCompatActivity implements
 
     }
 
+    /*
+     * Metodo encargado de crear el intent e iniciar la actividad para agregar personal.
+     * Recibe como parametro de un objeto de clase view creado por el boton agregar
+     * presente en la interfaz de la lista de personal.
+     */
     public void agregarPersonal(View view) {
         Intent EnterAdittion = new Intent(this, PersonalAdittionActivity.class);
         EnterAdittion.putExtra("idCentro", idCentroActual);
@@ -369,7 +417,10 @@ public class EvaluationActivity extends AppCompatActivity implements
 
 
     }
-
+    /*
+     * Metodo encargado de asignar la funcionalidad al clickear del boton de personal presente
+     * en la parte inferior de la interfaz de evaluacion.
+     */
     private void funcionalidadBotonPersonal() {
         sincroniza = new SyncDatabase(this);
         this.personalButton.setOnClickListener(new View.OnClickListener() {
@@ -379,13 +430,21 @@ public class EvaluationActivity extends AppCompatActivity implements
             }
         });
     }
-
+    /*
+     * Metodo encargado de recargar el personal presente en la lista, una vez que se produce
+     * un evento de agregacion o eliminacion.
+     */
     public void recargarListaPersonal() {
         listaPersonalFlotante.cancel();
         listaPersonal();
         sincroniza.updatePersonalSQLite();
     }
-
+    /*
+     * Metodo encargado de seleccionaar el nombre de un punto de evaluacion dependiendo del id
+     * de este.
+     * Recibe como parametro un entero con el id de dicho punto.
+     * Retorna un String con el nombre del punto.
+     */
     public String obtenerNombrePunto(int id)
     {
         for(Point point : this.points)

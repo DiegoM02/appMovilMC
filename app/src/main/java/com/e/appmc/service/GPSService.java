@@ -60,10 +60,7 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         System.out.println("Star GPS Service");
-
         googleApiClient.reconnect();
-        //startForeground();
-       // userID = intent.getExtras().getInt("id");
         System.out.println("Service UserID: " + userID);
         if(this.obtenerEstadoRecordarSession())
         {
@@ -88,54 +85,37 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
 
         super.onCreate();
         mediator = new DBMediator(getApplicationContext());
-        //startForeground();
-        //GoogleApiClient
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
-        //GoogleApiClient
         System.out.println("Entre al Servicio");
         mGeofenceList = new ArrayList<>();
-        /*Geofence geofence = new Geofence.Builder().setRequestId("Mi casa").setCircularRegion(-35.07468,-71.25500,50).setExpirationDuration(600000).setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                Geofence.GEOFENCE_TRANSITION_EXIT |
-                Geofence.GEOFENCE_TRANSITION_DWELL).setLoiteringDelay(1).build();
-        mGeofenceList.add(geofence);*/
         this.fillGeofences();
         mGeofencingClient = new GeofencingClient(this.getApplicationContext());
-        /*mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        System.out.println("Service:Succes");
-                        //Toast.makeText(VisitActivity.this,"Geofence listo, ready pa todas las nenas",Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println("Service: " + e.getMessage());
-                        //Toast.makeText(VisitActivity.this,"Error" + e.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-                });*/
 
     }
 
 
-
+    /*
+     * Metodo encargado de retornar los tipos de trigger que seran afectados en los geoefences que se
+     * estan monitoreando.
+     * Retorna un objeto de tipo GeofencingRequest con estos.
+     */
     private GeofencingRequest getGeofencingRequest() {
         return new GeofencingRequest.Builder()
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .addGeofences(mGeofenceList)
                 .build();
     }
-
+    /*
+     * Metodo encargado de generar el pending Intent que sera enviado al JobService utilizado para
+     * el monitoreo de los geofences, ademas de poblarlo el Intent contenido en este con los datos
+     * necesarios.
+     * Retorna un objeto de clase PendingIntent que servira para llamar al servicio.
+     */
     private PendingIntent getGeofencePendingIntent()
     {
-        //Intent intent = new Intent(this.getApplicationContext(), GeofenceTransitionsIntentService.class);
-        //intent.putExtra("id",this.userID);
-        //mGeofencePendingIntent = PendingIntent.getService(this.getApplicationContext(), 0, intent, PendingIntent.
-          //      FLAG_UPDATE_CURRENT);
         Intent intent = new Intent(this, GeofenceReceiver.class);
         intent.putExtra("id",userID);
         mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -165,7 +145,10 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
             return GPSService.this;
         }
     }
-
+    /*
+     * Metodo encargado de iniciar el location monitor, que escuchara todos los cambios de posicion
+     * que sufra el dispositivo.
+     */
     private void startLocationMonitor() {
         Log.d(TAG, "start location monitor");
         LocationRequest locationRequest = LocationRequest.create()
@@ -189,9 +172,10 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
 
     }
 
-
-
-
+    /*
+     * Metodo encargado de comenzar el servicio de geofencing que sera realizado por cada uno de los
+     * geofences registrados.
+     */
     private void startGeofencing() {
         Log.d(TAG, "Start geofencing monitoring call");
         mGeofencePendingIntent = getGeofencePendingIntent();
@@ -217,7 +201,10 @@ public class GPSService extends Service implements GoogleApiClient.ConnectionCal
         }
     }
 
-
+    /*
+     * Metodo encargado de rellenar los geofences segun los datos de los centros que esten en la
+     * memoria.
+     */
     private void fillGeofences()
     {
         int id = this.obtenerIdUsuarioRecordarSesion();
