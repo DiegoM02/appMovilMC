@@ -31,6 +31,7 @@ public class SyncDatabase {
     private final static String URL_UPDATE_PERSONAl = "http://"+IP+"/syncpersonal/php/update_personal.php";
     private final static String URL_LOGIN_USER = "http://"+IP+"/syncpersonal/modelos/login_mcs.php";
     private final static String URL_UPDATE_VISIT ="http://"+IP+"/syncpersonal/modelos/insert_personal.php";
+    private final static String URL_SYNC_VISIT = "http://"+IP+"/syncpersonal/modelos/insert_visit.php" ;
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;

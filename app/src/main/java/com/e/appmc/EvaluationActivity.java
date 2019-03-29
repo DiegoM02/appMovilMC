@@ -393,6 +393,7 @@ public class EvaluationActivity extends AppCompatActivity implements
                 idCentroActual = user.getId();
                 Bundle bundle = new Bundle();
                 bundle.putInt("idFacility",idCentroActual);
+                sincroniza.syncEvaluation(idCentroActual);
                 goToFragment(bundle);
             }
 

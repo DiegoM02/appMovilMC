@@ -118,7 +118,7 @@ class DB_Functions {
 
     public function selectEvaluation($id)
     {
-        $result = mysql_query($this->con"SELECT id,done,facility_id FROM evaluation WHERE '$id' = facility_id;");
+        $result = mysql_query($this->con"SELECT id,done,facility_id FROM evaluation WHERE facility_id = '$id';");
         return $result;
     }
 

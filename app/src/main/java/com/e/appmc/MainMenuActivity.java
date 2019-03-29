@@ -50,7 +50,7 @@ public class MainMenuActivity extends AppCompatActivity {
         datosUsuario = getIntent().getExtras();
         nombreUsuario.setText(datosUsuario.getString("name"));
         imageProfile = (ImageView) findViewById(R.id.imageProfile);
-
+        this.sincroniza.syncVisitSQLite();
 
 
 
