@@ -331,6 +331,55 @@ public class DBMediator {
         return gson.toJson(wordList);
     }
 
+
+    public String composeJSONfromSQLiteResponseEvaluation(){
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idResponse", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("IdEvaluation", cursor.getString(cursor.getColumnIndex("id_evaluation")));
+                map.put("assessment",cursor.getString(cursor.getColumnIndex("assessment")));
+                map.put("IdFacility", cursor.getString(cursor.getColumnIndex("fscility_id")));
+                map.put("IdAspect", cursor.getString(cursor.getColumnIndex("aspect_id")));
+
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
+
+    public String composeJSONfromSQLiteResponseQuestion(){
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("idResponse", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
+                map.put("IdEvaluation", cursor.getString(cursor.getColumnIndex("id_evaluation")));
+                map.put("IdEvaluation", cursor.getString(cursor.getColumnIndex("id_question")));
+                map.put("assessment",cursor.getString(cursor.getColumnIndex("assessment")));
+
+
+
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+
     public void updateSyncStatusFacility(String id, String status){
         this.db.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -351,9 +400,9 @@ public class DBMediator {
         db.insertTableAspect(db.getWritableDatabase(),new Aspect(id,created,name,approval_percentage));
     }
 
-    public void insertarResponseQuestion(int id, int id_evaluation, int id_question,float valoracion) {
+    public void insertarResponseQuestion( int id_evaluation, int id_question,float valoracion) {
 
-        db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id,id_evaluation,id_question,valoracion,"no"));
+        db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id_evaluation,id_question,valoracion,"no"));
     }
 
 
