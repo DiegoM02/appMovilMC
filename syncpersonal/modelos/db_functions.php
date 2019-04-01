@@ -180,5 +180,40 @@ class DB_Functions {
             }             
         } 
     }
+
+
+    public function storeResponseQuestion($Id , $IdEvaluation, $IdQuestion,$Assessment) {
+        // Insert user into database
+    $result = mysqli_query($this->con,"INSERT INTO response_question (id, evaluation_id, question_id,assessment) VALUES ('$Id','$IdEvaluation','$IdQuestion','$Assessment');");
+		
+        if ($result) {
+			return true;
+        } else {
+			if( mysqli_errno($this->con) == 1062) {
+				// Duplicate key - Primary Key Violation
+				return false;
+			} else {
+				// For other errors
+				return false;
+			}            
+        }
+    }
+
+    public function storeResponseEvaluation($Id , $IdEvaluation,$Assessment , $IdAspect , $IdFacility) {
+        // Insert user into database
+    $result = mysqli_query($this->con,"INSERT INTO response_question (id, id_evaluation, assessment, aspect_id, facility_id) VALUES ('$Id','$IdEvaluation','$Assessment', '$IdAspect', '$IdFacility');");
+		
+        if ($result) {
+			return true;
+        } else {
+			if( mysqli_errno($this->con) == 1062) {
+				// Duplicate key - Primary Key Violation
+				return false;
+			} else {
+				// For other errors
+				return false;
+			}            
+        }
+    }
 }
 ?>
