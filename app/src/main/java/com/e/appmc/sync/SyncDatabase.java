@@ -37,6 +37,10 @@ public class SyncDatabase {
     private final static String URL_SUMMARY= "http://"+IP+"/syncpersonal/php/insert_summary.php";
     private final static String URL_UPDATE_PERSONAl = "http://"+IP+"/syncpersonal/php/update_personal.php";
     private final static String URL_LOGIN_USER = "http://"+IP+"/syncpersonal/modelos/login_mcs.php";
+    private final static String URL_RESPONSE_EVALUATION = "http://"+IP+"/syncpersonal/modelos/insert_response_evaluation.php";
+    private final static String URL_RESPONSE_QUESTION = "http://"+IP+"/syncpersonal/modelos/insert_response_question.php";
+    private final static String URL_UPDATE_VISIT ="http://"+IP+"/syncpersonal/modelos/insert_personal.php";
+    private final static String URL_SYNC_VISIT = "http://"+IP+"/syncpersonal/modelos/insert_visit.php" ;
     private AppCompatActivity activity;
     private Context activityC;
     private DBMediator mediator;
@@ -99,11 +103,139 @@ public class SyncDatabase {
     }
 
 
+
+
+    public void syncResponseEvaluationSQLite() {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("responseEvaluationJSON", mediator.composeJSONfromSQLiteResponseEvaluation());
+        client.post(URL_RESPONSE_EVALUATION, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+                        System.out.println(obj.get("id"));
+                        System.out.println(obj.get("status"));
+                        mediator.updateSyncStatus(obj.get("id").toString(), obj.get("status").toString(),3);
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+    }
+
+
+    public void syncResponseQuestionSQLite() {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("responseQuestionJSON", mediator.composeJSONfromSQLiteResponseQuestion());
+        client.post(URL_RESPONSE_QUESTION, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+                        System.out.println(obj.get("id"));
+                        System.out.println(obj.get("status"));
+                        mediator.updateSyncStatus(obj.get("id").toString(), obj.get("status").toString(),4);
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+    }
+
+
     /**
      * Metodo encargado de sincronizar los datos de los centros de costos en la base de datos interna hacia la base externa MYSQL
      * de la plataforma web, este envia todos los centros del usuario logeado.
      *
      * */
+    public void syncVisitSQLite()
+    {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("visitJSON",mediator.composeJSONfromSQLiteVisit());
+        client.post(URL_UPDATE_VISIT, new AsyncHttpResponseHandler()
+        {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+                        System.out.println(obj.get("id"));
+                        System.out.println(obj.get("status"));
+                        mediator.updateSyncStatus(obj.get("id").toString(), obj.get("status").toString(),3);
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+
+
     public void syncFacilitySQLite()
     {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -147,11 +279,11 @@ public class SyncDatabase {
      * Metodo encargado de sincronizar desde la base de datos de la plataforma web los centros de costos
      * hacia la base de datos interna, enviando el id del usuario logeado actualmente.
      * */
-    public void syncFacilityWebsite()
+    public void syncFacilityWebsite(int idUser)
     {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("idUser", "30000");
+        params.put("idUser", idUser);
         client.setTimeout(10000);
         client.post(URL_CENTRO_WEBSITE, params, new AsyncHttpResponseHandler() {
             @Override
@@ -164,6 +296,80 @@ public class SyncDatabase {
                         JSONObject obj = (JSONObject) arr.get(i);
                        // mediator.insertarFacility(obj.getInt("id_facility"),obj.getInt("user_id"),obj.getString("name_facility"),
                           //      obj.getString("code_facility"),obj.getString("date_facility"),obj.getString("address_facility"),obj.getInt("service_id_facility"));
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void syncEvaluation(int idFacility)
+    {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("idFacility", idFacility);
+        client.setTimeout(10000);
+        client.post(URL_CENTRO_WEBSITE, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+                        mediator.insertarEvaluation(obj.getInt("id"),obj.getString("done"),obj.getInt("facility_Id"));
+                    }
+                    Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(activity.getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                if (statusCode == 404) {
+                    Toast.makeText(activity.getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(activity.getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void syncQuestionWebsite(int idFacility)
+    {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("idUser", idFacility);
+        client.setTimeout(10000);
+        client.post(URL_CENTRO_WEBSITE, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println(response);
+                try {
+                    JSONArray arr = new JSONArray(response);
+                    System.out.println(arr.length());
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = (JSONObject) arr.get(i);
+
                     }
                     Toast.makeText(activity.getApplicationContext(), "DB Sync completed!", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {

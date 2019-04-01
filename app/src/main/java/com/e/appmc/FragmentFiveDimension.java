@@ -685,10 +685,12 @@ public class FragmentFiveDimension extends Fragment {
      * */
     public void agregarValoracion(float valoracion, int posicion, String pregunta) {
 
+        int idEvaluation = this.mediador.obtenerIdEvaluation(this.dimensionActiva, posicion);
         int opcion = existeValoracion(posicion,pregunta);
         if(opcion ==-1) {
             Assessment valoraciones = new Assessment(posicion, valoracion, pregunta);
             this.valoraciones.add(valoraciones);
+            this.mediador.insertarResponseQuestion(idEvaluation,posicion,valoracion);
         }
         else{
             this.valoraciones.get(opcion).setAssessment(valoracion);

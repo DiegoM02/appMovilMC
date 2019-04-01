@@ -5,15 +5,14 @@ import android.content.ContentValues;
 public class ResponseQuestion {
 
 
-    private int id;
     private int id_evaluation;
     private int id_question;
     private float valoracion;
     private String sync_status;
 
 
-    public ResponseQuestion(int id, int id_evaluation, int id_question, float valoracion, String sync_status) {
-        this.id = id;
+    public ResponseQuestion( int id_evaluation, int id_question, float valoracion, String sync_status) {
+
         this.id_evaluation = id_evaluation;
         this.id_question = id_question;
         this.valoracion = valoracion;
@@ -23,10 +22,6 @@ public class ResponseQuestion {
     public String getSync_status()
     {
         return sync_status;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getId_evaluation() {
@@ -44,7 +39,6 @@ public class ResponseQuestion {
     public ContentValues toContentValues()
     {
         ContentValues values = new ContentValues();
-        values.put(ResponseQuestionContract.ResponseQuestionEntry.ID,id);
         values.put(ResponseQuestionContract.ResponseQuestionEntry.ID_EVALUATION,id_evaluation);
         values.put(ResponseQuestionContract.ResponseQuestionEntry.ID_QUESTION,id_question);
         values.put(ResponseQuestionContract.ResponseQuestionEntry.ASSESSMENT,valoracion);

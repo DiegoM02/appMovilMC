@@ -364,6 +364,7 @@ public class SQLiteOpenHelperDataBase extends SQLiteOpenHelper {
                 + VisitContract.VisitEntry.ENTER + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.EXIT + " TEXT NOT NULL, "
                 + VisitContract.VisitEntry.COMMENT + " TEXT NOT NULL, "
+                + VisitContract.VisitEntry.SYNC_STATE + " TEXT NOT NULL, "
                 + " UNIQUE (" + VisitContract.VisitEntry.ID + "),"
                 + " FOREIGN KEY(" + VisitContract.VisitEntry.USER_ID + ") REFERENCES "+ UserContract.UserEntry.TABLE_NAME +"(" + UserContract.UserEntry.ID+"),"
                 + " FOREIGN KEY(" + VisitContract.VisitEntry.FACILITY_ID + ") REFERENCES "+ FacilityContract.FacilityEntry.TABLE_NAME +"(" + FacilityContract.FacilityEntry.ID+"))";
