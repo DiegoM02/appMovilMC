@@ -243,6 +243,12 @@ public class DBMediator {
             case 2:
                 db.getWritableDatabase().update("summary",values,"id= " + id, null);
                 db.close();
+            case 3:
+                db.getWritableDatabase().update("response_evaluation",values,"id= " + id, null);
+                db.close();
+            case 4:
+                db.getWritableDatabase().update("response_question",values,"id= " + id, null);
+                db.close();
         }
 
     }
@@ -335,7 +341,7 @@ public class DBMediator {
     public String composeJSONfromSQLiteResponseEvaluation(){
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        String selectQuery = "SELECT  * FROM response_evaluation where sync_status = '"+"no"+"'";
         Cursor cursor = db.doSelectQuery(selectQuery);
         if (cursor.moveToFirst()) {
             do {
@@ -360,14 +366,14 @@ public class DBMediator {
     public String composeJSONfromSQLiteResponseQuestion(){
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT  * FROM facility where sync_status = '"+"no"+"'";
+        String selectQuery = "SELECT  * FROM response_question where sync_status = '"+"no"+"'";
         Cursor cursor = db.doSelectQuery(selectQuery);
         if (cursor.moveToFirst()) {
             do {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("idResponse", String.valueOf(cursor.getInt(cursor.getColumnIndex("id"))));
                 map.put("IdEvaluation", cursor.getString(cursor.getColumnIndex("id_evaluation")));
-                map.put("IdEvaluation", cursor.getString(cursor.getColumnIndex("id_question")));
+                map.put("IdQuestion", cursor.getString(cursor.getColumnIndex("id_question")));
                 map.put("assessment",cursor.getString(cursor.getColumnIndex("assessment")));
 
 
