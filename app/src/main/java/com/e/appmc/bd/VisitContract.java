@@ -13,6 +13,7 @@ public class VisitContract {
         public static final String ENTER = "enter";
         public static final String EXIT = "exit";
         public static final String COMMENT = "comment";
+        public static final String SYNC_STATE = "state";
 
     }
 }

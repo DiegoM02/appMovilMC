@@ -48,7 +48,13 @@ public class QuestionAdpater extends PagerAdapter   {
         return this.questions.size();
     }
 
-
+    /*
+     * Metodo encargado de obtener el nombre de un punto determinado realizando una consulta
+     * a la base de datos interna del dispositivo.
+     * Recibe como parametro un entero con el id del punto.
+     * Retorna un String con el nombre del punto buscado o un string vacio en caso de no
+     * encontrar coincidencias.
+     */
     public String obtenerPuntoDePregunta(int id) {
         String query = "SELECT point.name FROM point WHERE point.id = " + id;
         String name_point = "";
@@ -121,7 +127,11 @@ public class QuestionAdpater extends PagerAdapter   {
         container.removeView((LinearLayout) object);
 
     }
-
+    /*
+     * Metodo encargado de llamar a confirmClick dentro de los fragmentos.
+     * Recibe como parametro de entrada un objeto de clase view y un entero
+     * con la posicion de la pregunta que se modificara.
+     */
     public void callerConfirmClick(View view,int position)
     {
 
@@ -134,7 +144,12 @@ public class QuestionAdpater extends PagerAdapter   {
             ((FragmentFiveDimension)fragment).confirmClick(view,questions,position,valoracion);
         }
     }
-
+    /*
+     * Metodo encargado de obtener el rating guardado de una preunta en el arreglo presente en los
+     * fragment.
+     * Recibe como parametro un entero con la posicion de a pregunta.
+     * Retorna un float con la valoracion de dicha pregunta.
+     */
     public float fillRating(int position)
     {
         Toast.makeText(fragment.getContext(),"entre",Toast.LENGTH_SHORT);

@@ -68,6 +68,24 @@ class DB_Functions {
         }
     }
 
+    public function storeVisit($UserId,$FacilityID,$Date,$Enter,$Exit,$Comment)
+    {
+        $result = mysql_query($this->con,"INSERT INTO visit (user_id,facility_id, date, enter, exit,comment) VALUES
+            ('$UserId'.'$FacilityID','$Date','$Enter','$Exit','$Comment');");
+        
+        if ($result) {
+            return true;
+        } else {
+            if( mysqli_errno($this->con) == 1062) {
+                // Duplicate key - Primary Key Violation
+                return false;
+            } else {
+                // For other errors
+                return false;
+            }            
+        }
+    }
+
     public function getFacilityForId($Id)
     {
         $name="";
@@ -96,6 +114,12 @@ class DB_Functions {
         $result = mysqli_query($this->con,"SELECT facilities.id AS id_facility, T1.user_id_facility AS user_id, facilities.created AS date_facility,facilities.code AS code_facility, facilities.name AS name_facility, facilities.address AS address_facility, facilities.service_id AS service_id_facility FROM facilities, (SELECT facility_id AS facility_id_users, facilities_users.user_id AS user_id_facility  FROM facilities_users WHERE  facilities_users.user_id = '$id') AS T1 WHERE  facilities.id = T1.facility_id_users;") ;
         return $result;
     
+    }
+
+    public function selectEvaluation($id)
+    {
+        $result = mysql_query($this->con"SELECT id,done,facility_id FROM evaluation WHERE facility_id = '$id';");
+        return $result;
     }
 
     function selectAllAspect()

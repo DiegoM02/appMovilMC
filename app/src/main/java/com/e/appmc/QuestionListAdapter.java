@@ -63,7 +63,12 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
             textPersonal = (TextView) itemView.findViewById(R.id.textPersonal);
         }
     }
-
+    /*
+     * Metodo encargado de formatear el cotenido del arrayList Personal presente en cada
+     * objeto a una lista.
+     * Recibe como parametro de entrada un ArrayList de string con los nombres del personal.
+     * Retorna un String con formato de lista.
+     */
     public String stringLista(ArrayList<String> personal)
     {
         String string = "";

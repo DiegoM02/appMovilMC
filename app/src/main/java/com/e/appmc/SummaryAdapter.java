@@ -22,13 +22,20 @@ public class SummaryAdapter extends RecyclerView.Adapter<SummaryAdapter.SummaryV
     private HashMap<String,Float> datos;
     private Activity activity;
     private int mode;
-
+    /*
+     * Constructor utiizado cuando es creado un resumen de preguntas si y no.
+     * Recibe como parametro un ArrayList de Critical Point y una instancia de EvaluationActivity.
+     */
     public SummaryAdapter(ArrayList<CriticalPoint> puntosCriticos, EvaluationActivity activity) {
         this.puntosCriticos =  puntosCriticos;
         this.activity = activity;
         mode=0;
     }
-
+    /*
+     * Constructor utiizado cuando es creado un resumen de preguntas con valoracion.
+     * Recibe como parametro una instancia de EvaluationActivity y un Hashmap con clave un
+     * String que es el nombre de la pregunta y valor un float que corresponde a la valoracion de esta.
+     */
     public SummaryAdapter(EvaluationActivity activity,HashMap<String,Float> datos)
     {
         this.activity = activity;

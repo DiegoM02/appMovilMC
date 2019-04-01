@@ -31,7 +31,13 @@ public class QuestionSiNoAdapter extends PagerAdapter {
     private ArrayList<Question> questions = new ArrayList<Question>();
     private Fragment fragment;
 
-
+    /*
+     * Metodo encargado de obtener el nombre de un punto determinado realizando una consulta
+     * a la base de datos interna del dispositivo.
+     * Recibe como parametro un entero con el id del punto.
+     * Retorna un String con el nombre del punto buscado o un string vacio en caso de no
+     * encontrar coincidencias.
+     */
     public String obtenerPuntoDePregunta(int id)
     {
         String query = "SELECT point.name FROM point WHERE point.id = " + id;
@@ -114,7 +120,11 @@ public class QuestionSiNoAdapter extends PagerAdapter {
     }
 
 
-
+    /*
+     * Metodo encargado de resaltar el color de la pocion seleccionada como respuesta de la pregunta,
+     * dependiendo de cual haya sido esta.
+     * Recibe como parametro un entero con la posicion y un String con el nombre de esta.
+     */
     public void colorChanger(int position,String name)
     {
 

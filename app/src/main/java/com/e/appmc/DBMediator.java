@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.e.appmc.bd.Aspect;
+import com.e.appmc.bd.Evaluation;
 import com.e.appmc.bd.Facility;
 import com.e.appmc.bd.FacilityContract;
 import com.e.appmc.bd.Personal;
@@ -41,7 +42,12 @@ public class DBMediator {
     public DBMediator(Context activity) {
         this.db = new SQLiteOpenHelperDataBase(activity,"mcapp",null,1);
     }
-
+    /*
+     * Metodo enccargado de devolver el personal asociado a un determinado centro, haciendo
+     * uso de los registros guardados en la base de datos interna del dispositivo.
+     * Recibe como parametro un entero que contiene el id del centro actualmente seleccionado.
+     * Retorna un ArrayList de objetos Personal con todos los resultados de la consulta.
+     */
     public ArrayList<Personal> rellenarPersonal(int idCentroActual)
     {
         ArrayList<Personal> personal = new ArrayList<>();
@@ -67,7 +73,13 @@ public class DBMediator {
 
     }
 
-
+    /*
+     * Metodo encargado de devolver todos los registros de preguntas en la base de dato, dependiendo
+     * de la dimension, la evluacion y el centro.
+     * Recibe como parameto un entero con el id de la dimension, otro con el de la evaluacion y otro
+     * con el id del centro.
+     * Retorna un ArrayList de Question con todos los datos solicitados.
+     */
     public ArrayList<Question> llenarPreguntas(int idAspect, int idEvaluation, int idCentro)
     {
         ArrayList<Question> questions = new ArrayList<Question>();
@@ -100,7 +112,12 @@ public class DBMediator {
     }
 
 
-
+    /*
+     * Metodo encargado de obtnener los centros de los registros de la base de datos dependiendo del
+     * usuario que este actualmente logeado.
+     * Recibe como parametro un entero con el id del usuario en cuestion.
+     * Retorna un arreglo de objetos Facility con los datos obtenidos.
+     */
     public Facility[] obtenerCentros(int idUsuario)
     {
         String query = "SELECT * FROM facility WHERE user_id = " + idUsuario;
@@ -131,7 +148,13 @@ public class DBMediator {
 
 
     }
-
+    /*
+     * Metodo originalmente usado para combrobar la presencia de un  usuario en la base de datos
+     * interna del dispostivo, se dejo de utilizar debido a que esto se hace actualmente con la base
+     * de datos remota.
+     * Recibe como parametro un String con el nombre unico del usuario.
+     * Retorna un objeto de tipo User con los datos encontrados y null si no se encontro registro.
+     */
     public User comprobarUsuario(String usr)
     {
         Cursor data = this.db.doSelectQuery("SELECT * FROM user WHERE username LIKE '" +usr+"%'");
@@ -153,7 +176,12 @@ public class DBMediator {
         }
         return null;
     }
-
+    /*
+     * Metodo encargado de identificar en los registros de la base de datos cual es el servicio
+     * correspondiente para el usuario actual en la aplicacion.
+     * Recibe como parametro un entero con el id del usuario actualemente en la aplicacion.
+     * Retorna un entero con el id del servicio y cero si no se encuentra registro.
+     */
     public int comprobarServicio(int idUsuario)
     {
         String query = "SELECT service_id FROM facility WHERE user_Id = " + idUsuario;
@@ -177,14 +205,22 @@ public class DBMediator {
     {
         db.inserTableSummary(db.getWritableDatabase(),summary);
     }
-
+    /*
+     * Metodo encargado de modificar la columna estado en un registro de personal determinado, esto
+     * se realiza para deshabilitar dicho registro.
+     * Recibe como parametro un entero con el id del personal que sera afectado.
+     */
     public void actualizarEstadoPesonal(int idPersonal)
     {
         ContentValues cv = new ContentValues();
         cv.put("state",0);
         db.getWritableDatabase().update("personal",cv,"id = " + idPersonal,null);
     }
-
+    /*
+     * Metodo encargado de retornar todas las entradas de la tabla point existentes en la base de
+     * datos interna del dispositivo.
+     * Retorna un ArrayList de objetos de clase point con los datos encotrados en los registros.
+     */
     public ArrayList<Point> obtenerPuntos()
     {
         ArrayList<Point> points = new ArrayList<>();
@@ -202,7 +238,11 @@ public class DBMediator {
 
     }
 
-
+    /*
+     * Metodo encargado de formar el JSON que sera enviado hacia los php de la pagina web, obtiene
+     * los registros de personal que aun no han sido sincornizados con dicha base de datos remota.
+     * Retorna un String con el formato del JSON en cuestion.
+     */
     public String composeJSONfromSQLitePersonal(){
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
@@ -230,7 +270,13 @@ public class DBMediator {
         return gson.toJson(wordList);
     }
 
-
+    /*
+     * Metodo encargado de acttulizar el estado de los registros que ya fueron sincronizados con la
+     * base de datos remota pertnciente a la plataforma web.
+     * Recibe como parametro un String con el id del registo que se vera afectado, un string con el
+     * status que le sera asignado y un entero con el tipo de registro que se vera afectado, 1 para
+     * personal y 2 para summary.
+     */
     public void updateSyncStatus(String id, String status,int type){
          this.db.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -249,10 +295,17 @@ public class DBMediator {
             case 4:
                 db.getWritableDatabase().update("response_question",values,"id= " + id, null);
                 db.close();
+            case 3:
+                db.getWritableDatabase().update("visit",values,"id = " + id,null);
+                db.close();
         }
 
     }
-
+    /*
+     * Metodo encargado de formar el JSON que sera enviado hacia los php de la pagina web, obtiene
+     * los registros de summary que aun no han sido sincronizados con dicha base de datos remota.
+     * Retorna un String con el formato del JSON en cuestion.
+     */
     public String composeJSONFromSQLiteSummary()
     {
         ArrayList<HashMap<String, String>> wordList;
@@ -275,7 +328,12 @@ public class DBMediator {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(wordList);
     }
-
+    /*
+     * Metodo encargado de formar el JSON que sera enviado hacia los php de la pagina web, obtiene
+     * los registros de personal que posean un status equivalente a 0 que aun no han sido
+     * sincornizados con dicha base de datos remota.
+     * Retorna un String con el formato del JSON en cuestion.
+     */
     public String composeJSONfromSQLitePersonalStatus()
     {
         ArrayList<HashMap<String,String>> wordList;
@@ -297,7 +355,11 @@ public class DBMediator {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(wordList);
     }
-
+    /*
+     * Metodo encargado de formar el JSON que sera enviado hacia los php de la pagina web, obtiene
+     * los datos de logeo de usuario que seran comprobados en la base de datos remota.
+     * Retorna un String con el formato del JSON en cuestion.
+     */
     public String composeJSONfromSQLiteUserLogin(String user,String password)
     {
         ArrayList<HashMap<String,String>> wordList;
@@ -311,7 +373,11 @@ public class DBMediator {
         Gson gson = new GsonBuilder().create();
         return gson.toJson(wordList);
     }
-
+    /*
+     * Metodo encargado de formar el JSON que sera enviado hacia los php de la pagina web, obtiene
+     * los registros de facility que aun no han sido sincronizados con dicha base de datos remota.
+     * Retorna un String con el formato del JSON en cuestion.
+     */
     public String composeJSONfromSQLiteFacility(){
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
@@ -386,6 +452,37 @@ public class DBMediator {
         return gson.toJson(wordList);
     }
 
+    public String composeJSONfromSQLiteVisit()
+    {
+        ArrayList<HashMap<String,String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT user_id,facility_id,date,enter,exit,comment FROM visit WHERE state = 0 ";
+        Cursor cursor = db.doSelectQuery(selectQuery);
+        if(cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String,String> map = new HashMap<>();
+                map.put("idUser",cursor.getString(cursor.getColumnIndex("user_id")));
+                map.put("idFacility",String.valueOf(cursor.getString(cursor.getColumnIndex("facility_id"))));
+                map.put("dateVisit",String.valueOf(cursor.getString(cursor.getColumnIndex("date"))));
+                map.put("enterVisit",String.valueOf(cursor.getString(cursor.getColumnIndex("enter"))));
+                map.put("exitVisit",String.valueOf(cursor.getString(cursor.getColumnIndex("exit"))));
+                map.put("commentVisit",String.valueOf(cursor.getString(cursor.getColumnIndex("comment"))));
+
+                wordList.add(map);
+            }while(cursor.moveToNext());
+        }
+        db.close();
+        Gson gson = new GsonBuilder().create();
+        return gson.toJson(wordList);
+    }
+    /*
+     * Metodo encargado de acttulizar el estado de los registros de facility que ya fueron
+     * sincronizados con la base de datos remota pertnciente a la plataforma web.
+     * Recibe como parametro un String con el id del registo que se vera afectado y un string con el
+     * status que le sera asignado y un entero con el tipo de registro que se vera afectado.
+     */
     public void updateSyncStatusFacility(String id, String status){
         this.db.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -411,8 +508,18 @@ public class DBMediator {
         db.insertTableResponseQuestion(db.getWritableDatabase(), new ResponseQuestion(id_evaluation,id_question,valoracion,"no"));
     }
 
+    public void insertarEvaluation(int id, String done, int facilityId)
+    {
+        db.insertarEvaluation(db.getWritableDatabase(),new Evaluation(id,done,facilityId));
+    }
 
 
+    /*
+     * Metodo encargado de encontrar los registros de las visitas filtrando por el usuario y el centro
+     * en cuestion que haya sido visitado.
+     * Recibe como parametro un entero con el id del usuario y un entero con el centro seleccionado.
+     * Retorna un ArrayList de objetos VisitModel con los datos encontrados en los registros.
+     */
     public ArrayList<VisitModel> obtenerVisitasPorUsuarioYCentro(int idUser , int idFacility)
     {
         ArrayList<VisitModel> visit = new ArrayList<VisitModel>();
@@ -440,9 +547,15 @@ public class DBMediator {
 
     public void insertarVisit(int idUsuario,int idFacility,String horaInicio,String horaTermino,String fecha)
     {
-        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,fecha,horaInicio,horaTermino,""));
+        db.insertTableVisit(db.getWritableDatabase(),new Visit(-1,idFacility,idUsuario,fecha,horaInicio,horaTermino,"","0"));
     }
-
+    /*
+     * Metodo encargado de registrar una visita que se haya realizado en las base de datos interna
+     * del dipositivo.
+     * Recibe como paramentro un entero con el id del usuario que la realizo, un String con el id
+     * del centro donde se realizo, un String con la hora de inicio de la visita, un String con  la
+     * hora de termino y un String con la fecha de realizacion.
+     */
     public void registrarVisita(int idUsuario,String IDRequest,String horaInicio,String horaTermino,String fecha)
     {
         Cursor data = db.doSelectQuery("SELECT id FROM facility WHERE name = '"+IDRequest+"' AND user_id = " + idUsuario);
@@ -455,7 +568,12 @@ public class DBMediator {
 
 
     }
-
+    /*
+     * Metodo encargado de encontrar el id de un registro de evaluacion en la base de datos interna
+     * del dispositivo, utilizando como filtro el id de la dimension y la pregunta en cuestion.
+     * Recibe como parameto un entero con el id de la dimension y otro con el id de la pregunta.
+     * Retorna un entero con el id del registro de evaluacion encontrado.
+     */
     public int obtenerIdEvaluation(int aspectID, int quesionID)
     {
         Cursor data = db.doSelectQuery("SELECT question.evaluation_id as id_evaluation FROM aspect, question WHERE aspect.id = " + aspectID + " AND question.id = " + quesionID +
@@ -466,7 +584,11 @@ public class DBMediator {
         }
         return -1;
     }
-
+    /*
+     * Metodo encargado de retornar los registros de los centros con mas y menos visitas.
+     * Retorna un HashMap con clave String, que corresponde al nombre del ceentro en cuestion y valor
+     * Integer que corresponde a la cantidad de visitas realizadas
+     */
     public  HashMap<String,Integer> obtenerCentroVisitas()
     {
         HashMap<String,Integer> visitas = new HashMap<>();
@@ -511,7 +633,12 @@ public class DBMediator {
 
         return visitas;
     }
-
+    /*
+     * Metodo encargado de obtner el registro de algun centro que posea cero visitas si es que existe,
+     * es llamado por el metodo obtnerCentroVisitas.
+     * Retorna un String con el nombre del centro en cuestion y vacio en caso de no encontrar
+     * registros.
+     */
     private  String comprobarCero()
     {
 
@@ -531,7 +658,12 @@ public class DBMediator {
 
         return "";
     }
-
+    /*
+     * Metodo encargado de retornar el registro de la base de datos correspondiente a la visita con
+     * la fecha mas reciente.
+     * Retorna un HashMap con clave String correspondiente al nombre del centro y con valor un String
+     * con la fecha de dicha visita.
+     */
     public HashMap<String,String> visitaReciente() throws ParseException {
         HashMap<String,String> fecha = new HashMap<>();
         String query = "SELECT facility.name as name,visit.date as date FROM facility,visit WHERE facility.id = visit.facility_id ";
@@ -570,13 +702,18 @@ public class DBMediator {
     {
         db.insertTableResponseEvaluation(db.getWritableDatabase(),new ResponseEvaluation(id,idEvaluation,valoracion, aspect, "no", facility_id));
     }
-
+    /*
+     * Metodo encargado de obtener la valoracion asociada a las dimensiones presentes en el centro y
+     * mostradas en los cardView dependiendo del fragmento desplegado segun el servicio.
+     * Recibe como parametro un entero con el id de la dimension en cuestion y un entero con el id
+     * del centro del cual se quiere obtener su valoracion.
+     * Retorna un float con la valoracion registrada en la base de datos del dispositivo.
+     *
+     */
     public float obtenerValoracionPromedioDimension(int idAspect, int idCentro)
     {
         String query = "SELECT avg(assessment) as valoracion_promedio FROM response_evaluation where response_evaluation.aspect_id = " + idAspect
                 + " and facility_id = " + idCentro;
-
-
 
         Cursor cursor = db.doSelectQuery(query);
 
